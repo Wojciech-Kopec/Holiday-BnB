@@ -4,29 +4,32 @@ import java.util.Arrays;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class LoggerAspect {
+    private static final Logger logger = LoggerFactory.getLogger(LoggerAspect.class);
 
     @Before("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
     public void logInfoBefore(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        System.out.printf("Log @Before: %s with args: %s\n",
+        logger.debug("Log @Before: {} with args: {}",
                 joinPoint.getSignature(), Arrays.toString(args));
     }
 
     @After("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
     public void logInfoAfter(JoinPoint joinPoint) {
-        System.out.printf("Log @After: Method %s executed \n", joinPoint.getSignature());
+        logger.debug("Log @After: Method {} executed", joinPoint.getSignature());
     }
 
     @AfterThrowing(
             pointcut = "com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()",
             throwing = "error")
     public void logError(JoinPoint joinPoint, Throwable error) {
-        System.out.printf("Log @AfterThrowing, Error: Method %s finished with error %s\n",
+        logger.error("Log @AfterThrowing, Error: Method {} finished with error {",
                 joinPoint.getSignature(), error.getMessage());
     }
 
@@ -36,7 +39,7 @@ public class LoggerAspect {
     public void logSuccess(JoinPoint joinPoint, Object result) {
         Object[] args = joinPoint.getArgs();
         if (result != null)
-            System.out.printf("Log @AfterReturning: Method " + joinPoint.getSignature() + " successfully returned value %s for args %s\n",
+            logger.debug("Log @AfterReturning: Method " + joinPoint.getSignature() + " successfully returned value {} for args {}",
                     result, Arrays.toString(args));
     }
 }

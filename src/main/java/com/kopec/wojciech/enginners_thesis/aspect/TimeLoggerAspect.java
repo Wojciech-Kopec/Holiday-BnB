@@ -3,11 +3,15 @@ package com.kopec.wojciech.enginners_thesis.aspect;
 import java.time.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 public class TimeLoggerAspect {
+    private static final Logger logger = LoggerFactory.getLogger(TimeLoggerAspect.class);
+
 
     @Around("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
     public Object measureExecTime(ProceedingJoinPoint pjp) throws Throwable {
@@ -23,7 +27,7 @@ public class TimeLoggerAspect {
             // @AfterReturning
             Instant after = Instant.now();
             Duration execTime = Duration.between(before, after);
-            System.out.printf("%s execution took %d ms\n", pjp.toShortString(), execTime.toMillis());
+            logger.debug("{} execution took {} ms", pjp.toShortString(), execTime.toMillis());
         }
     }
 }

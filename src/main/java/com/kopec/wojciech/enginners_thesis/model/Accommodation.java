@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
-//@ToString
+@EqualsAndHashCode(exclude = "bookings")
+@ToString(exclude = "bookings")
 
 @Entity
 @Table(name = "ACCOMMODATIONS")
