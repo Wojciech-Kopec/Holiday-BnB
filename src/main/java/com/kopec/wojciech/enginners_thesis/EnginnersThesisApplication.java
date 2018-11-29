@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -26,21 +27,8 @@ public class EnginnersThesisApplication {
         ConfigurableApplicationContext context = SpringApplication.run(EnginnersThesisApplication.class, args);
 
 
-        User userOwner = new User();
-        userOwner.setFirstName("Test_FirstName1");
-        userOwner.setLastName("Test_LastName1");
-        userOwner.setEmail("user1@test");
-        userOwner.setPassword("password");
-        userOwner.setUsername("Owner1");
-        userOwner.setPhoneNumber("101010101");
-
-        User userClient = new User();
-        userClient.setFirstName("Test_FirstName2");
-        userClient.setLastName("Test_LastName2");
-        userClient.setEmail("user2@test");
-        userClient.setPassword("password");
-        userClient.setUsername("Client1");
-        userClient.setPhoneNumber("121212121");
+        User userOwner = createOwnerUser();
+        User userClient = createClientUser();
 
         logger.info("Adding created User-objects");
         UserRepository userRepository = context.getBean(UserRepository.class);
@@ -48,6 +36,47 @@ public class EnginnersThesisApplication {
         userRepository.save(userClient);
         logger.info("Objects added");
 
+        Accommodation accommodation1 = createAccomodationObject(userOwner);
+
+        logger.info("Adding created Accommodation-objects");
+        AccommodationRepository accommodationRepository = context.getBean(AccommodationRepository.class);
+        accommodationRepository.save(accommodation1);
+        logger.info("Objects added");
+
+        Booking booking1 = createBooking(userClient, accommodation1);
+
+        logger.info("Adding created Booking-objects");
+        BookingRepository bookingRepository = context.getBean(BookingRepository.class);
+        bookingRepository.save(booking1);
+        logger.info("Objects added");
+
+        logger.info("userRepository.findByUsername(userOwner.getUsername()).getAccommodations().forEach(System.out::println);");
+        User userOwnerCopy = userRepository.findByUsername(userOwner.getUsername());
+        List<Accommodation> accommodationsCopy = userOwnerCopy.getAccommodations();
+        accommodationsCopy.forEach(accommodation -> logger.info(accommodation.toString()));
+
+        logger.info("userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(System.out::println);");
+        userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(booking -> logger.info(booking.toString()));
+
+
+
+    }
+
+    public static Booking createBooking(User userClient, Accommodation accommodation1) {
+        Booking booking1 = new Booking();
+        booking1.setUser(userClient);
+        booking1.setAccommodation(accommodation1);
+        booking1.setGuestsCount(4);
+        booking1.setStatus(BookingStatus.VERIFIED.toString());
+        booking1.setSubmissionDate(LocalDateTime.now());
+        booking1.setStartDate(LocalDate.of(2019, 1, 1));
+        booking1.setFinishDate(LocalDate.of(2019, 1, 15));
+        int bookedDays = (int) DAYS.between(booking1.getStartDate(), booking1.getFinishDate());
+        booking1.setFinalPrice(booking1.getAccommodation().getPricePerNight() * bookedDays);
+        return booking1;
+    }
+
+    public static Accommodation createAccomodationObject(User userOwner) {
         Accommodation accommodation1 = new Accommodation();
         accommodation1.setUser(userOwner);
         accommodation1.setName("Test_AccommodationName1");
@@ -74,34 +103,29 @@ public class EnginnersThesisApplication {
         localization1.setAddress("Polska 52");
 
         accommodation1.setLocalization(localization1);
-
-        logger.info("Adding created Accommodation-objects");
-        AccommodationRepository accommodationRepository = context.getBean(AccommodationRepository.class);
-        accommodationRepository.save(accommodation1);
-        logger.info("Objects added");
-
-        Booking booking1 = new Booking();
-        booking1.setUser(userClient);
-        booking1.setAccommodation(accommodation1);
-        booking1.setGuestsCount(4);
-        booking1.setStatus(BookingStatus.VERIFIED.toString());
-        booking1.setSubmissionDate(LocalDateTime.now());
-        booking1.setStartDate(LocalDate.of(2019, 1, 1));
-        booking1.setFinishDate(LocalDate.of(2019, 1, 15));
-        int bookedDays = (int) DAYS.between(booking1.getStartDate(), booking1.getFinishDate());
-        booking1.setFinalPrice(booking1.getAccommodation().getPricePerNight() * bookedDays);
-
-        logger.info("Adding created Booking-objects");
-        BookingRepository bookingRepository = context.getBean(BookingRepository.class);
-        bookingRepository.save(booking1);
-        logger.info("Objects added");
-
-        logger.info("userRepository.findByUsername(userOwner.getUsername()).getAccommodations().forEach(System.out::println);");
-        User userOwnerCopy = userRepository.findByUsername(userOwner.getUsername());
-        List<Accommodation> accommodationsCopy = userOwnerCopy.getAccommodations();
-        accommodationsCopy.forEach(accommodation -> logger.info(accommodation.toString()));
-
-        logger.info("userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(System.out::println);");
-        userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(booking -> logger.info(booking.toString()));
+        return accommodation1;
     }
+
+    public static User createClientUser() {
+        User userClient = new User();
+        userClient.setFirstName("Test_FirstName2");
+        userClient.setLastName("Test_LastName2");
+        userClient.setEmail("user2@test");
+        userClient.setPassword("password");
+        userClient.setUsername("Client1");
+        userClient.setPhoneNumber("121212121");
+        return userClient;
+    }
+
+    public static User createOwnerUser() {
+        User userOwner = new User();
+        userOwner.setFirstName("Test_FirstName1");
+        userOwner.setLastName("Test_LastName1");
+        userOwner.setEmail("user1@test");
+        userOwner.setPassword("password");
+        userOwner.setUsername("Owner1");
+        userOwner.setPhoneNumber("101010101");
+        return userOwner;
+    }
+
 }

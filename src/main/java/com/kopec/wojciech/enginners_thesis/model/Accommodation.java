@@ -20,36 +20,46 @@ import java.util.List;
 @Table(name = "ACCOMMODATIONS")
 
 public class Accommodation implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "accommodation_id")
     private long id;
+
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Localization localization;
+
     @Column(name = "accommodation_type")
     @NotBlank
     private String accommodationType;
+
+    @Column(name = "max_guests")
+    @Positive
+    private int maxGuests;
+
+    @Column(name = "price_per_night")
+    @Positive
+    private int pricePerNight;
+
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Localization localization;
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "accommodation_id")
     private List<Amenity> amenities;
-    @Column(name = "max_guests")
-    @Positive
-    private int maxGuests;
-    private LocalDateTime createdDate;
-    @Column(name = "price_per_night")
-    @Positive
-    private int pricePerNight;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private LocalDateTime createdDate;
+
 
     //TODO to analyze
     @OneToMany(mappedBy = "accommodation",

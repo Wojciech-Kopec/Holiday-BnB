@@ -21,20 +21,24 @@ import java.util.List;
 //exclusions needed to solve StackOverFlowException with bilateral-referencing
 
 @Entity
-@Table(name = "USERS",
+@Table(name = "USERS"/*,
         uniqueConstraints = {@UniqueConstraint(
-                columnNames = {"username", "email"})})
+                columnNames = {"username", "email"})}*/)
+//todo check if this can be removed when @Column(unique=true) is introduced
+
 
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long id;
+    @Column(unique = true)
     private String username;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(unique = true)
     @Email
     private String email;
     @Column(name = "phone_number")
