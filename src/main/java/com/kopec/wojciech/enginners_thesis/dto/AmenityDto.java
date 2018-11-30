@@ -1,7 +1,9 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
+import lombok.Data;
 
+@Data
 public class AmenityDto implements DtoConvertible<Amenity, AmenityDto> {
     private long id;
     private String type;
@@ -9,13 +11,11 @@ public class AmenityDto implements DtoConvertible<Amenity, AmenityDto> {
 
     @Override
     public AmenityDto toDto(Amenity amenity) {
-        AmenityDto amenityDto = modelMapper.map(amenity, AmenityDto.class);
-        return amenityDto;
+        return modelMapper.map(amenity, AmenityDto.class);
     }
 
     @Override
-    public Amenity toEntity(AmenityDto amenityDto) {
-        Amenity amenity = modelMapper.map(amenityDto, Amenity.class);
-        return amenity;
+    public Amenity toEntity() {
+        return modelMapper.map(this, Amenity.class);
     }
 }

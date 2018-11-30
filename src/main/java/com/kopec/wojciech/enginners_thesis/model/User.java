@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 
+import com.kopec.wojciech.enginners_thesis.validation.ExtendedEmailValidator;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -39,7 +40,7 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
     @Column(unique = true)
-    @Email
+    @ExtendedEmailValidator
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;

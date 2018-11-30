@@ -1,14 +1,15 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Booking;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+
+@Data
 public class BookingDto implements DtoConvertible<Booking, BookingDto> {
     private long id;
     private AccommodationDto accommodation;
@@ -23,13 +24,12 @@ public class BookingDto implements DtoConvertible<Booking, BookingDto> {
 
     @Override
     public BookingDto toDto(Booking booking) {
-        BookingDto bookingDto = modelMapper.map(booking, BookingDto.class);
-        return bookingDto;
+        return modelMapper.map(booking, BookingDto.class);
     }
 
     @Override
-    public Booking toEntity(BookingDto bookingDto) {
-        Booking booking = modelMapper.map(bookingDto, Booking.class);
+    public Booking toEntity() {
+        Booking booking = modelMapper.map(this, Booking.class);
         return booking;
     }
 }

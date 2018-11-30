@@ -99,7 +99,7 @@ public class EnginnersThesisApplication {
         Localization localization1 = new Localization();
         localization1.setCountry("Poland");
         localization1.setState("Lubuskie");
-        localization1.setCity("łąkie".toUpperCase());
+        localization1.setCity("Łąkie");
         localization1.setAddress("Polska 52");
 
         accommodation1.setLocalization(localization1);
@@ -111,7 +111,7 @@ public class EnginnersThesisApplication {
         userClient.setFirstName("Test_FirstName2");
         userClient.setLastName("Test_LastName2");
         userClient.setEmail("user2@test");
-        userClient.setPassword("password");
+        userClient.setPassword("password2");
         userClient.setUsername("Client1");
         userClient.setPhoneNumber("121212121");
         return userClient;
@@ -122,7 +122,7 @@ public class EnginnersThesisApplication {
         userOwner.setFirstName("Test_FirstName1");
         userOwner.setLastName("Test_LastName1");
         userOwner.setEmail("user1@test");
-        userOwner.setPassword("password");
+        userOwner.setPassword("password1");
         userOwner.setUsername("Owner1");
         userOwner.setPhoneNumber("101010101");
         return userOwner;

@@ -7,5 +7,5 @@ public interface DtoConvertible<T, S> {
 
     S toDto(T t);
 
-    T toEntity(S s);
+    T toEntity();
 }
