@@ -2,15 +2,13 @@ package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class AccommodationDto implements DtoConvertible<Accommodation, AccommodationDto> {
+public class AccommodationDto {
     private long id;
     private String name;
     private String description;
@@ -22,14 +20,14 @@ public class AccommodationDto implements DtoConvertible<Accommodation, Accommoda
     private UserDto user;
     private LocalDateTime createdDate;
 
+    private static ModelMapper modelMapper = new ModelMapper();
 
-    @Override
-    public AccommodationDto toDto(Accommodation accommodation) {
+
+    public static AccommodationDto toDto(Accommodation accommodation) {
         return modelMapper.map(accommodation, AccommodationDto.class);
     }
 
-    @Override
-    public Accommodation toEntity() {
-        return modelMapper.map(this, Accommodation.class);
+    public static Accommodation toEntity(AccommodationDto accommodationDto) {
+        return modelMapper.map(accommodationDto, Accommodation.class);
     }
 }

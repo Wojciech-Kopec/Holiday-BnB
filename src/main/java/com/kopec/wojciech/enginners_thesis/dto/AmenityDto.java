@@ -2,20 +2,22 @@ package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 @Data
-public class AmenityDto implements DtoConvertible<Amenity, AmenityDto> {
+public class AmenityDto {
     private long id;
     private String type;
     private String description;
 
-    @Override
-    public AmenityDto toDto(Amenity amenity) {
+    private static ModelMapper modelMapper = new ModelMapper();
+
+
+    public static AmenityDto toDto(Amenity amenity) {
         return modelMapper.map(amenity, AmenityDto.class);
     }
 
-    @Override
-    public Amenity toEntity() {
-        return modelMapper.map(this, Amenity.class);
+    public static Amenity toEntity(AmenityDto amenityDto) {
+        return modelMapper.map(amenityDto, Amenity.class);
     }
 }

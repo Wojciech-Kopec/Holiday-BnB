@@ -4,23 +4,23 @@ import com.kopec.wojciech.enginners_thesis.model.Localization;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 @Data
-public class LocalizationDto implements DtoConvertible<Localization,LocalizationDto> {
+public class LocalizationDto {
     private long id;
     private String country;
     private String state;
     private String city;
     private String address;
 
+    private static ModelMapper modelMapper = new ModelMapper();
 
-    @Override
-    public LocalizationDto toDto(Localization localization) {
+    public static LocalizationDto toDto(Localization localization) {
         return modelMapper.map(localization, LocalizationDto.class);
     }
 
-    @Override
-    public Localization toEntity() {
-        return modelMapper.map(this, Localization.class);
+    public static Localization toEntity(LocalizationDto localizationDto) {
+        return modelMapper.map(localizationDto, Localization.class);
     }
 }

@@ -2,9 +2,10 @@ package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.User;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 @Data
-public class UserDto implements DtoConvertible<User, UserDto> {
+public class UserDto {
     private long id;
     private String username;
     private String firstName;
@@ -12,14 +13,13 @@ public class UserDto implements DtoConvertible<User, UserDto> {
     private String email;
     private String phoneNumber;
 
+    private static ModelMapper modelMapper = new ModelMapper();
 
-    @Override
-    public UserDto toDto(User user) {
+    public static UserDto toDto(User user) {
         return modelMapper.map(user, UserDto.class);
     }
 
-    @Override
-    public User toEntity() {
-        return modelMapper.map(this, User.class);
+    public static User toEntity(UserDto userDto) {
+        return modelMapper.map(userDto, User.class);
     }
 }

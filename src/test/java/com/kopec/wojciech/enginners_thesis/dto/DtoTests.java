@@ -1,6 +1,5 @@
-package com.kopec.wojciech.enginners_thesis;
+package com.kopec.wojciech.enginners_thesis.dto;
 
-import com.kopec.wojciech.enginners_thesis.dto.*;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.Booking;
 import com.kopec.wojciech.enginners_thesis.model.User;
@@ -11,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
-import static com.kopec.wojciech.enginners_thesis.EnginnersThesisApplication.*;
+import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -32,7 +31,7 @@ public class DtoTests {
 
     @Test
     public void basicUserDtoConversionTest() {
-        UserDto userDto = new UserDto().toDto(userOwner);
+        UserDto userDto = UserDto.toDto(userOwner);
 
         assertThat(userOwner.getId(), is((userDto.getId())));
         assertThat(userOwner.getUsername(), is((userDto.getUsername())));
@@ -44,7 +43,7 @@ public class DtoTests {
 
     @Test
     public void deepAccomodationDtoConversionTest() {
-        AccommodationDto accommodationDto = new AccommodationDto().toDto(accommodation1);
+        AccommodationDto accommodationDto = AccommodationDto.toDto(accommodation1);
         assertThat(accommodation1.getId(), is(accommodationDto.getId()));
         assertThat(accommodation1.getName(), is(accommodationDto.getName()));
         assertThat(accommodation1.getDescription(), is(accommodationDto.getDescription()));
@@ -53,17 +52,17 @@ public class DtoTests {
         assertThat(accommodation1.getMaxGuests(), is(accommodationDto.getMaxGuests()));
         assertThat(accommodation1.getCreatedDate(), is(accommodationDto.getCreatedDate()));
 
-        assertThat(accommodation1.getLocalization(), is(accommodationDto.getLocalization().toEntity()));
+        assertThat(accommodation1.getLocalization(), is(LocalizationDto.toEntity(accommodationDto.getLocalization())));
         assertThat(accommodation1.getAmenities(), is(accommodationDto.getAmenities().stream()
                 .map(AmenityDto::toEntity).collect(Collectors.toList())));
 
         accommodation1.getUser().setPassword(null); //Password is not mapped in DTO
-        assertThat(accommodation1.getUser(), is(accommodationDto.getUser().toEntity()));
+        assertThat(accommodation1.getUser(), is(UserDto.toEntity(accommodationDto.getUser())));
     }
 
     @Test
     public void deepBookingDtoConversionTest() {
-        BookingDto bookingDto = new BookingDto().toDto(booking1);
+        BookingDto bookingDto = BookingDto.toDto(booking1);
 
         assertThat(booking1.getId(), is(bookingDto.getId()));
         assertThat(booking1.getGuestsCount(), is(bookingDto.getGuestsCount()));
@@ -74,9 +73,9 @@ public class DtoTests {
         assertThat(booking1.getFinalPrice(), is(bookingDto.getFinalPrice()));
 
         booking1.getUser().setPassword(null); //Password is not mapped in DTO
-        assertThat(booking1.getUser(), is(bookingDto.getUser().toEntity()));
+        assertThat(booking1.getUser(), is(UserDto.toEntity(bookingDto.getUser())));
 
         booking1.getAccommodation().getUser().setPassword(null); //Password is not mapped in DTO
-        assertThat(booking1.getAccommodation(), is(bookingDto.getAccommodation().toEntity()));
+        assertThat(booking1.getAccommodation(), is(AccommodationDto.toEntity(bookingDto.getAccommodation())));
     }
 }
