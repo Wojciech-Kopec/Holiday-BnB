@@ -58,6 +58,7 @@ public class EnginnersThesisApplication {
         logger.info("userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(System.out::println);");
         userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(booking -> logger.info(booking.toString()));
 
+//        accommodationRepository.findAll(QAccommodation.accommodation.name.contains(criteria.getName()));
 
 
     }

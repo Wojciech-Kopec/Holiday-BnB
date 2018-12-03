@@ -1,52 +1,132 @@
 package com.kopec.wojciech.enginners_thesis.jpaUtils;
 
-import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.AccommodationType;
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
+import com.kopec.wojciech.enginners_thesis.model.AmenityType;
 import com.kopec.wojciech.enginners_thesis.model.QAccommodation;
-import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
+import com.kopec.wojciech.enginners_thesis.model.QAmenity;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
+import com.querydsl.core.types.dsl.Expressions;
 
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class AccommodationSpecification implements Specification<Accommodation> {
+public class AccommodationSpecification {
     private final AccommodationSearch criteria;
 
     public AccommodationSpecification(AccommodationSearch criteria) {
         this.criteria = criteria;
     }
 
-    @Nullable
-    @Override
-    public Predicate toPredicate(Root<Accommodation> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate() {
+        return Expressions.asBoolean(true)
+                .and(withNameContains(criteria.getName()))
+                .and(withAccommodationType(criteria.getAccommodationType()))
+                .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
+                .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
+                .and(criteria.getAmenities().forEach(amenity -> withAmenity(amenity)));
 
-        BooleanExpression predicate = null;
-//        final List<Predicate> predicates = new ArrayList<>()
-        if (criteria.getName() != null) {
-            predicate.and(QAccommodation.accommodation.name.contains(criteria.getName()));
-        }
-        if (criteria.getAccommodationType() != null) {
-            predicate.and(QAccommodation.accommodation.accommodationType.eq(criteria.getAccommodationType()));
-        }
-        if (criteria.getMaxGuests() != 0) {
-            predicate.and(QAccommodation.accommodation.maxGuests.goe(criteria.getMaxGuests()));
-        }
-        if (criteria.getPricePerNight() != 0) {
-            predicate.and(QAccommodation.accommodation.pricePerNight.loe(criteria.getPricePerNight()));
-        }
-        if (criteria.getAmenities() != null) {
-            criteria.getAmenities().forEach(amenity -> predicate.and(QAccommodation.accommodation.amenities.contains(amenity)));
-        }
-        if (criteria.getLocalizationSearch() != null) {
-
-        }
-
-        return null;
     }
 
+    private static BooleanExpression withNameContains(String name) {
+        return QAccommodation.accommodation.name.contains(name);
+    }
+
+    private static BooleanExpression withAccommodationType(String type) {
+        return QAccommodation.accommodation.accommodationType.eq(type);
+    }
+
+    private static BooleanExpression withMinGuestsOf(int requiredGuests) {
+        return QAccommodation.accommodation.maxGuests.goe(requiredGuests);
+    }
+
+    private static BooleanExpression withPriceLowerOrEqual(int price) {
+        return QAccommodation.accommodation.pricePerNight.loe(price);
+    }
+
+    private static BooleanExpression withAmenity(String amenity) {
+        JPQLQuery<Void> query = new JPAQuery<Void>(em);
+        QAccommodation accommodation = QAccommodation.accommodation;
+        List<QAmenity> amenities = accommodation.amenities;
+        return query.select(accommodation)
+                .from(accommodation);
+        accommodation.amenities.
+                .where(accommodation.amenities("this"))
+                .fetch();
+
+        QAmenity.amenity.type.eq(amenity);
+        return QAccommodation.accommodation.amenities.getType(AmenityType.parse(amenity));
+    }
+
+    public class AmenitySearch {
+        QAmenity.
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

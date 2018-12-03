@@ -9,7 +9,7 @@ import java.util.List;
 public class AccommodationSearch {
     private String name;
     private String accommodationType;
-    private int maxGuests;
+    private int requiredGuestCount;
     private int pricePerNight;
     private LocalizationSearch localizationSearch;
     private List<Amenity> amenities;
