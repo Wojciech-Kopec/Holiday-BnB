@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class DtoTests {
-    private static Logger logger = LoggerFactory.getLogger(DtoTests.class);
+    private Logger logger = LoggerFactory.getLogger(DtoTests.class);
     private User userOwner;
     private User userClient;
     private Accommodation accommodation1;

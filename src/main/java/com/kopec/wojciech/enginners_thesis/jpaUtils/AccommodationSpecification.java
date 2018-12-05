@@ -1,65 +1,58 @@
 package com.kopec.wojciech.enginners_thesis.jpaUtils;
 
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
-import com.kopec.wojciech.enginners_thesis.model.AmenityType;
 import com.kopec.wojciech.enginners_thesis.model.QAccommodation;
 import com.kopec.wojciech.enginners_thesis.model.QAmenity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.ListPath;
 
 import java.util.List;
 
 public class AccommodationSpecification {
-    private final AccommodationSearch criteria;
+    private final AccommodationCriteria criteria;
 
-    public AccommodationSpecification(AccommodationSearch criteria) {
+    public AccommodationSpecification(AccommodationCriteria criteria) {
         this.criteria = criteria;
     }
 
-    public Predicate toPredicate() {
+    public Predicate withCriteria() {
         return Expressions.asBoolean(true)
                 .and(withNameContains(criteria.getName()))
                 .and(withAccommodationType(criteria.getAccommodationType()))
                 .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
                 .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
-                .and(criteria.getAmenities().forEach(amenity -> withAmenity(amenity)));
-
+                .and(withAmenities(criteria.getAmenities()));
     }
 
-    private static BooleanExpression withNameContains(String name) {
+    private static Predicate withNameContains(String name) {
         return QAccommodation.accommodation.name.contains(name);
     }
 
-    private static BooleanExpression withAccommodationType(String type) {
+    private static Predicate withAccommodationType(String type) {
         return QAccommodation.accommodation.accommodationType.eq(type);
     }
 
-    private static BooleanExpression withMinGuestsOf(int requiredGuests) {
+    private static Predicate withMinGuestsOf(int requiredGuests) {
         return QAccommodation.accommodation.maxGuests.goe(requiredGuests);
     }
 
-    private static BooleanExpression withPriceLowerOrEqual(int price) {
+    private static Predicate withPriceLowerOrEqual(int price) {
         return QAccommodation.accommodation.pricePerNight.loe(price);
     }
 
-    private static BooleanExpression withAmenity(String amenity) {
-        JPQLQuery<Void> query = new JPAQuery<Void>(em);
-        QAccommodation accommodation = QAccommodation.accommodation;
-        List<QAmenity> amenities = accommodation.amenities;
-        return query.select(accommodation)
-                .from(accommodation);
-        accommodation.amenities.
-                .where(accommodation.amenities("this"))
-                .fetch();
-
-        QAmenity.amenity.type.eq(amenity);
-        return QAccommodation.accommodation.amenities.getType(AmenityType.parse(amenity));
+    private static Predicate withAmenity(String amenityType) {
+        ListPath<Amenity, QAmenity> qAmenities = QAccommodation.accommodation.amenities;
+        return qAmenities.any().type.eq(amenityType);
     }
 
-    public class AmenitySearch {
-        QAmenity.
+    private static Predicate withAmenities(List<String> amenities) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        for (String amenityType : amenities) {
+            booleanBuilder.and(withAmenity(amenityType));
+        }
+        return booleanBuilder;
     }
 }
 

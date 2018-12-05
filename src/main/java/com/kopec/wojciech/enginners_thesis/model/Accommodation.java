@@ -1,5 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
+import com.querydsl.core.annotations.QueryInit;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,12 +47,14 @@ public class Accommodation implements Serializable {
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+//    @QueryInit("accommodation.localization")
     private Localization localization;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "accommodation_id")
+//    @QueryInit("accommodation.amenities")
     private List<Amenity> amenities;
 
     @ManyToOne

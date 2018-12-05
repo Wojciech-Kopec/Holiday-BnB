@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 
 
 public class ValidatorTests {
-    private static Logger logger = LoggerFactory.getLogger(ValidatorTests.class);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Validator createValidator() {
         LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
