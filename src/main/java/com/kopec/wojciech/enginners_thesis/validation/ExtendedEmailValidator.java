@@ -1,6 +1,5 @@
 package com.kopec.wojciech.enginners_thesis.validation;
 
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.constraints.Email;

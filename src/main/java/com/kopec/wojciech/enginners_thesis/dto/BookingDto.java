@@ -1,9 +1,8 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Booking;
+import com.kopec.wojciech.enginners_thesis.model.BookingStatus;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ public class BookingDto {
     private AccommodationDto accommodation;
     private UserDto user;
     private int guestsCount;
-    private String status;
+    private BookingStatus status;
     private LocalDateTime submissionDate;
     private LocalDate startDate;
     private LocalDate finishDate;

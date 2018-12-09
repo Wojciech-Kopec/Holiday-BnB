@@ -1,13 +1,14 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
+import com.kopec.wojciech.enginners_thesis.model.AmenityType;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 @Data
 public class AmenityDto {
     private long id;
-    private String type;
+    private AmenityType type;
     private String description;
 
     private static ModelMapper modelMapper = new ModelMapper();

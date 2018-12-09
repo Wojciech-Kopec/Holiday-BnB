@@ -20,7 +20,7 @@ public class TimeLoggerAspect {
         try {
             return pjp.proceed();
             //}catch (Throwable e) {
-            //  @AfterThrowing, gdyby nie było throws
+            //  @AfterThrowing, if throws was not present
             //}
         } finally {
             // @After

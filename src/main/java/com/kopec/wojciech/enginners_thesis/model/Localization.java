@@ -7,8 +7,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"id"})
 @ToString
+@Builder
 
 @Entity
 @Table(name = "LOCALIZATIONS")

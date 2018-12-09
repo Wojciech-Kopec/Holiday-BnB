@@ -68,8 +68,7 @@ public class EnginnersThesisApplication {
         booking1.setUser(userClient);
         booking1.setAccommodation(accommodation1);
         booking1.setGuestsCount(4);
-        booking1.setStatus(BookingStatus.VERIFIED.toString());
-        booking1.setSubmissionDate(LocalDateTime.now());
+        booking1.setStatus(BookingStatus.VERIFIED);
         booking1.setStartDate(LocalDate.of(2019, 1, 1));
         booking1.setFinishDate(LocalDate.of(2019, 1, 15));
         int bookedDays = (int) DAYS.between(booking1.getStartDate(), booking1.getFinishDate());
@@ -82,17 +81,16 @@ public class EnginnersThesisApplication {
         accommodation1.setUser(userOwner);
         accommodation1.setName("Test_AccommodationName1");
         accommodation1.setDescription("Test_Description");
-        accommodation1.setCreatedDate(LocalDateTime.now());
-        accommodation1.setAccommodationType(AccommodationType.HOUSE.getType());
+        accommodation1.setAccommodationType(AccommodationType.HOUSE);
         accommodation1.setMaxGuests(5);
         accommodation1.setPricePerNight(500);
 
         Amenity amenity1 = new Amenity();
-        amenity1.setType(AmenityType.WIFI.getType());
+        amenity1.setType(AmenityType.WIFI);
         amenity1.setDescription("Test_ Internet Connections all over the building");
 
         Amenity amenity2 = new Amenity();
-        amenity2.setType(AmenityType.KITCHEN.getType());
+        amenity2.setType(AmenityType.KITCHEN);
         amenity2.setDescription("Test_ Fully functional kitchen");
 
         accommodation1.setAmenities(Arrays.asList(amenity1, amenity2));

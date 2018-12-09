@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
+import com.kopec.wojciech.enginners_thesis.model.AccommodationType;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -12,7 +13,7 @@ public class AccommodationDto {
     private long id;
     private String name;
     private String description;
-    private String accommodationType;
+    private AccommodationType accommodationType;
     private int maxGuests;
     private int pricePerNight;
     private LocalizationDto localization;

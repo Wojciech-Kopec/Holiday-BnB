@@ -1,28 +1,48 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import javax.persistence.UniqueConstraint;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
+public class UserValidationTests implements TestValidable<User> {
+    private final Logger logger = LoggerFactory.getLogger(UserValidationTests.class);
 
+    @Test
+    public void shouldNotValidateNulls() {
+        User user = new User();
+        assertObjectsConstraintsViolationCount(user, 6);
+    }
 
-public class ValidatorTests {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Test
+    public void shouldNotValidateSizesNotInRange() {
+        User user1 = User.builder()
+                .username(stringWithSize(4))
+                .firstName(stringWithSize(4))
+                .lastName(stringWithSize(4))
+                .phoneNumber(stringWithSize(6))
+                .password(stringWithSize(4))
+                .email("valid@email.com")
+                .build();
 
-    private Validator createValidator() {
-        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-        localValidatorFactoryBean.afterPropertiesSet();
-        return localValidatorFactoryBean;
+        User user2 = User.builder()
+                .username(stringWithSize(51))
+                .firstName(stringWithSize(51))
+                .lastName(stringWithSize(51))
+                .phoneNumber(stringWithSize(13))
+                .password(stringWithSize(101))
+                .email("valid@email.com")
+                .build();
+
+        assertObjectsConstraintsViolationCount(user1, 6);
+        assertObjectsConstraintsViolationCount(user2, 6);
     }
 
     @Test
@@ -53,15 +73,14 @@ public class ValidatorTests {
                 "\"(),:;<>[\\]@example.com",
                 "just\"not\"right@example.com",
                 "this\\ is\"really\"not\\\\allowed@example.com",
-//                "あいうえお@example.com",
-//                "email@example.web",
-//                "email@111.222.333.44444",
         };
+
         Set<String> invalidEmails = new HashSet<>(Arrays.asList(invalidInputs));
         for (String email : invalidEmails) {
             user.setEmail(email);
             logger.info("Testing for value: " + email);
-            assertValidation(user, false);
+            final String EMAIL_NOT_VALID_MSG = "Please provide a valid email address";
+            assertFieldValidation(user, "email", false, EMAIL_NOT_VALID_MSG);
         }
     }
 
@@ -84,33 +103,14 @@ public class ValidatorTests {
                 "email@example.museum",
                 "email@example.co.jp",
                 "firstname-lastname@example.com",
-                "very.unusual.\"@\".unusual.com@example.com",
-//                "much.\"more\\ unusual\"@example.com",
-//                "very.\"(),:;<>[]\".VERY.\"very@\\\\\\ \"very\".unusual@strange.example.com",
+                "very.unusual.\"@\".unusual.com@example.com"
         };
+
         Set<String> invalidEmails = new HashSet<>(Arrays.asList(validInputs));
         for (String email : invalidEmails) {
             user.setEmail(email);
             logger.info("Testing for value: " + email);
-            assertValidation(user, true);
-        }
-
-    }
-
-    private void assertValidation(User user, boolean shouldBeValid) {
-        final String EMAIL_NOT_VALID_MSG = "Please provide a valid email address";
-
-        Validator validator = createValidator();
-        Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
-
-        if (!shouldBeValid) {
-            //sometimes more than one violation is returned, can't tell why
-            assertThat(constraintViolations.size(), is(greaterThanOrEqualTo(1)));
-            ConstraintViolation<User> violation = constraintViolations.iterator().next();
-            assertThat(violation.getPropertyPath().toString(), is("email"));
-            assertThat(violation.getMessage(), is(EMAIL_NOT_VALID_MSG));
-        } else if (shouldBeValid) {
-            assertThat(constraintViolations.size(), is(0));
+            assertFieldValidation(user, "email", true, null);
         }
     }
 }
