@@ -8,18 +8,15 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id"}, callSuper = true)
 @ToString
 @Builder
 
 @Entity
 @Table(name = "LOCALIZATIONS")
 
-public class Localization {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "localization_id")
-    private long id;
+public class Localization extends AbstractEntity {
+
     private String country;
     private String state;
     private String city;

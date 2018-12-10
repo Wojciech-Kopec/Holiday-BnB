@@ -23,10 +23,10 @@ public class DtoTests {
 
     @Before
     public void initObjects() {
-        userOwner = createOwnerUser();
-        userClient = createClientUser();
-        accommodation1 = createAccomodationObject1(userOwner);
-        booking1 = createBooking(userClient, accommodation1);
+        userOwner = createUser1();
+        userClient = createUser2();
+        accommodation1 = createAccomodation1(userOwner);
+        booking1 = createBooking1(userClient, accommodation1);
     }
 
     @Test

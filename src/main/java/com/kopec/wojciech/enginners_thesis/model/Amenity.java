@@ -10,18 +10,14 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id"})
+@EqualsAndHashCode(exclude = {"id"}, callSuper = true)
 @ToString
 @Builder
 
 @Entity
 @Table(name = "AMENITIES")
 
-public class Amenity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "amenity_id")
-    private long id;
+public class Amenity extends AbstractEntity {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull

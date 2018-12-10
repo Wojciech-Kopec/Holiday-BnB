@@ -7,7 +7,6 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -16,20 +15,16 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString()
 
 @Entity
 @Table(name = "BOOKINGS")
 
-public class Booking implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id")
-    private long id;
+public class Booking extends AbstractEntity {
 
     @ManyToOne
-    @JoinColumn(name = "accomodation_id")
+    @JoinColumn(name = "accommodation_id")
     @NotNull
     private Accommodation accommodation;
 

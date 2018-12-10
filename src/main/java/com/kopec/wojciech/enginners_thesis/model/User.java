@@ -9,15 +9,14 @@ import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-@ToString(exclude = {"id", "password", "bookings", "accommodations"})
+@EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"password", "bookings", "accommodations"})
 //exclusions for lists needed to solve StackOverFlowException with bilateral-referencing
 @Builder()
 
@@ -26,12 +25,7 @@ import java.util.List;
         uniqueConstraints = {@UniqueConstraint(
                 columnNames = {"username", "email"})})
 
-public class User implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private long id;
-
+public class User extends AbstractEntity {
 
     @NotNull
     @Size(min = 5, max = 50)
@@ -68,7 +62,8 @@ public class User implements Serializable {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
 //    @OrderColumn(name = "booking_id")
-    @IndexColumn(name = "booking_id", base = 1)
+    @IndexColumn(name = "id", base = 1)
+    @Singular
     private List<Booking> bookings;
 
     @Fetch(value = FetchMode.SUBSELECT)
@@ -77,6 +72,7 @@ public class User implements Serializable {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
 //    @OrderColumn(name = "accommodation_id")
-    @IndexColumn(name = "accommodation_id", base = 1)
+    @IndexColumn(name = "id", base = 1)
+    @Singular
     private List<Accommodation> accommodations;
 }

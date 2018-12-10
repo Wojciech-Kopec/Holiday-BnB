@@ -3,10 +3,10 @@ package com.kopec.wojciech.enginners_thesis.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -16,25 +16,20 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id","bookings"})
+@EqualsAndHashCode(exclude = {"bookings"}, callSuper = false)
 @ToString(exclude = "bookings")
 @Builder
 
 @Entity
 @Table(name = "ACCOMMODATIONS")
 
-public class Accommodation implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accommodation_id")
-    private long id;
+public class Accommodation extends AbstractEntity {
 
     @NotNull
     @Size(min = 10, max = 120)
     private String name;
 
-    @NotNull
+    @NotBlank //todo
     @Size(min = 100)
     private String description;
 
@@ -61,7 +56,7 @@ public class Accommodation implements Serializable {
     @OneToMany(fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JoinColumn(name = "accommodation_id")
+    @JoinColumn(name = "amenity_id")
     @Singular
     private List<Amenity> amenities;
 
@@ -74,12 +69,9 @@ public class Accommodation implements Serializable {
     @Builder.Default
     private final LocalDateTime createdDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
-    //TODO to analyze
+
     @OneToMany(mappedBy = "accommodation",
             orphanRemoval = true)
+    @Singular
     private List<Booking> bookings;
-
-
-
-
 }

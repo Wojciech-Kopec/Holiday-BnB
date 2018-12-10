@@ -4,39 +4,36 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ModelProvider {
 
-    public static User createOwnerUser() {
+    public static User createUser1() {
         return User.builder()
                 .firstName("Test_FirstName1")
                 .lastName("Test_LastName1")
                 .email("user1@test.com")
                 .password("password1")
-                .username("Owner1")
+                .username("User1")
                 .phoneNumber("101010101")
                 .build();
     }
 
 
-    public static User createClientUser() {
+    public static User createUser2() {
         return User.builder()
                 .firstName("Test_FirstName2")
                 .lastName("Test_LastName2")
                 .email("user2@test.com")
                 .password("password2")
-                .username("Client1")
+                .username("User2")
                 .phoneNumber("121212121")
                 .build();
     }
 
-    public static Accommodation createAccomodationObject1(User userOwner) {
+    public static Accommodation createAccomodation1(User userOwner) {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
@@ -59,25 +56,75 @@ public class ModelProvider {
         accommodation = Accommodation.builder()
                 .user(userOwner)
                 .name("Test_AccommodationName1")
-                .description("Test_Description" + StringUtils.repeat(" ", 100))
+                .description("Test_Description1_" + StringUtils.repeat(" ", 100))
                 .accommodationType(AccommodationType.HOUSE)
                 .maxGuests(5)
                 .pricePerNight(500)
-                .amenities(Arrays.asList(amenity1, amenity2))
+                .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2)))
                 .localization(localization1)
                 .build();
 
         return accommodation;
     }
 
-    public static Booking createBooking(User userClient, Accommodation accommodation1) {
+    public static Accommodation createAccomodation2(User userOwner) {
+        Accommodation accommodation;
+
+        Amenity amenity1 = Amenity.builder()
+                .type(AmenityType.BACKYARD)
+                .description("Spacious yard just behind the property")
+                .build();
+
+        Amenity amenity2 = Amenity.builder()
+                .type(AmenityType.TV)
+                .description("50 inch TV set with cable in property")
+                .build();
+
+        Amenity amenity3 = Amenity.builder()
+                .type(AmenityType.OTHER)
+                .description("Roof of property is fully accessible for guests")
+                .build();
+
+        Localization localization2 = Localization.builder()
+                .country("Poland")
+                .state("Dolnoslaskie")
+                .city("Wrocław")
+                .address("Rynek 10")
+                .build();
+
+        accommodation = Accommodation.builder()
+                .user(userOwner)
+                .name("Test_AccommodationName2")
+                .description("Test_Description2_" + StringUtils.repeat(" ", 100))
+                .accommodationType(AccommodationType.FLAT)
+                .maxGuests(4)
+                .pricePerNight(350)
+                .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2, amenity3)))
+                .localization(localization2)
+                .build();
+
+        return accommodation;
+    }
+
+    public static Booking createBooking1(User client, Accommodation accommodation) {
         return Booking.builder()
-                .user(userClient)
-                .accommodation(accommodation1)
+                .user(client)
+                .accommodation(accommodation)
                 .guestsCount(4)
                 .status(BookingStatus.VERIFIED)
                 .startDate(LocalDate.of(2019, 1, 1))
                 .finishDate(LocalDate.of(2019, 1, 15))
+                .build();
+    }
+
+    public static Booking createBooking2(User client, Accommodation accommodation) {
+        return Booking.builder()
+                .user(client)
+                .accommodation(accommodation)
+                .guestsCount(3)
+                .status(BookingStatus.SUBMITTED)
+                .startDate(LocalDate.of(2019, 2, 10))
+                .finishDate(LocalDate.of(2019, 3, 1))
                 .build();
     }
 }

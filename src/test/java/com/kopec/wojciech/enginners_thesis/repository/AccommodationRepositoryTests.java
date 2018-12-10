@@ -3,74 +3,71 @@ package com.kopec.wojciech.enginners_thesis.repository;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.model.User;
-import org.hamcrest.core.IsEqual;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.jws.WebParam;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccommodationRepositoryTests {
-
-    @Autowired
-    UserRepository userRepository;
+public class AccommodationRepositoryTests implements TestableRepository<Accommodation, AccommodationRepository> {
 
     @Autowired
     AccommodationRepository accommodationRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    private UserRepositoryTests userRepositoryTests = new UserRepositoryTests();
+
+    private User user1 = ModelProvider.createUser1();
+    private User user2 = ModelProvider.createUser2();
+    private Accommodation accommodation = ModelProvider.createAccomodation1(user1);
+
     @Test
-    public void createUserEntityTest() {
-        User user = ModelProvider.createOwnerUser();
-        long oldId = user.getId();
-        int prePersistEntityCount = userRepository.findAll().size();
-
-        User persistedUser = userRepository.save(user);
-        long newId = persistedUser.getId();
-
-        assertThat(oldId, is(not(newId)));
-        assertThat(userRepository.findAll().size(), is(greaterThan(prePersistEntityCount)));
-        assertThat(user, equalTo(persistedUser));
+    public void createAccommodationEntityTest() {
+        userRepositoryTests.createEntityTest(user1, userRepository);
+        createEntityTest(accommodation, accommodationRepository);
     }
 
     @Test
-    public void createEntityTest() {
-        User user = userRepository.findByUsername(ModelProvider.createOwnerUser().getUsername());
-        Accommodation accommodation = ModelProvider.createAccomodationObject1(user);
+    @Transactional
+    public void readAccommodationEntityTest() {
+        userRepositoryTests.createEntityTest(user1, userRepository);
+        createEntityTest(accommodation, accommodationRepository);
 
-        long oldId = accommodation.getId();
-        int prePersistEntityCount = accommodationRepository.findAll().size();
-
-        Accommodation savedAccommodation = accommodationRepository.save(accommodation);
-        long newId = savedAccommodation.getId();
-        assertThat(oldId, is(not(newId)));
-        assertThat(accommodationRepository.findAll().size(), is(greaterThan(prePersistEntityCount)));
-        assertThat(accommodation, equalTo(savedAccommodation));
+        readEntityTest(accommodation, accommodationRepository);
     }
 
-//    @Test
-//    public void readEntityTest() {
-//        Accommodation accommodation = accommodationRepository.findAll().get(0);
-//
-//        assertThat(accommodation, is(ModelProvider.createAccomodationObject1(ModelProvider.createOwnerUser())));
-//    }
-//
-//    @Test
-//    public void updateEntityTest() {
-//        Accommodation accommodation = accommodationRepository.findAll().get(0);
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//        accommodation.setDescription(accommodation.getDescription() + "_TEST");
-//        accommodation.setAccommodationType(AccommodationType.FLAT.getType());
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//        accommodation.setName(accommodation.getName() + "_TEST");
-//    }
+    @Test
+    public void updateAccommodationEntityTest() {
+        userRepositoryTests.createEntityTest(user1, userRepository);
+        userRepositoryTests.createEntityTest(user2, userRepository);
+
+        createEntityTest(accommodation, accommodationRepository);
+
+        Accommodation updated = ModelProvider.createAccomodation2(user2);
+
+        updateEntityTest(accommodation, updated, accommodationRepository);
+    }
+
+    @Test
+    public void deleteAccommodationEntityTest() {
+        userRepositoryTests.createEntityTest(user1, userRepository);
+
+        deleteEntityTest(accommodation, accommodationRepository);
+    }
+
+    @After
+    @Override
+    public void wipe() {
+        accommodationRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 }
