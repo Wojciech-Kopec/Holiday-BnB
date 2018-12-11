@@ -37,11 +37,9 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
     }
 
     @Test
-    @Transactional
+//    @Transactional
     public void readAccommodationEntityTest() {
         userRepositoryTests.createEntityTest(user1, userRepository);
-        createEntityTest(accommodation, accommodationRepository);
-
         readEntityTest(accommodation, accommodationRepository);
     }
 
@@ -50,17 +48,12 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
         userRepositoryTests.createEntityTest(user1, userRepository);
         userRepositoryTests.createEntityTest(user2, userRepository);
 
-        createEntityTest(accommodation, accommodationRepository);
-
         Accommodation updated = ModelProvider.createAccomodation2(user2);
-
         updateEntityTest(accommodation, updated, accommodationRepository);
     }
 
     @Test
     public void deleteAccommodationEntityTest() {
-        userRepositoryTests.createEntityTest(user1, userRepository);
-
         deleteEntityTest(accommodation, accommodationRepository);
     }
 

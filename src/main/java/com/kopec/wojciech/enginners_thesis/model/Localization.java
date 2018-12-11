@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id"}, callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Builder
 

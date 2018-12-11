@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id"}, callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Builder
 

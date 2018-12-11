@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"bookings"}, callSuper = false)
+//@EqualsAndHashCode(exclude = {"bookings","amenities"}, callSuper = false)
 @ToString(exclude = "bookings")
 @Builder
 
@@ -74,4 +74,36 @@ public class Accommodation extends AbstractEntity {
             orphanRemoval = true)
     @Singular
     private List<Booking> bookings;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Accommodation that = (Accommodation) o;
+
+        if (maxGuests != that.maxGuests) return false;
+        if (pricePerNight != that.pricePerNight) return false;
+        if (!name.equals(that.name)) return false;
+        if (!description.equals(that.description)) return false;
+        if (accommodationType != that.accommodationType) return false;
+        if (!localization.equals(that.localization)) return false;
+        if (!amenities.containsAll(that.amenities) && that.amenities.containsAll(amenities)) return false;
+        if (!user.equals(that.user)) return false;
+        return createdDate.equals(that.createdDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + accommodationType.hashCode();
+        result = 31 * result + maxGuests;
+        result = 31 * result + pricePerNight;
+        result = 31 * result + localization.hashCode();
+        result = 31 * result + amenities.hashCode();
+        result = 31 * result + user.hashCode();
+        result = 31 * result + createdDate.hashCode();
+        return result;
+    }
 }
