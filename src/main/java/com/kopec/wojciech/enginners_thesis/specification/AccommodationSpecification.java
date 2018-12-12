@@ -1,8 +1,6 @@
-package com.kopec.wojciech.enginners_thesis.jpaUtils;
+package com.kopec.wojciech.enginners_thesis.specification;
 
-import com.kopec.wojciech.enginners_thesis.model.Amenity;
-import com.kopec.wojciech.enginners_thesis.model.QAccommodation;
-import com.kopec.wojciech.enginners_thesis.model.QAmenity;
+import com.kopec.wojciech.enginners_thesis.model.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -18,8 +16,8 @@ public class AccommodationSpecification {
     }
 
     public Predicate withCriteria() {
-        return Expressions.asBoolean(true)
-                .and(withNameContains(criteria.getName()))
+        return new BooleanBuilder(
+                (withNameContains(criteria.getName())))
                 .and(withAccommodationType(criteria.getAccommodationType()))
                 .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
                 .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
@@ -30,7 +28,7 @@ public class AccommodationSpecification {
         return QAccommodation.accommodation.name.contains(name);
     }
 
-    private static Predicate withAccommodationType(String type) {
+    private static Predicate withAccommodationType(AccommodationType type) {
         return QAccommodation.accommodation.accommodationType.eq(type);
     }
 
@@ -44,7 +42,7 @@ public class AccommodationSpecification {
 
     private static Predicate withAmenity(String amenityType) {
         ListPath<Amenity, QAmenity> qAmenities = QAccommodation.accommodation.amenities;
-        return qAmenities.any().type.eq(amenityType);
+        return qAmenities.any().type.eq(AmenityType.valueOf(amenityType));
     }
 
     private static Predicate withAmenities(List<String> amenities) {

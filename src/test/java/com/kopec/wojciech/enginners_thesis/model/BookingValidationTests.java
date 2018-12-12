@@ -9,7 +9,7 @@ import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookingValidationTests implements TestValidable<Booking> {
+public class BookingValidationTests implements TestableValidation<Booking> {
     private final Logger logger = LoggerFactory.getLogger(BookingValidationTests.class);
 
     @Test

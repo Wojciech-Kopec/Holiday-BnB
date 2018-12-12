@@ -15,7 +15,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @ToString()
 
 @Entity
@@ -70,7 +70,8 @@ public class Booking extends AbstractEntity {
         this.submissionDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         this.status = BookingStatus.SUBMITTED;
         if (startDate != null && finishDate != null && accommodation != null)
-            this.finalPrice = (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight());
+            this.finalPrice = isFinishDateAfterStartDate() ?
+                    (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight()) : -1;
     }
 
     @Builder
@@ -82,6 +83,7 @@ public class Booking extends AbstractEntity {
         this.submissionDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.finalPrice = isFinishDateAfterStartDate() ? (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight()) : -1;
+        this.finalPrice = isFinishDateAfterStartDate() ?
+                (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight()) : -1;
     }
 }

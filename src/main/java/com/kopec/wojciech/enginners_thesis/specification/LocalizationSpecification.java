@@ -1,9 +1,10 @@
-package com.kopec.wojciech.enginners_thesis.jpaUtils;
+package com.kopec.wojciech.enginners_thesis.specification;
 
 import com.kopec.wojciech.enginners_thesis.model.Localization;
 import com.kopec.wojciech.enginners_thesis.model.QLocalization;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
+import lombok.Builder;
 
 public class LocalizationSpecification {
     private Localization criteria;

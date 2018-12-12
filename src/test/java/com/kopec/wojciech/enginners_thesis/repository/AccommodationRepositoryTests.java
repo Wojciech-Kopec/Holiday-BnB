@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -24,11 +25,13 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
     @Autowired
     UserRepository userRepository;
 
-    private UserRepositoryTests userRepositoryTests = new UserRepositoryTests();
+    @Autowired
+    UserRepositoryTests userRepositoryTests;
 
-    private User user1 = ModelProvider.createUser1();
-    private User user2 = ModelProvider.createUser2();
-    private Accommodation accommodation = ModelProvider.createAccomodation1(user1);
+    private User user1 = createUser1();
+    private User user2 = createUser2();
+    private Accommodation accommodation = createAccomodation1(user1);
+    private Accommodation accommodation2 = createAccomodation2(user2);
 
     @Test
     public void createAccommodationEntityTest() {
@@ -37,7 +40,7 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
     }
 
     @Test
-//    @Transactional
+    @Transactional
     public void readAccommodationEntityTest() {
         userRepositoryTests.createEntityTest(user1, userRepository);
         readEntityTest(accommodation, accommodationRepository);
@@ -48,12 +51,13 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
         userRepositoryTests.createEntityTest(user1, userRepository);
         userRepositoryTests.createEntityTest(user2, userRepository);
 
-        Accommodation updated = ModelProvider.createAccomodation2(user2);
+        Accommodation updated = accommodation2;
         updateEntityTest(accommodation, updated, accommodationRepository);
     }
 
     @Test
     public void deleteAccommodationEntityTest() {
+        userRepositoryTests.createEntityTest(user1, userRepository);
         deleteEntityTest(accommodation, accommodationRepository);
     }
 

@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@EqualsAndHashCode(exclude = {"bookings","amenities"}, callSuper = false)
 @ToString(exclude = "bookings")
 @Builder
 
@@ -48,7 +47,8 @@ public class Accommodation extends AbstractEntity {
     @Positive
     private int pricePerNight;
 
-    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(orphanRemoval = true,
+            cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     @NotNull
     private Localization localization;

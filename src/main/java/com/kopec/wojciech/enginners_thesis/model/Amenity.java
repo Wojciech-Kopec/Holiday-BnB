@@ -25,4 +25,5 @@ public class Amenity extends AbstractEntity {
 
     @NotBlank
     private String description;
+
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(exclude = {"bookings", "accommodations"}, callSuper = false)
 @ToString(exclude = {"password", "bookings", "accommodations"})
 //exclusions for lists needed to solve StackOverFlowException with bilateral-referencing
-@Builder()
+@Builder
 
 @Entity
 @Table(name = "USERS",
@@ -59,7 +59,7 @@ public class User extends AbstractEntity {
     @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+//            cascade = CascadeType.ALL, COULD NOT DELETE OBJECTS WITH THIS
             orphanRemoval = true)
 //    @OrderColumn(name = "booking_id")
     @IndexColumn(name = "id", base = 1)
@@ -69,7 +69,7 @@ public class User extends AbstractEntity {
     @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+//            cascade = CascadeType.ALL,
             orphanRemoval = true)
 //    @OrderColumn(name = "accommodation_id")
     @IndexColumn(name = "id", base = 1)

@@ -7,7 +7,8 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                <!--%black(%d{ISO8601})--> %highlight(%-5level) [%blue(%t)] <!--%yellow(%C{1.}):-->%yellow(%class{0}): %msg%n%throwable
+                <!--%black(%d{ISO8601})--> %highlight(%-5level) [%blue(%t)] <!--%yellow(%C{1.}):-->%yellow(%class{0}):
+                %msg%n%throwable
             </Pattern>
         </layout>
     </appender>
@@ -40,6 +41,7 @@
 
     <!-- engine.jdbc logged info about connections and Database, Driver and Connection
          SQL for logging statements - UpperCase crucial for this - don't know why -->
+    <logger name="org.hibernate" level="info"/>
     <logger name="org.hibernate.engine.jdbc" level="debug"/>
     <logger name="org.hibernate.SQL" level="debug"/>
 

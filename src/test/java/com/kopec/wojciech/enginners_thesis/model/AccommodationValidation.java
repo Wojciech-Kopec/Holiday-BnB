@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AccommodationValidation implements TestValidable<Accommodation> {
+public class AccommodationValidation implements TestableValidation<Accommodation> {
     private final Logger logger = LoggerFactory.getLogger(AccommodationValidation.class);
 
     @Test

@@ -1,18 +1,14 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.UniqueConstraint;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserValidationTests implements TestValidable<User> {
+public class UserValidationTests implements TestableValidation<User> {
     private final Logger logger = LoggerFactory.getLogger(UserValidationTests.class);
 
     @Test
