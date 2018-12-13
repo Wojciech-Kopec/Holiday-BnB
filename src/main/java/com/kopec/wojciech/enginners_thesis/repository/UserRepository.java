@@ -11,12 +11,14 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource()
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT user FROM User user left join fetch user.accommodations left join fetch user.bookings WHERE user.username=:username")
+//    @Query("SELECT user FROM User user left join fetch user.accommodations left join fetch user.bookings WHERE user.username=:username")
     User findByUsername(@Param("username") String username);
 
     User findByAccommodationsContains(Accommodation accommodation);
 
     User findByBookingsContains(Booking booking);
+
+    User findByEmail(String email);
 
 
 }

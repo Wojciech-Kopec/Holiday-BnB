@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Localization;
+import lombok.Builder;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 

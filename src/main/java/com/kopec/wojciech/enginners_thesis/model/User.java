@@ -10,12 +10,13 @@ import org.hibernate.annotations.IndexColumn;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"bookings", "accommodations"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"bookings", "accommodations", "roles"}, callSuper = true)
 @ToString(exclude = {"password", "bookings", "accommodations"})
 //exclusions for lists needed to solve StackOverFlowException with bilateral-referencing
 @Builder
@@ -48,13 +49,16 @@ public class User extends AbstractEntity {
     @Column(name = "phone_number")
     @NotNull
     @Pattern(regexp = "^[0-9]*$")
-    @Size(min = 7, max = 12)
+    @Size(min = 7, max = 14)
     private String phoneNumber;
 
     @NotNull
     @Size(min = 5, max = 100)
     private String password;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
+    @Singular
+    private Set<Role> roles;
 
     @Fetch(value = FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "user",

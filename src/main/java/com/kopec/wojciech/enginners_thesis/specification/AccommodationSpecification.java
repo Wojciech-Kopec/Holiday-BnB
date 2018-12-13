@@ -1,23 +1,32 @@
 package com.kopec.wojciech.enginners_thesis.specification;
 
+import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.model.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.ListPath;
 
 import java.util.List;
 
-public class AccommodationSpecification {
-    private final AccommodationCriteria criteria;
 
-    public AccommodationSpecification(AccommodationCriteria criteria) {
-        this.criteria = criteria;
+public final class AccommodationSpecification {
+
+    private AccommodationSpecification() {
     }
 
-    public Predicate withCriteria() {
+    public static Predicate withCriteria(AccommodationCriteria criteria) {
         return new BooleanBuilder(
-                (withNameContains(criteria.getName())))
+                withNameContains(criteria.getName()))
+                .and(withAccommodationType(criteria.getAccommodationType()))
+                .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
+                .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
+                .and(withAmenities(criteria.getAmenities()))
+                .and(withLocalization(criteria.getLocalization()));
+    }
+
+    public static Predicate withAccommodationCriteria(AccommodationCriteria criteria) {
+        return new BooleanBuilder(
+                withNameContains(criteria.getName()))
                 .and(withAccommodationType(criteria.getAccommodationType()))
                 .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
                 .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
@@ -51,6 +60,12 @@ public class AccommodationSpecification {
             booleanBuilder.and(withAmenity(amenityType));
         }
         return booleanBuilder;
+    }
+
+    private static Predicate withLocalization(LocalizationDto localization) {
+        if (localization != null)
+            return LocalizationSpecification.withCriteria(localization);
+        return null;
     }
 }
 

@@ -32,7 +32,7 @@ public class UserValidationTests implements TestableValidation<User> {
                 .username(stringWithSize(51))
                 .firstName(stringWithSize(51))
                 .lastName(stringWithSize(51))
-                .phoneNumber(stringWithSize(13))
+                .phoneNumber(stringWithSize(15))
                 .password(stringWithSize(101))
                 .email("valid@email.com")
                 .build();

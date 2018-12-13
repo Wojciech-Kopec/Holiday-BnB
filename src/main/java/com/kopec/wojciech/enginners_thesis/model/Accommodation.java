@@ -47,8 +47,9 @@ public class Accommodation extends AbstractEntity {
     @Positive
     private int pricePerNight;
 
-    @OneToOne(orphanRemoval = true,
-            cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @PrimaryKeyJoinColumn
     @NotNull
     private Localization localization;

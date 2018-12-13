@@ -2,7 +2,6 @@ package com.kopec.wojciech.enginners_thesis.repository;
 
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.Booking;
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.model.User;
 import org.junit.After;
 import org.junit.Before;
@@ -61,9 +60,11 @@ public class BookingRepositoryTests implements TestableRepository<Booking, Booki
     }
 
     @Test
+    @Transactional
+    //TODO Got to be there to work with booking.accommodation.localication persistence, why?
     public void updateBookingEntityTest() {
         accommodationRepositoryTests.createEntityTest(accommodation2, accommodationRepository);
-//TODO Make Booking Immutable? Should any update be available? Localization is invalid (??)
+        //TODO Make Booking Immutable? Should any update be available?
         updateEntityTest(booking1, booking2, bookingRepository);
     }
 

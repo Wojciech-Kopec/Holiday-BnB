@@ -1,14 +1,18 @@
 package com.kopec.wojciech.enginners_thesis.specification;
 
+import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
+import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
+import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
-import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepositoryTests;
-import org.junit.Test;
+import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,16 +25,26 @@ import static org.hamcrest.Matchers.*;
 public class SpecificationTests {
 
     @Autowired
-    AccommodationRepositoryTests accommodationRepositoryTests;
+    static UserRepository userRepository;
 
     @Autowired
-    AccommodationRepository repository;
+    static AccommodationRepository accommodationRepository;
 
+    static Accommodation accommodationEntity;
+
+    @BeforeClass
+    public static void persistObjects() {
+        User user = ModelProvider.createUser1();
+        accommodationEntity = ModelProvider.createAccomodation1(user);
+
+        userRepository.save(user);
+        accommodationRepository.save(accommodationEntity);
+    }
 
     @Test
-    public void accommodationCriteriaTest() {
-        accommodationRepositoryTests.createAccommodationEntityTest();
-        Accommodation accommodation = ModelProvider.createAccomodation1(ModelProvider.createUser1());
+    @Transactional
+    public void fullCriteriaTest() {
+        AccommodationDto accommodation = AccommodationDto.toDto(accommodationEntity);
 
         AccommodationCriteria criteria = AccommodationCriteria.builder()
                 .name(accommodation.getName())
@@ -42,26 +56,63 @@ public class SpecificationTests {
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
                 .build();
 
-        //TODO Localization is not used in filtering
 
-        AccommodationSpecification specification = new AccommodationSpecification(criteria);
+        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
+                AccommodationSpecification.withCriteria(criteria));
 
-        List<Accommodation> filteredResults = (List<Accommodation>) repository.findAll(specification.withCriteria());
         assertThat(filteredResults.size(), is(1));
-
         Accommodation filterResult = filteredResults.get(0);
-        //TODO HSQLDB Expected Localization is not set (?)
         assertThat(filterResult, equalTo(accommodation));
     }
 
     @Test
-    public void localizationCriteriaTest() {
+    public void accommodationCriteriaTest() {
+        AccommodationDto accommodation = AccommodationDto.toDto(accommodationEntity);
 
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .name(accommodation.getName())
+                .accommodationType(accommodation.getAccommodationType())
+                .requiredGuestCount(accommodation.getMaxGuests())
+                .pricePerNight(accommodation.getPricePerNight())
+                .amenities(accommodation.getAmenities().stream().map(
+                        amenity -> amenity.getType().toString()).collect(Collectors.toList()))
+                .build();
+
+        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
+                AccommodationSpecification.withCriteria(criteria));
+
+        assertThat(filteredResults.size(), is(1));
+        Accommodation filterResult = filteredResults.get(0);
+        assertThat(filterResult, equalTo(accommodationEntity));
+    }
+
+    @Test
+    public void localizationCriteriaTest() {
+        LocalizationDto criteria = LocalizationDto.toDto(accommodationEntity.getLocalization());
+
+        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
+                LocalizationSpecification.withCriteria(criteria));
+
+        assertThat(filteredResults.size(), is(1));
+        Accommodation filterResult = filteredResults.get(0);
+        assertThat(filterResult, equalTo(accommodationEntity));
     }
 
     @Test
     public void singularCriteriaTest() {
+        Accommodation accommodationEntity = ModelProvider.createAccomodation1(ModelProvider.createUser1());
+        AccommodationDto accommodation = AccommodationDto.toDto(accommodationEntity);
 
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .accommodationType(accommodation.getAccommodationType())
+                .build();
+
+        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
+                AccommodationSpecification.withCriteria(criteria));
+
+        assertThat(filteredResults.size(), is(1));
+        Accommodation filterResult = filteredResults.get(0);
+        assertThat(filterResult, equalTo(accommodationEntity));
     }
 
     @Test
@@ -69,8 +120,9 @@ public class SpecificationTests {
 
     }
 
-    @Test
-    public void fullCriteriaTest() {
-
-    }
+//    @AfterClass
+//    public static void clearDatabase() {
+//        accommodationRepository.deleteAll();
+//        userRepository.deleteAll();
+//    }
 }
