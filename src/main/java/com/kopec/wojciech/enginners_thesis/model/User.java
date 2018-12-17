@@ -16,8 +16,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"bookings", "accommodations", "roles"}, callSuper = true)
-@ToString(exclude = {"password", "bookings", "accommodations"})
+@EqualsAndHashCode(exclude = {"bookings", "accommodations", "roles", "password"}, callSuper = false)
+@ToString(exclude = {"password", "bookings", "accommodations"}, callSuper = true)
 //exclusions for lists needed to solve StackOverFlowException with bilateral-referencing
 @Builder
 

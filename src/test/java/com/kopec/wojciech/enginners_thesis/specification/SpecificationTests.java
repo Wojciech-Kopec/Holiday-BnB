@@ -25,44 +25,42 @@ import static org.hamcrest.Matchers.*;
 public class SpecificationTests {
 
     @Autowired
-    static UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    static AccommodationRepository accommodationRepository;
+    AccommodationRepository accommodationRepository;
 
-    static Accommodation accommodationEntity;
+    private Accommodation accommodationEntity;
 
-    @BeforeClass
-    public static void persistObjects() {
-        User user = ModelProvider.createUser1();
-        accommodationEntity = ModelProvider.createAccomodation1(user);
+    @Before
+    public void persistObjects() {
+        User user = ModelProvider.createUser_1();
+        accommodationEntity = ModelProvider.createAccomodation_1(user);
 
         userRepository.save(user);
         accommodationRepository.save(accommodationEntity);
+
+        assertThat(userRepository.count(), is(1L));
+        assertThat(accommodationRepository.count(), is(1L));
     }
 
     @Test
     @Transactional
     public void fullCriteriaTest() {
-        AccommodationDto accommodation = AccommodationDto.toDto(accommodationEntity);
+        AccommodationDto accommodationDto = AccommodationDto.toDto(accommodationEntity);
 
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .name(accommodation.getName())
-                .accommodationType(accommodation.getAccommodationType())
-                .requiredGuestCount(accommodation.getMaxGuests())
-                .pricePerNight(accommodation.getPricePerNight())
-                .localization(accommodation.getLocalization())
-                .amenities(accommodation.getAmenities().stream().map(
+                .name(accommodationDto.getName())
+                .accommodationType(accommodationDto.getAccommodationType())
+                .requiredGuestCount(accommodationDto.getMaxGuests())
+                .pricePerNight(accommodationDto.getPricePerNight())
+                .localization(accommodationDto.getLocalization())
+                .amenities(accommodationDto.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
                 .build();
 
 
-        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
-                AccommodationSpecification.withCriteria(criteria));
-
-        assertThat(filteredResults.size(), is(1));
-        Accommodation filterResult = filteredResults.get(0);
-        assertThat(filterResult, equalTo(accommodation));
+        assertResults(accommodationEntity, criteria);
     }
 
     @Test
@@ -78,12 +76,7 @@ public class SpecificationTests {
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
                 .build();
 
-        List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
-                AccommodationSpecification.withCriteria(criteria));
-
-        assertThat(filteredResults.size(), is(1));
-        Accommodation filterResult = filteredResults.get(0);
-        assertThat(filterResult, equalTo(accommodationEntity));
+        assertResults(accommodationEntity, criteria);
     }
 
     @Test
@@ -95,34 +88,67 @@ public class SpecificationTests {
 
         assertThat(filteredResults.size(), is(1));
         Accommodation filterResult = filteredResults.get(0);
-        assertThat(filterResult, equalTo(accommodationEntity));
+        assertThat(AccommodationDto.toDto(filterResult), equalTo(AccommodationDto.toDto(accommodationEntity)));
     }
 
     @Test
-    public void singularCriteriaTest() {
-        Accommodation accommodationEntity = ModelProvider.createAccomodation1(ModelProvider.createUser1());
-        AccommodationDto accommodation = AccommodationDto.toDto(accommodationEntity);
-
+    public void singularCriteriaTypeTest() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .accommodationType(accommodation.getAccommodationType())
+                .accommodationType(accommodationEntity.getAccommodationType())
                 .build();
 
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaAmenityListTest() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .amenities(accommodationEntity.getAmenities().stream().map(
+                        amenity -> amenity.getType().toString()).collect(Collectors.toList()))
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaDefaultPriceEquals0Test() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .pricePerNight(0) //if not specified
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaPriceTest() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .pricePerNight(accommodationEntity.getPricePerNight())
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaNameContainsTest() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .name(accommodationEntity.getName().substring(0, accommodationEntity.getName().length() - 1))
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    private void assertResults(Accommodation accommodationEntity, AccommodationCriteria criteria) {
         List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
                 AccommodationSpecification.withCriteria(criteria));
 
         assertThat(filteredResults.size(), is(1));
         Accommodation filterResult = filteredResults.get(0);
-        assertThat(filterResult, equalTo(accommodationEntity));
+        assertThat(AccommodationDto.toDto(filterResult), equalTo(AccommodationDto.toDto(accommodationEntity)));
     }
 
-    @Test
-    public void selectedCriteriaTest() {
-
+    @After
+    public void clearDatabase() {
+        accommodationRepository.deleteAll();
+        userRepository.deleteAll();
     }
-
-//    @AfterClass
-//    public static void clearDatabase() {
-//        accommodationRepository.deleteAll();
-//        userRepository.deleteAll();
-//    }
 }

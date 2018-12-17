@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
+@ToString(callSuper = true)
 @Builder
 
 @Entity
@@ -21,5 +21,6 @@ public class Localization extends AbstractEntity {
     private String state;
     private String city;
     private String address;
+
 
 }

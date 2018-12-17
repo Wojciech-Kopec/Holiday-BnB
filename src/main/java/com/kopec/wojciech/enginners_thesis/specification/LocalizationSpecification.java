@@ -8,7 +8,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import lombok.Builder;
 
-final class LocalizationSpecification {
+public final class LocalizationSpecification {
 
     private LocalizationSpecification() {}
 

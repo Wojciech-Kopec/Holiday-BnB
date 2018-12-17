@@ -7,6 +7,9 @@ import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -17,17 +20,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerNewUserAccount(final UserDto accountDto) {
+    public UserDto registerNewUserAccount(final UserDto accountDto) {
         if (emailExist(accountDto.getEmail())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + accountDto.getEmail());
         }
-        if(usernameExist(accountDto.getUsername())) {
+        if (usernameExist(accountDto.getUsername())) {
             throw new UserAlreadyExistException("There is an account with that username: " + accountDto.getUsername());
         }
 
         final User user = UserDto.toEntity(accountDto);
-        return userRepository.save(user);
+        return UserDto.toDto(userRepository.save(user));
     }
+
     public void updateUser(User user) {
         userRepository.save(user);
     }
@@ -42,5 +46,13 @@ public class UserService {
 
     private boolean usernameExist(final String username) {
         return userRepository.findByUsername(username) != null;
+    }
+
+    public List<UserDto> findAll() {
+        return userRepository.findAll().stream().map(UserDto::toDto).collect(Collectors.toList());
+    }
+
+    public UserDto findByUsername(String username) {
+        return UserDto.toDto(userRepository.findByUsername(username));
     }
 }

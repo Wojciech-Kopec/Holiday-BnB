@@ -16,7 +16,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
-@ToString()
+@ToString(callSuper = true)
 
 @Entity
 @Table(name = "BOOKINGS")

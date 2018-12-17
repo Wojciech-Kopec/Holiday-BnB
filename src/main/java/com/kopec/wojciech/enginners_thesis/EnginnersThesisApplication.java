@@ -12,9 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -93,7 +91,7 @@ public class EnginnersThesisApplication {
         amenity2.setType(AmenityType.KITCHEN);
         amenity2.setDescription("Test_ Fully functional kitchen");
 
-        accommodation1.setAmenities(Arrays.asList(amenity1, amenity2));
+        accommodation1.setAmenities(new LinkedList<>(Arrays.asList(amenity1, amenity2)));
 
         Localization localization1 = new Localization();
         localization1.setCountry("Poland");

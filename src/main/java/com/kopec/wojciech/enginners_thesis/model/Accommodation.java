@@ -10,13 +10,15 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "bookings")
+//@EqualsAndHashCode(exclude = {"bookings"}, callSuper = true)
+@ToString(exclude = "bookings", callSuper = true)
 @Builder
 
 @Entity
@@ -47,10 +49,8 @@ public class Accommodation extends AbstractEntity {
     @Positive
     private int pricePerNight;
 
-    @OneToOne(fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
     @NotNull
     private Localization localization;
 
@@ -76,35 +76,28 @@ public class Accommodation extends AbstractEntity {
     @Singular
     private List<Booking> bookings;
 
+    //Got to be implemented because of Hibernate PersistentBag lack of equals() implementation
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
+        if (!super.equals(o)) return false;
         Accommodation that = (Accommodation) o;
-
-        if (maxGuests != that.maxGuests) return false;
-        if (pricePerNight != that.pricePerNight) return false;
-        if (!name.equals(that.name)) return false;
-        if (!description.equals(that.description)) return false;
-        if (accommodationType != that.accommodationType) return false;
-        if (!localization.equals(that.localization)) return false;
-        if (!amenities.containsAll(that.amenities) && that.amenities.containsAll(amenities)) return false;
-        if (!user.equals(that.user)) return false;
-        return createdDate.equals(that.createdDate);
+        return getMaxGuests() == that.getMaxGuests() &&
+                getPricePerNight() == that.getPricePerNight() &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getDescription(), that.getDescription()) &&
+                getAccommodationType() == that.getAccommodationType() &&
+                Objects.equals(getLocalization(), that.getLocalization()) &&
+                //equals() for Lists to avoid above Hibernate flaw
+                getAmenities().containsAll(that.getAmenities()) &&
+                that.getAmenities().containsAll(getAmenities()) &&
+                Objects.equals(getUser(), that.getUser()) &&
+                Objects.equals(getCreatedDate(), that.getCreatedDate());
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + accommodationType.hashCode();
-        result = 31 * result + maxGuests;
-        result = 31 * result + pricePerNight;
-        result = 31 * result + localization.hashCode();
-        result = 31 * result + amenities.hashCode();
-        result = 31 * result + user.hashCode();
-        result = 31 * result + createdDate.hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), getName(), getDescription(), getAccommodationType(), getMaxGuests(), getPricePerNight(), getLocalization(), getAmenities(), getUser(), getCreatedDate());
     }
 }

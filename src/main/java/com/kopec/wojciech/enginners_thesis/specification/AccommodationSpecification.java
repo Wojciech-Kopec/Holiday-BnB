@@ -34,11 +34,11 @@ public final class AccommodationSpecification {
     }
 
     private static Predicate withNameContains(String name) {
-        return QAccommodation.accommodation.name.contains(name);
+        return name != null ? QAccommodation.accommodation.name.contains(name) : null;
     }
 
     private static Predicate withAccommodationType(AccommodationType type) {
-        return QAccommodation.accommodation.accommodationType.eq(type);
+        return type != null ? QAccommodation.accommodation.accommodationType.eq(type) : null;
     }
 
     private static Predicate withMinGuestsOf(int requiredGuests) {
@@ -46,7 +46,7 @@ public final class AccommodationSpecification {
     }
 
     private static Predicate withPriceLowerOrEqual(int price) {
-        return QAccommodation.accommodation.pricePerNight.loe(price);
+        return price > 0 ? QAccommodation.accommodation.pricePerNight.loe(price) : null;
     }
 
     private static Predicate withAmenity(String amenityType) {
@@ -56,16 +56,16 @@ public final class AccommodationSpecification {
 
     private static Predicate withAmenities(List<String> amenities) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        for (String amenityType : amenities) {
-            booleanBuilder.and(withAmenity(amenityType));
+        if (amenities != null && amenities.size() > 0) {
+            for (String amenityType : amenities) {
+                booleanBuilder.and(withAmenity(amenityType));
+            }
         }
         return booleanBuilder;
     }
 
     private static Predicate withLocalization(LocalizationDto localization) {
-        if (localization != null)
-            return LocalizationSpecification.withCriteria(localization);
-        return null;
+        return localization != null ? LocalizationSpecification.withCriteria(localization) : null;
     }
 }
 

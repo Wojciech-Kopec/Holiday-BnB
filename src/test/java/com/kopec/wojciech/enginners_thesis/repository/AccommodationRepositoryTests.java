@@ -1,7 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.repository;
 
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.model.User;
 import org.junit.After;
 import org.junit.Test;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,10 +26,10 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
     @Autowired
     UserRepositoryTests userRepositoryTests;
 
-    private User user1 = createUser1();
-    private User user2 = createUser2();
-    private Accommodation accommodation = createAccomodation1(user1);
-    private Accommodation accommodation2 = createAccomodation2(user2);
+    private User user1 = createUser_1();
+    private User user2 = createUser_2();
+    private Accommodation accommodation = createAccomodation_1(user1);
+    private Accommodation accommodation2 = createAccomodation_2(user2);
 
     @Test
     public void createAccommodationEntityTest() {

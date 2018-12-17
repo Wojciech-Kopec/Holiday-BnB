@@ -10,7 +10,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ModelProvider {
 
-    public static User createUser1() {
+    public static User createUser_1() {
         return User.builder()
                 .firstName("Test_FirstName1")
                 .lastName("Test_LastName1")
@@ -22,7 +22,7 @@ public class ModelProvider {
     }
 
 
-    public static User createUser2() {
+    public static User createUser_2() {
         return User.builder()
                 .firstName("Test_FirstName2")
                 .lastName("Test_LastName2")
@@ -33,7 +33,7 @@ public class ModelProvider {
                 .build();
     }
 
-    public static Accommodation createAccomodation1(User userOwner) {
+    public static Accommodation createAccomodation_1(User userOwner) {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
@@ -67,7 +67,7 @@ public class ModelProvider {
         return accommodation;
     }
 
-    public static Accommodation createAccomodation2(User userOwner) {
+    public static Accommodation createAccomodation_2(User userOwner) {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
@@ -106,7 +106,7 @@ public class ModelProvider {
         return accommodation;
     }
 
-    public static Booking createBooking1(User client, Accommodation accommodation) {
+    public static Booking createBooking_1(User client, Accommodation accommodation) {
         return Booking.builder()
                 .user(client)
                 .accommodation(accommodation)
@@ -117,7 +117,7 @@ public class ModelProvider {
                 .build();
     }
 
-    public static Booking createBooking2(User client, Accommodation accommodation) {
+    public static Booking createBooking_2(User client, Accommodation accommodation) {
         return Booking.builder()
                 .user(client)
                 .accommodation(accommodation)
