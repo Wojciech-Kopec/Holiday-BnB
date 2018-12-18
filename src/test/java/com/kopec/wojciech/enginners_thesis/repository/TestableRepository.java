@@ -11,14 +11,14 @@ import javax.persistence.EntityNotFoundException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public interface TestableRepository<T extends AbstractEntity, S extends JpaRepository<T, Long>> {
+public interface TestableRepository<T extends AbstractEntity, S extends JpaRepository<T, Integer>> {
 
     default void createEntityTest(T objToPersist, S repository) {
-        long oldId = objToPersist.getId();
+        Integer oldId = objToPersist.getId();
         int prePersistEntityCount = (int) repository.count();
 
         T persistedObj = repository.save(objToPersist);
-        long newId = persistedObj.getId();
+        Integer newId = persistedObj.getId();
 
         assertThat(oldId, is(not(newId)));
         assertThat((int) repository.count(), is(greaterThan(prePersistEntityCount)));
