@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource()
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.List;
 
-//    @Query("SELECT user FROM User user left join fetch user.accommodations left join fetch user.bookings WHERE user.username=:username")
+@RepositoryRestResource()
+public interface UserRepository extends JpaRepository<User, Integer> {
+
+    @Query("SELECT user FROM User user left join fetch user.accommodations left join fetch user.bookings WHERE user.username=:username")
     User findByUsername(@Param("username") String username);
+
+    List<User> findAllByUsernameContainingIgnoreCaseOrderByUsernameAsc(String username);
 
     User findByAccommodationsContains(Accommodation accommodation);
 

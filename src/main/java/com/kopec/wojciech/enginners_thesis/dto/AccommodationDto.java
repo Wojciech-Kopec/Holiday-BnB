@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public class AccommodationDto {
-    private long id;
+    private Integer id;
     private String name;
     private String description;
     private AccommodationType accommodationType;

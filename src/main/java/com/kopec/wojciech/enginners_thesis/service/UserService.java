@@ -20,20 +20,25 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDto registerNewUserAccount(final UserDto accountDto) {
-        if (emailExist(accountDto.getEmail())) {
-            throw new UserAlreadyExistException("There is an account with that email address: " + accountDto.getEmail());
+    public UserDto save(UserDto userDto) {
+        if (emailExist(userDto.getEmail())) {
+            throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
         }
-        if (usernameExist(accountDto.getUsername())) {
-            throw new UserAlreadyExistException("There is an account with that username: " + accountDto.getUsername());
+        if (usernameExist(userDto.getUsername())) {
+            throw new UserAlreadyExistException("There is an account with that username: " + userDto.getUsername());
         }
 
-        final User user = UserDto.toEntity(accountDto);
-        return UserDto.toDto(userRepository.save(user));
+        return mapSavedUser(userDto);
     }
 
-    public void updateUser(User user) {
-        userRepository.save(user);
+    private UserDto mapSavedUser(UserDto userDto) {
+        User user = UserDto.toEntity(userDto);
+        User savedUser = userRepository.save(user);
+        return UserDto.toDto(savedUser);
+    }
+
+    public UserDto update(UserDto userDto) {
+        return mapSavedUser(userDto);
     }
 
     public void deleteUser(final UserDto userDto) {
@@ -54,5 +59,12 @@ public class UserService {
 
     public UserDto findByUsername(String username) {
         return UserDto.toDto(userRepository.findByUsername(username));
+    }
+
+    public List<UserDto> findByUsernameContaining(String username) {
+        return userRepository.findAllByUsernameContainingIgnoreCaseOrderByUsernameAsc(username)
+                .stream()
+                .map(UserDto::toDto)
+                .collect(Collectors.toList());
     }
 }

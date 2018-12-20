@@ -3,6 +3,7 @@ package com.kopec.wojciech.enginners_thesis.specification;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
+import com.kopec.wojciech.enginners_thesis.model.Amenity;
 import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
@@ -102,9 +103,10 @@ public class SpecificationTests {
 
     @Test
     public void singularCriteriaAmenityListTest() {
+        List<Amenity> amenities = accommodationEntity.getAmenities();
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .amenities(accommodationEntity.getAmenities().stream().map(
-                        amenity -> amenity.getType().toString()).collect(Collectors.toList()))
+                .amenities(amenities.stream().map(
+                        amenity -> amenity.getType().toString()).limit(amenities.size()-1).collect(Collectors.toList()))
                 .build();
 
         assertResults(accommodationEntity, criteria);

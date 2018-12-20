@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BookingDto {
-    private long id;
+    private Integer id;
     private AccommodationDto accommodation;
     private UserDto user;
     private int guestsCount;

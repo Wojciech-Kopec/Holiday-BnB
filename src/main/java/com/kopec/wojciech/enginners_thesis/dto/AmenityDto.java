@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 
 @Data
 public class AmenityDto {
-    private long id;
+    private Integer id;
     private AmenityType type;
     private String description;
 

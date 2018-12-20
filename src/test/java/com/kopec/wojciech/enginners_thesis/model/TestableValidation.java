@@ -36,8 +36,8 @@ public interface TestableValidation<T> {
             if (message != null)
                 assertThat(violation.getMessage(), is(message));
         } else if (shouldBeValid) {
-            assertThat(constraintViolations.stream().filter(
-                    v -> v.getPropertyPath().toString().equals(value)).count(), is((long) 0));
+            assertThat(((int) constraintViolations.stream().filter(
+                    v -> v.getPropertyPath().toString().equals(value)).count()), is(0));
         }
     }
 

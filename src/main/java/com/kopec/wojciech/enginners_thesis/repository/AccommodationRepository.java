@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @RepositoryRestResource()
-public interface AccommodationRepository extends JpaRepository<Accommodation, Long>, QuerydslPredicateExecutor<Accommodation> {
+public interface AccommodationRepository extends JpaRepository<Accommodation, Integer>, QuerydslPredicateExecutor<Accommodation> {
 
     List<Accommodation> findAllByAccommodationType(AccommodationType accommodationType);
 

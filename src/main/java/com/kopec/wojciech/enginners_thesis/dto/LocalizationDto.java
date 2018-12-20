@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 
 @Data
 public class LocalizationDto {
-    private long id;
+    private Integer id;
     private String country;
     private String state;
     private String city;

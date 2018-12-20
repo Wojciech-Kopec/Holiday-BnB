@@ -16,11 +16,7 @@ public final class AccommodationSpecification {
 
     public static Predicate withCriteria(AccommodationCriteria criteria) {
         return new BooleanBuilder(
-                withNameContains(criteria.getName()))
-                .and(withAccommodationType(criteria.getAccommodationType()))
-                .and(withMinGuestsOf(criteria.getRequiredGuestCount()))
-                .and(withPriceLowerOrEqual(criteria.getPricePerNight()))
-                .and(withAmenities(criteria.getAmenities()))
+                withAccommodationCriteria(criteria))
                 .and(withLocalization(criteria.getLocalization()));
     }
 

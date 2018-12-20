@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 
 @Data
 public class UserDto {
-    private long id;
+    private Integer id;
     private String username;
     private String firstName;
     private String lastName;
