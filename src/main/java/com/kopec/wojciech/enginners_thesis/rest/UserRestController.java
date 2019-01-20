@@ -16,18 +16,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserResource {
+public class UserRestController {
     private UserService userService;
 
     @Autowired
-    public UserResource(UserService userService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> register(@RequestBody UserDto user) {
         if (user.getId() != null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{id_not_consistent_with_resource_msg}");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_set}");
         UserDto savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -42,7 +42,7 @@ public class UserResource {
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody UserDto user) {
         if (!id.equals(user.getId()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{id_not_consistent_with_resource_msg}");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_not_consistent}");
         UserDto updatedUser = userService.update(user);
         return ResponseEntity.ok(updatedUser);
 

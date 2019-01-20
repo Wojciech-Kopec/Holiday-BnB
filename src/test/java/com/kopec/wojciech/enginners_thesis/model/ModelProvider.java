@@ -112,8 +112,8 @@ public class ModelProvider {
                 .accommodation(accommodation)
                 .guestsCount(4)
                 .status(BookingStatus.VERIFIED)
-                .startDate(LocalDate.of(2019, 1, 1))
-                .finishDate(LocalDate.of(2019, 1, 15))
+                .startDate(LocalDate.of(2022, 1, 1))
+                .finishDate(LocalDate.of(2022, 1, 15))
                 .build();
     }
 
@@ -123,8 +123,8 @@ public class ModelProvider {
                 .accommodation(accommodation)
                 .guestsCount(3)
                 .status(BookingStatus.SUBMITTED)
-                .startDate(LocalDate.of(2019, 2, 10))
-                .finishDate(LocalDate.of(2019, 3, 1))
+                .startDate(LocalDate.of(2022, 2, 10))
+                .finishDate(LocalDate.of(2022, 3, 1))
                 .build();
     }
 }

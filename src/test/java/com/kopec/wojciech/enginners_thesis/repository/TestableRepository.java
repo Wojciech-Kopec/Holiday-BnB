@@ -1,9 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.repository;
 
-import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.model.AbstractEntity;
-import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.EntityNotFoundException;

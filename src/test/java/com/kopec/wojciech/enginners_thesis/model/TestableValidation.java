@@ -1,9 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.ConstraintViolation;
