@@ -11,9 +11,10 @@ import java.util.List;
 @Builder
 public class AccommodationCriteria {
     private String name;
-    private AccommodationType accommodationType;
-    private int requiredGuestCount;
-    private int pricePerNight;
+    private List<AccommodationType> accommodationTypes;
+    private Integer requiredGuestCount;
+    private Integer minPricePerNight;
+    private Integer maxPricePerNight;
     private List<String> amenities;
     private LocalizationDto localization;
 }

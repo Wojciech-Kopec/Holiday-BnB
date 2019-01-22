@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
+
     private UserService userService;
 
     @Autowired
@@ -39,16 +40,16 @@ public class UserRestController {
         return new ResponseEntity<>(savedUser, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody UserDto user) {
         if (!id.equals(user.getId()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_not_consistent}");
         UserDto updatedUser = userService.update(user);
-        return ResponseEntity.ok(updatedUser);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 
     }
 
-    @GetMapping("")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<UserDto>> findAll(@RequestParam(required = false) String username) {
         List<UserDto> users;
         if (username != null)
@@ -56,5 +57,16 @@ public class UserRestController {
         else
             users = userService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserDto> delete(@PathVariable Integer id) {
+        UserDto userToDelete = userService.findById(id);
+        if (userToDelete != null) {
+            userService.delete(userToDelete);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

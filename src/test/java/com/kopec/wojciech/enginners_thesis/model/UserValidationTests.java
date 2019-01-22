@@ -75,7 +75,7 @@ public class UserValidationTests implements TestableValidation<User> {
         for (String email : invalidEmails) {
             user.setEmail(email);
             logger.info("Testing for value: " + email);
-            final String EMAIL_NOT_VALID_MSG = "Please provide a valid email address";
+            final String EMAIL_NOT_VALID_MSG = "{constraint.emailNotValid}";
             assertFieldValidation(user, "email", false, EMAIL_NOT_VALID_MSG);
         }
     }

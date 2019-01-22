@@ -22,35 +22,40 @@ public class AccommodationService {
         this.accommodationRepository = accommodationRepository;
     }
 
-    public void createAccommodation(AccommodationDto accommodationDto) {
-        accommodationRepository.save(AccommodationDto.toEntity(accommodationDto));
+    public AccommodationDto save(AccommodationDto accommodationDto) {
+        return mapSavedAccommodation(accommodationDto);
     }
 
-    public void deleteAccommodation(AccommodationDto accommodationDto) {
+    private AccommodationDto mapSavedAccommodation(AccommodationDto accommodationDto) {
+        Accommodation accommodation = AccommodationDto.toEntity(accommodationDto);
+        Accommodation savedAccommodation = accommodationRepository.save(accommodation);
+        return AccommodationDto.toDto(savedAccommodation);
+    }
+
+    public AccommodationDto update(AccommodationDto accommodationDto) {
+        return mapSavedAccommodation(accommodationDto);
+    }
+
+    public void delete(final AccommodationDto accommodationDto) {
         accommodationRepository.delete(AccommodationDto.toEntity(accommodationDto));
     }
 
-    public List<AccommodationDto> findByCriteria(AccommodationCriteria criteria) {
-        return ((List<Accommodation>) accommodationRepository.findAll(
-                AccommodationSpecification.withCriteria(criteria)))
-                .stream()
-                .map(AccommodationDto::toDto)
-                .collect(Collectors.toList());
-    }
-
     public List<AccommodationDto> findAll() {
-        return accommodationRepository.findAll()
-                .stream().map(AccommodationDto::toDto)
-                .collect(Collectors.toList());
+        return accommodationRepository.findAll().stream().map(AccommodationDto::toDto).collect(Collectors.toList());
     }
 
+//    public AccommodationDto findByAccommodationname(String accommodationname) {
+//        return AccommodationDto.toDto(accommodationRepository.findByAccommodationname(accommodationname));
+//    }
+//
+//    public List<AccommodationDto> findByAccommodationnameContaining(String accommodationname) {
+//        return accommodationRepository.findAllByAccommodationnameContainingIgnoreCaseOrderByAccommodationnameAsc(accommodationname)
+//                .stream()
+//                .map(AccommodationDto::toDto)
+//                .collect(Collectors.toList());
+//    }
 
-
-    public Accommodation findAccommodationById(Integer id) {
-        return null;
-    }
-
-    public void saveAccommodation(@Valid Accommodation accommodation) {
-
+    public AccommodationDto findById(Integer id) {
+        return AccommodationDto.toDto(accommodationRepository.findById(id).orElse(null));
     }
 }

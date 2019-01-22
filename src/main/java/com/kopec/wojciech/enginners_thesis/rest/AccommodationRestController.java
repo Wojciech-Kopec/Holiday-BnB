@@ -1,73 +1,72 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
-import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/accommodations")
-@AllArgsConstructor
 public class AccommodationRestController {
 
-    private AccommodationService accommodationService;
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Accommodation> getResource(Model model, @PathVariable Integer id) {
-        Accommodation accommodation = accommodationService.findAccommodationById(id);
-        if (accommodation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(accommodation, HttpStatus.FOUND); //TODO HttpStatus. ~FOUND or ~OK ?
-    }
-
-//    @PreAuthorize( "hasRole(@roles.OWNER_ADMIN)" )
-//    @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseEntity<Accommodation> addAccommodation(@RequestBody @Valid Accommodation accommodation, BindingResult bindingResult, UriComponentsBuilder ucBuilder){
-//        BindingErrorsResponse errors = new BindingErrorsResponse();
-//        HttpHeaders headers = new HttpHeaders();
-//        if(bindingResult.hasErrors() || (accommodation == null)){
-//            errors.addAllErrors(bindingResult);
-//            headers.add("errors", errors.toJSON());
-//            return new ResponseEntity<Accommodation>(headers, HttpStatus.BAD_REQUEST);
-//        }
-//        this.accommodationService.saveAccommodation(accommodation);
-//        headers.setLocation(ucBuilder.path("/api/accommodations/{id}").buildAndExpand(accommodation.getId()).toUri());
-//        return new ResponseEntity<>(accommodation, headers, HttpStatus.CREATED);
+//    private AccommodationService accommodationService;
+//
+//    @Autowired
+//    public AccommodationRestController(AccommodationService accommodationService) {
+//        this.accommodationService = accommodationService;
 //    }
-
-    @PostMapping()
-    public String saveResource(Model model) {
-        //store resource via someService and return to view
-        return null;
-    }
-
-    @PutMapping(value = "/{id}")
-    public String modifyResource(Model model, @PathVariable Integer id) {
-        //update resource with given identifier and given data via someService and return to view
-        return null;
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public String deleteResource(Model model, @PathVariable Integer id) {
-        //delete resource with given identifier via someService and return to view
-        return null;
-    }
-
-    @GetMapping("")
-    public List<AccommodationDto> findAll() {
-        return accommodationService.findAll();
-    }
+//
+//    @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseEntity<AccommodationDto> register(@RequestBody AccommodationDto accommodation) {
+//        if (accommodation.getId() != null)
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_set}");
+//        AccommodationDto savedAccommodation = accommodationService.save(accommodation);
+//        URI location = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(savedAccommodation.getId())
+//                .toUri();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(location);
+//        return new ResponseEntity<>(savedAccommodation, headers, HttpStatus.CREATED);
+//    }
+//
+//    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseEntity<AccommodationDto> update(@PathVariable Integer id, @RequestBody AccommodationDto accommodation) {
+//        if (!id.equals(accommodation.getId()))
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_not_consistent}");
+//        AccommodationDto updatedAccommodation = accommodationService.update(accommodation);
+//        return new ResponseEntity<>(updatedAccommodation, HttpStatus.OK);
+//
+//    }
+//
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public ResponseEntity<List<AccommodationDto>> findAll(@RequestParam(required = false) String accommodationname) {
+//        List<AccommodationDto> accommodations;
+//        if (accommodationname != null)
+//            accommodations = accommodationService.findByAccommodationnameContaining(accommodationname);
+//        else
+//            accommodations = accommodationService.findAll();
+//        return new ResponseEntity<>(accommodations, HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<AccommodationDto> delete(@PathVariable Integer id) {
+//        AccommodationDto accommodationToDelete = accommodationService.findById(id);
+//        if (accommodationToDelete != null) {
+//            accommodationService.delete(accommodationToDelete);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

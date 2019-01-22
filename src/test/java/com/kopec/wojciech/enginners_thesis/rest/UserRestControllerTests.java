@@ -1,100 +1,87 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.service.UserService;
 
+import org.assertj.core.util.Lists;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-
-//@RunWith(MockitoJUnitRunner.class)
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = UserRestController.class, secure = false)
-public class UserRestControllerTests {
-
-    @Autowired
-    private MockMvc mockMvc;
+public class UserRestControllerTests extends AbstractRestUnitTests<UserDto> {
 
     @MockBean
     private UserService userService;
 
     @InjectMocks
     private UserRestController userRestController;
-    private ObjectMapper mapper = new ObjectMapper();
-    private static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
+
+    private String baseEndpoint = "/api/users";
+    private UserDto requestedUser;
+    private UserDto existingUser;
 
 
-    public String mock(UserDto requestedUser) throws JsonProcessingException {
-        //2nd User used for List assertions
-        UserDto existingUser = UserDto.toDto(ModelProvider.createUser_2());
-
+    public void mockServices() throws JsonProcessingException {
         Mockito.when(userService.save(requestedUser)).thenReturn(requestedUser);
         Mockito.when(userService.update(requestedUser)).thenReturn(requestedUser);
         Mockito.when(userService.findByUsername(requestedUser.getUsername())).thenReturn(requestedUser);
         Mockito.when(userService.findByUsernameContaining(requestedUser.getUsername())).thenReturn(Collections
                 .singletonList(requestedUser));
         Mockito.when(userService.findAll()).thenReturn(Arrays.asList(requestedUser, existingUser));
-
+        Mockito.when(userService.findById(requestedUser.getId())).thenReturn(requestedUser);
         userRestController = new UserRestController(userService);
-        return mapper.writeValueAsString(requestedUser);
+    }
 
+    @Before
+    //Resets objects to their original state
+    public void setUpBaseObject() {
+        requestedUser = UserDto.toDto(ModelProvider.createUser_1());
+        //2nd User used for List assertions
+        existingUser = UserDto.toDto(ModelProvider.createUser_2());
     }
 
     @Test
     public void validRegistrationTest() throws Exception {
         //Given
-        UserDto requestedUser = UserDto.toDto(ModelProvider.createUser_1());
-        String userJson = mock(requestedUser);
+        mockServices();
+        String userJson = mapper.writeValueAsString(requestedUser);
 
         //When
-        String location = "/api/users";
-        MockHttpServletResponse
-                response = executeRequest(HttpMethod.POST, userJson, location);
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.POST, userJson, baseEndpoint);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
         printResponseDetails(response);
 
         //Then
-        thenAssert(response, userJson, HttpStatus.CREATED, location, null);
-
+        thenAssert(response, userJson, HttpStatus.CREATED, baseEndpoint, null);
     }
 
     @Test
     public void invalidRegistrationTest() throws Exception {
         //Given
-        UserDto requestedUser = UserDto.toDto(ModelProvider.createUser_1());
         requestedUser.setId(10);
-        String userJson = mock(requestedUser);
+        mockServices();
+        String userJson = mapper.writeValueAsString(requestedUser);
 
         //When
-        String location = "/api/users";
-        MockHttpServletResponse response = executeRequest(HttpMethod.POST, userJson, location);
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.POST, userJson, baseEndpoint);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
         printResponseDetails(response);
 
         //Then
@@ -104,13 +91,15 @@ public class UserRestControllerTests {
     @Test
     public void validEndpointUpdateUserTest() throws Exception {
         //Given
-        UserDto requestedUser = UserDto.toDto(ModelProvider.createUser_1());
         requestedUser.setId(10);
-        String userJson = mock(requestedUser);
+        mockServices();
+        String userJson = mapper.writeValueAsString(requestedUser);
 
         //When
-        String location = "/api/users/" + requestedUser.getId();
-        MockHttpServletResponse response = executeRequest(HttpMethod.PUT, userJson, location);
+        Integer pathId = requestedUser.getId();
+        String location = baseEndpoint + "/" + pathId;
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.PUT, userJson, location);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
         printResponseDetails(response);
 
         //Then
@@ -120,60 +109,87 @@ public class UserRestControllerTests {
     @Test
     public void invalidEndpointUpdateUserTest() throws Exception {
         //Given
-        UserDto requestedUser = UserDto.toDto(ModelProvider.createUser_1());
         requestedUser.setId(10);
-        String userJson = mock(requestedUser);
+        mockServices();
+        String userJson = mapper.writeValueAsString(requestedUser);
 
         //When
-        String location = "/api/users/" + (requestedUser.getId() + 1);
-        MockHttpServletResponse response = executeRequest(HttpMethod.PUT, userJson, location);
+        Integer pathId = requestedUser.getId() + 1;
+        String location = baseEndpoint + "/" + pathId;
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.PUT, userJson, location);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
         printResponseDetails(response);
 
         //Then
         thenAssert(response, null, HttpStatus.BAD_REQUEST, null, "{resource.id_not_consistent}");
     }
 
-    private MockHttpServletResponse executeRequest(HttpMethod httpMethod, String content, String urlTemplate) throws
-            Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .request(httpMethod, urlTemplate)
-                .accept(MediaType.APPLICATION_JSON_UTF8).content(content)
-                .contentType(MediaType.APPLICATION_JSON_UTF8);
+    @Test
+    public void validFindAllUsersNoParamTest() throws Exception {
+        //Given
+        mockServices();
+        List<UserDto> users = Lists.newArrayList(requestedUser, existingUser);
+        String usersJson = mapper.writeValueAsString(users);
 
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        return result.getResponse();
+        //When
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, null, baseEndpoint);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+        printResponseDetails(response);
+
+        //Then
+        thenAssert(response, usersJson, HttpStatus.OK, null, null);
     }
 
-    private void printResponseDetails(MockHttpServletResponse response) throws UnsupportedEncodingException {
-        logger.info("response.getContentType():\n"
-                + response.getContentType() + "\n");
+    @Test
+    public void validFindAllUsersWithParamTest() throws Exception {
+        //Given
+        mockServices();
+        List<UserDto> users = Lists.newArrayList(requestedUser);
+        String usersJson = mapper.writeValueAsString(users);
 
-        logger.info("response.getHeader(HttpHeaders.LOCATION):\n"
-                + response.getHeader(HttpHeaders.LOCATION + "\n"));
+        //When
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.GET, null, baseEndpoint);
+        request.param("username", requestedUser.getUsername());
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+        printResponseDetails(response);
 
-        logger.info("response.getStatus():\n"
-                + response.getStatus() + "\n");
-
-        logger.info("response.getContentAsString():\n"
-                + response.getContentAsString() + "\n");
-
-        logger.info("response.getErrorMessage():\n"
-                + response.getErrorMessage() + "\n");
+        //Then
+        thenAssert(response, usersJson, HttpStatus.OK, null, null);
     }
 
-    private void thenAssert(MockHttpServletResponse response, String content, HttpStatus status, String urlLocation,
-                            String error) throws UnsupportedEncodingException {
+    @Test
+    public void validDeleteUserTest() throws Exception {
+        //Given
+        requestedUser.setId(10);
+        mockServices();
+        String userJson = mapper.writeValueAsString(requestedUser);
 
-        assertThat(response.getContentAsString(), equalTo(content != null ? content : ""));
-        assertThat(response.getStatus(), equalTo(status.value()));
-        assertThat(response.getErrorMessage(), equalTo(error));
+        //When
+        Integer pathId = requestedUser.getId();
+        String location = baseEndpoint + "/" + pathId;
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, null, location);
+        request.param("id", requestedUser.getId().toString());
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+        printResponseDetails(response);
 
-        if (urlLocation != null) {
-            assertThat(response.getHeader(HttpHeaders.LOCATION), containsString(urlLocation));
-        } else {
-            assertThat(response.getHeader(HttpHeaders.LOCATION), nullValue());
-        }
+        //Then
+        thenAssert(response, null, HttpStatus.NO_CONTENT, null, null);
+    }
 
-        assertThat(response.getContentType(), equalTo(content != null ? MediaType.APPLICATION_JSON_UTF8_VALUE : null));
+    @Test
+    public void invalidDeleteUserTest() throws Exception {
+        //Given
+        requestedUser.setId(10);
+        mockServices();
+
+        //When
+        Integer pathId = requestedUser.getId() + 1;
+        String location = baseEndpoint + "/" + pathId;
+        MockHttpServletRequestBuilder request = buildRequest(HttpMethod.DELETE, null, location);
+        MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+        printResponseDetails(response);
+
+        //Then
+        thenAssert(response, null, HttpStatus.NOT_FOUND, null, null);
     }
 }

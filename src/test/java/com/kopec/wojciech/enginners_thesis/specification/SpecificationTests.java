@@ -15,12 +15,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+/*TODO with modifications in Criteria class
+with Price and Accomodation Types please modify this class accordingly*/
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpecificationTests {
@@ -52,9 +55,9 @@ public class SpecificationTests {
 
         AccommodationCriteria criteria = AccommodationCriteria.builder()
                 .name(accommodationDto.getName())
-                .accommodationType(accommodationDto.getAccommodationType())
+                .accommodationTypes(Collections.singletonList(accommodationDto.getAccommodationType()))
                 .requiredGuestCount(accommodationDto.getMaxGuests())
-                .pricePerNight(accommodationDto.getPricePerNight())
+                .maxPricePerNight(accommodationDto.getPricePerNight())
                 .localization(accommodationDto.getLocalization())
                 .amenities(accommodationDto.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
@@ -70,9 +73,9 @@ public class SpecificationTests {
 
         AccommodationCriteria criteria = AccommodationCriteria.builder()
                 .name(accommodation.getName())
-                .accommodationType(accommodation.getAccommodationType())
+                .accommodationTypes(Collections.singletonList(accommodation.getAccommodationType()))
                 .requiredGuestCount(accommodation.getMaxGuests())
-                .pricePerNight(accommodation.getPricePerNight())
+                .maxPricePerNight(accommodation.getPricePerNight())
                 .amenities(accommodation.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
                 .build();
@@ -95,7 +98,7 @@ public class SpecificationTests {
     @Test
     public void singularCriteriaTypeTest() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .accommodationType(accommodationEntity.getAccommodationType())
+                .accommodationTypes(Collections.singletonList(accommodationEntity.getAccommodationType()))
                 .build();
 
         assertResults(accommodationEntity, criteria);
@@ -115,7 +118,6 @@ public class SpecificationTests {
     @Test
     public void singularCriteriaDefaultPriceEquals0Test() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .pricePerNight(0) //if not specified
                 .build();
 
         assertResults(accommodationEntity, criteria);
@@ -124,7 +126,7 @@ public class SpecificationTests {
     @Test
     public void singularCriteriaPriceTest() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
-                .pricePerNight(accommodationEntity.getPricePerNight())
+                .maxPricePerNight(accommodationEntity.getPricePerNight())
                 .build();
 
         assertResults(accommodationEntity, criteria);

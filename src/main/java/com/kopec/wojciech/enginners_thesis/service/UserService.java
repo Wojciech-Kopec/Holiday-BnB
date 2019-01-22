@@ -41,7 +41,7 @@ public class UserService {
         return mapSavedUser(userDto);
     }
 
-    public void deleteUser(final UserDto userDto) {
+    public void delete(final UserDto userDto) {
         userRepository.delete(UserDto.toEntity(userDto));
     }
 
@@ -66,5 +66,9 @@ public class UserService {
                 .stream()
                 .map(UserDto::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public UserDto findById(Integer id) {
+        return UserDto.toDto(userRepository.findById(id).orElse(null));
     }
 }
