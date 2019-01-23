@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 
-abstract public class AbstractRestUnitTests<T> {
+abstract public class AbstractRestUnitTests {
 
     @Autowired
     protected MockMvc mockMvc;

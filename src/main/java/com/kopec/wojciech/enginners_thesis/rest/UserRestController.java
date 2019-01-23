@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class UserRestController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> register(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> register(@RequestBody @Valid UserDto user) {
         if (user.getId() != null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_set}");
         UserDto savedUser = userService.save(user);
@@ -41,7 +42,7 @@ public class UserRestController {
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody UserDto user) {
+    public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody @Valid UserDto user) {
         if (!id.equals(user.getId()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "{resource.id_not_consistent}");
         UserDto updatedUser = userService.update(user);

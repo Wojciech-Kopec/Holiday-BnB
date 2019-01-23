@@ -148,6 +148,7 @@ public class SpecificationTests {
         assertResults(accommodationEntity, criteria);
     }
 
+    //FIXME These 2 below don't really work as Predicate is set as NULL in that conditions = all entities are fetched.
     @Test
     public void singularCriteriaPriceTest3() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()

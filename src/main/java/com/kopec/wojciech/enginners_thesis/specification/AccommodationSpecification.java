@@ -52,11 +52,11 @@ public final class AccommodationSpecification {
     }
 
     private static Predicate withPriceBetween(Integer minPrice, Integer maxPrice) {
-        //TODO check for minPrice < maxPrice
-        if(minPrice != null && maxPrice != null) {
+        if (minPrice != null && maxPrice != null && maxPrice > minPrice) {
             return QAccommodation.accommodation.pricePerNight.between(minPrice, maxPrice);
+        } else {
+            return null;
         }
-        return null;
     }
 
     private static Predicate withAmenity(String amenityType) {
