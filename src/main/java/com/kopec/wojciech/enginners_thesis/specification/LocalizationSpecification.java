@@ -10,7 +10,8 @@ import lombok.Builder;
 
 public final class LocalizationSpecification {
 
-    private LocalizationSpecification() {}
+    private LocalizationSpecification() {
+    }
 
     public static Predicate withCriteria(LocalizationDto criteria) {
         return new BooleanBuilder(
@@ -21,18 +22,18 @@ public final class LocalizationSpecification {
     }
 
     private static Predicate withCountry(String country) {
-        return QLocalization.localization.country.eq(country);
+        return country != null ? QLocalization.localization.country.eq(country) : null;
     }
 
     private static Predicate withState(String state) {
-        return QLocalization.localization.state.eq(state);
+        return state != null ? QLocalization.localization.state.eq(state) : null;
     }
 
     private static Predicate withCity(String city) {
-        return QLocalization.localization.city.eq(city);
+        return city != null ? QLocalization.localization.city.eq(city) : null;
     }
 
     private static Predicate withAddressContains(String address) {
-        return QLocalization.localization.address.contains(address);
+        return address != null ? QLocalization.localization.address.contains(address) : null;
     }
 }

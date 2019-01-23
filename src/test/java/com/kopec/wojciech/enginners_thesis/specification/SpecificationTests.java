@@ -2,12 +2,10 @@ package com.kopec.wojciech.enginners_thesis.specification;
 
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
-import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.Amenity;
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
-import com.kopec.wojciech.enginners_thesis.model.User;
+import com.kopec.wojciech.enginners_thesis.model.*;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
+import org.assertj.core.util.Lists;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,11 +95,19 @@ public class SpecificationTests {
 
     @Test
     public void singularCriteriaTypeTest() {
-        AccommodationCriteria criteria = AccommodationCriteria.builder()
+        AccommodationCriteria criteria1 = AccommodationCriteria.builder()
                 .accommodationTypes(Collections.singletonList(accommodationEntity.getAccommodationType()))
                 .build();
 
-        assertResults(accommodationEntity, criteria);
+        assertResults(accommodationEntity, criteria1);
+
+        AccommodationCriteria criteria2 = AccommodationCriteria.builder()
+                .accommodationTypes(Lists.newArrayList(accommodationEntity.getAccommodationType(),
+                        AccommodationType.CABIN, AccommodationType.SUMMER_HOUSE, AccommodationType.SUITE)
+                )
+                .build();
+
+        assertResults(accommodationEntity, criteria2);
     }
 
     @Test
@@ -109,14 +115,14 @@ public class SpecificationTests {
         List<Amenity> amenities = accommodationEntity.getAmenities();
         AccommodationCriteria criteria = AccommodationCriteria.builder()
                 .amenities(amenities.stream().map(
-                        amenity -> amenity.getType().toString()).limit(amenities.size()-1).collect(Collectors.toList()))
+                        amenity -> amenity.getType().toString()).limit(amenities.size() - 1).collect(Collectors.toList()))
                 .build();
 
         assertResults(accommodationEntity, criteria);
     }
 
     @Test
-    public void singularCriteriaDefaultPriceEquals0Test() {
+    public void defaultEmptyCriteriaTest() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
                 .build();
 
@@ -124,8 +130,38 @@ public class SpecificationTests {
     }
 
     @Test
-    public void singularCriteriaPriceTest() {
+    public void singularCriteriaPriceTest1() {
         AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .minPricePerNight(accommodationEntity.getPricePerNight() - 1)
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaPriceTest2() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .minPricePerNight(accommodationEntity.getPricePerNight())
+                .maxPricePerNight(accommodationEntity.getPricePerNight())
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaPriceTest3() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .minPricePerNight(accommodationEntity.getPricePerNight())
+                .maxPricePerNight(accommodationEntity.getPricePerNight() - 10)
+                .build();
+
+        assertResults(accommodationEntity, criteria);
+    }
+
+    @Test
+    public void singularCriteriaPriceTest4() {
+        AccommodationCriteria criteria = AccommodationCriteria.builder()
+                .minPricePerNight(accommodationEntity.getPricePerNight() + 10)
                 .maxPricePerNight(accommodationEntity.getPricePerNight())
                 .build();
 

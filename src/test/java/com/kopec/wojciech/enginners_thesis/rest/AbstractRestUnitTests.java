@@ -31,7 +31,7 @@ abstract public class AbstractRestUnitTests<T> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    abstract protected void mockServices() throws JsonProcessingException;
+    abstract protected void mockServices();
 
     protected MockHttpServletRequestBuilder buildRequest(HttpMethod httpMethod, String content, String urlTemplate) throws Exception {
         if(content==null){

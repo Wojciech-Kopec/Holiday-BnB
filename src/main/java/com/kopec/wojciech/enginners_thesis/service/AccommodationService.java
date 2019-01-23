@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AccommodationService {
@@ -40,8 +41,11 @@ public class AccommodationService {
         accommodationRepository.delete(AccommodationDto.toEntity(accommodationDto));
     }
 
-    public List<AccommodationDto> findAll() {
-        return accommodationRepository.findAll().stream().map(AccommodationDto::toDto).collect(Collectors.toList());
+    public List<AccommodationDto> findAll(AccommodationCriteria criteria) {
+        Iterable<Accommodation> accommodations = accommodationRepository.findAll(AccommodationSpecification.withCriteria(criteria));
+        return StreamSupport.stream(accommodations.spliterator(), false)
+        .map(AccommodationDto::toDto)
+        .collect(Collectors.toList());
     }
 
 //    public AccommodationDto findByAccommodationname(String accommodationname) {

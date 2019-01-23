@@ -7,7 +7,7 @@ public class AccommodationRestControllerTests extends AbstractRestUnitTests<Acco
 
 
     @Override
-    protected void mockServices() throws JsonProcessingException {
+    protected void mockServices() {
 
     }
 }

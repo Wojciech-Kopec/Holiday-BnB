@@ -31,7 +31,7 @@ public interface TestableValidation<T> {
                     .orElseThrow(() -> new AssertionError("Violation for field " + value + " not found"));
 
             if (message != null)
-                assertThat(violation.getMessage(), is(message));
+                assertThat(message, is(violation.getMessage()));
         } else if (shouldBeValid) {
             assertThat(((int) constraintViolations.stream().filter(
                     v -> v.getPropertyPath().toString().equals(value)).count()), is(0));

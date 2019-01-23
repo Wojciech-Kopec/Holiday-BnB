@@ -38,7 +38,7 @@ public class UserRestControllerTests extends AbstractRestUnitTests<UserDto> {
     private UserDto existingUser;
 
 
-    public void mockServices() throws JsonProcessingException {
+    public void mockServices() {
         Mockito.when(userService.save(requestedUser)).thenReturn(requestedUser);
         Mockito.when(userService.update(requestedUser)).thenReturn(requestedUser);
         Mockito.when(userService.findByUsername(requestedUser.getUsername())).thenReturn(requestedUser);
