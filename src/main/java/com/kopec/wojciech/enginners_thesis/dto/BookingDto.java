@@ -25,10 +25,14 @@ public class BookingDto {
 
 
     public static BookingDto toDto(Booking booking) {
+        if(booking != null)
         return modelMapper.map(booking, BookingDto.class);
+    return null;
     }
 
     public static Booking toEntity(BookingDto bookingDto) {
+        if(bookingDto != null)
         return modelMapper.map(bookingDto, Booking.class);
+    return null;
     }
 }

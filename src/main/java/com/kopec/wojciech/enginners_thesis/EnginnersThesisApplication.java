@@ -24,39 +24,39 @@ public class EnginnersThesisApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(EnginnersThesisApplication.class, args);
 
-
-        User userOwner = createOwnerUser();
-        User userClient = createClientUser();
-
-        logger.info("Adding created User-objects");
-        UserRepository userRepository = context.getBean(UserRepository.class);
-        userRepository.save(userOwner);
-        userRepository.save(userClient);
-        logger.info("Objects added");
-
-        Accommodation accommodation1 = createAccomodationObject(userOwner);
-
-        logger.info("Adding created Accommodation-objects");
-        AccommodationRepository accommodationRepository = context.getBean(AccommodationRepository.class);
-        accommodationRepository.save(accommodation1);
-        logger.info("Objects added");
-
-        Booking booking1 = createBooking(userClient, accommodation1);
-
-        logger.info("Adding created Booking-objects");
-        BookingRepository bookingRepository = context.getBean(BookingRepository.class);
-        bookingRepository.save(booking1);
-        logger.info("Objects added");
-
-        logger.info("userRepository.findByUsername(userOwner.getUsername()).getAccommodations().forEach(System.out::println);");
-        User userOwnerCopy = userRepository.findByUsername(userOwner.getUsername());
-        List<Accommodation> accommodationsCopy = userOwnerCopy.getAccommodations();
-        accommodationsCopy.forEach(accommodation -> logger.info(accommodation.toString()));
-
-        logger.info("userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(System.out::println);");
-        userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(booking -> logger.info(booking.toString()));
-
-//        accommodationRepository.findAll(QAccommodation.accommodation.name.contains(criteria.getName()));
+//
+//        User userOwner = createOwnerUser();
+//        User userClient = createClientUser();
+//
+//        logger.info("Adding created User-objects");
+//        UserRepository userRepository = context.getBean(UserRepository.class);
+//        userRepository.save(userOwner);
+//        userRepository.save(userClient);
+//        logger.info("Objects added");
+//
+//        Accommodation accommodation1 = createAccomodationObject(userOwner);
+//
+//        logger.info("Adding created Accommodation-objects");
+//        AccommodationRepository accommodationRepository = context.getBean(AccommodationRepository.class);
+//        accommodationRepository.save(accommodation1);
+//        logger.info("Objects added");
+//
+//        Booking booking1 = createBooking(userClient, accommodation1);
+//
+//        logger.info("Adding created Booking-objects");
+//        BookingRepository bookingRepository = context.getBean(BookingRepository.class);
+//        bookingRepository.save(booking1);
+//        logger.info("Objects added");
+//
+//        logger.info("userRepository.findByUsername(userOwner.getUsername()).getAccommodations().forEach(System.out::println);");
+//        User userOwnerCopy = userRepository.findByUsername(userOwner.getUsername());
+//        List<Accommodation> accommodationsCopy = userOwnerCopy.getAccommodations();
+//        accommodationsCopy.forEach(accommodation -> logger.info(accommodation.toString()));
+//
+//        logger.info("userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(System.out::println);");
+//        userRepository.findByUsername(userClient.getUsername()).getBookings().forEach(booking -> logger.info(booking.toString()));
+//
+////        accommodationRepository.findAll(QAccommodation.accommodation.name.contains(criteria.getName()));
 
 
     }

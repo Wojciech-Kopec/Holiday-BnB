@@ -37,7 +37,7 @@ public class SpecificationTests {
     @Before
     public void persistObjects() {
         User user = ModelProvider.createUser_1();
-        accommodationEntity = ModelProvider.createAccomodation_1(user);
+        accommodationEntity = ModelProvider.createAccommodation_1(user);
 
         userRepository.save(user);
         accommodationRepository.save(accommodationEntity);
@@ -56,9 +56,9 @@ public class SpecificationTests {
                 .accommodationTypes(Collections.singletonList(accommodationDto.getAccommodationType()))
                 .requiredGuestCount(accommodationDto.getMaxGuests())
                 .maxPricePerNight(accommodationDto.getPricePerNight())
-                .localization(accommodationDto.getLocalization())
                 .amenities(accommodationDto.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
+                .localization(accommodationDto.getLocalization())
                 .build();
 
 

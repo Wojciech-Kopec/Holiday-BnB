@@ -25,7 +25,7 @@ public class DtoTests {
     public void initObjects() {
         userOwner = createUser_1();
         userClient = createUser_2();
-        accommodation1 = createAccomodation_1(userOwner);
+        accommodation1 = createAccommodation_1(userOwner);
         booking1 = createBooking_1(userClient, accommodation1);
     }
 

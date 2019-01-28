@@ -38,10 +38,14 @@ public class UserDto {
     private static ModelMapper modelMapper = new ModelMapper();
 
     public static UserDto toDto(User user) {
-        return modelMapper.map(user, UserDto.class);
+        if (user != null)
+            return modelMapper.map(user, UserDto.class);
+        return null;
     }
 
     public static User toEntity(UserDto userDto) {
+        if (userDto != null)
         return modelMapper.map(userDto, User.class);
+    return null;
     }
 }

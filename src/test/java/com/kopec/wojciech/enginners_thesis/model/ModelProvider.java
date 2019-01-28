@@ -33,7 +33,7 @@ public class ModelProvider {
                 .build();
     }
 
-    public static Accommodation createAccomodation_1(User userOwner) {
+    public static Accommodation createAccommodation_1(User userOwner) {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
@@ -56,7 +56,7 @@ public class ModelProvider {
         accommodation = Accommodation.builder()
                 .user(userOwner)
                 .name("Test_AccommodationName1")
-                .description("Test_Description1_" + StringUtils.repeat(".", 100))
+                .description("Test_Description1_" + StringUtils.repeat("A", 100))
                 .accommodationType(AccommodationType.HOUSE)
                 .maxGuests(5)
                 .pricePerNight(500)
@@ -67,7 +67,7 @@ public class ModelProvider {
         return accommodation;
     }
 
-    public static Accommodation createAccomodation_2(User userOwner) {
+    public static Accommodation createAccommodation_2(User userOwner) {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
@@ -95,7 +95,7 @@ public class ModelProvider {
         accommodation = Accommodation.builder()
                 .user(userOwner)
                 .name("Test_AccommodationName2")
-                .description("Test_Description2_" + StringUtils.repeat(".", 100))
+                .description("Test_Description2_" + StringUtils.repeat("A", 100))
                 .accommodationType(AccommodationType.FLAT)
                 .maxGuests(4)
                 .pricePerNight(350)

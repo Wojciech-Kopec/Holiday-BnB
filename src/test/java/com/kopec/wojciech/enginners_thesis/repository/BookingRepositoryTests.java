@@ -35,8 +35,8 @@ public class BookingRepositoryTests implements TestableRepository<Booking, Booki
 
     private User user1 = createUser_1();
     private User user2 = createUser_2();
-    private Accommodation accommodation1 = createAccomodation_1(user1);
-    private Accommodation accommodation2 = createAccomodation_2(user2);
+    private Accommodation accommodation1 = createAccommodation_1(user1);
+    private Accommodation accommodation2 = createAccommodation_2(user2);
     private Booking booking1 = createBooking_1(user2, accommodation1);
     private Booking booking2 = createBooking_2(user1, accommodation2);
 

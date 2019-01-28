@@ -16,10 +16,14 @@ public class LocalizationDto {
     private static ModelMapper modelMapper = new ModelMapper();
 
     public static LocalizationDto toDto(Localization localization) {
+        if(localization != null)
         return modelMapper.map(localization, LocalizationDto.class);
+    return null;
     }
 
     public static Localization toEntity(LocalizationDto localizationDto) {
+        if (localizationDto != null)
         return modelMapper.map(localizationDto, Localization.class);
+    return null;
     }
 }

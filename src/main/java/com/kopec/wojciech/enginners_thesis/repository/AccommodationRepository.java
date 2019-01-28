@@ -13,15 +13,5 @@ import java.util.function.Predicate;
 @RepositoryRestResource()
 public interface AccommodationRepository extends JpaRepository<Accommodation, Integer>, QuerydslPredicateExecutor<Accommodation> {
 
-    List<Accommodation> findAllByAccommodationType(AccommodationType accommodationType);
-
-    List<Accommodation> findAllByMaxGuestsGreaterThanEqual(int guests);
-
-    List<Accommodation> findAllByPricePerNightBetween(int low, int high);
-
-    List<Accommodation> findAllByLocalization_City(String city);
-
-    List<Accommodation> findAllByAmenities(List<String> amenities);
-
-    List<Accommodation> findAllByUser(User user);
+    List<Accommodation> findAllByUserOrderByCreatedDateDesc(User user);
 }

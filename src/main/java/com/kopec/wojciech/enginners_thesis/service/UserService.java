@@ -1,7 +1,10 @@
 package com.kopec.wojciech.enginners_thesis.service;
 
+import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
+import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.exception.UserAlreadyExistException;
+import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +73,13 @@ public class UserService {
 
     public UserDto findById(Integer id) {
         return UserDto.toDto(userRepository.findById(id).orElse(null));
+    }
+
+    public UserDto findByAccommodation(AccommodationDto accommodation) {
+        return UserDto.toDto(userRepository.findByAccommodationsContains(AccommodationDto.toEntity(accommodation)));
+    }
+
+    public UserDto findByBooking(BookingDto booking) {
+        return UserDto.toDto(userRepository.findByBookingsContains(BookingDto.toEntity(booking)));
     }
 }

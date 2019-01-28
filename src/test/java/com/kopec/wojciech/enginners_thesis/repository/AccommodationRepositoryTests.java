@@ -28,8 +28,8 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
 
     private User user1 = createUser_1();
     private User user2 = createUser_2();
-    private Accommodation accommodation = createAccomodation_1(user1);
-    private Accommodation accommodation2 = createAccomodation_2(user2);
+    private Accommodation accommodation = createAccommodation_1(user1);
+    private Accommodation accommodation2 = createAccommodation_2(user2);
 
     @Test
     public void createAccommodationEntityTest() {
