@@ -5,6 +5,8 @@ import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationCriteria;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,9 @@ public class AccommodationRestController {
 
     private AccommodationService accommodationService;
     private BookingService bookingService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccommodationRestController.class);
+
 
     @Autowired
     public AccommodationRestController(AccommodationService accommodationService, BookingService bookingService) {
@@ -82,10 +87,12 @@ public class AccommodationRestController {
         }
     }
 
-    @GetMapping("/{id}/bookings")
+    @GetMapping(value = "/{id}/bookings", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<BookingDto>> findAllBookings(@PathVariable Integer id) {
+        LOGGER.info(">>>> Controller-AccomID=" + id);
         AccommodationDto accommodation = accommodationService.findById(id);
         if (accommodation != null) {
+            LOGGER.info(">>>> Controller-Accom=" + accommodation.toString());
             List<BookingDto> accommodationsBookings = bookingService.findAllByAccommodation(accommodation);
             return new ResponseEntity<>(accommodationsBookings, HttpStatus.FOUND);
         } else {

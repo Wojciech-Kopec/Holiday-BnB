@@ -15,11 +15,13 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -55,7 +57,7 @@ public class UserRestControllerTests extends AbstractRestTest {
         bookingService = ServiceMocker.mockBookingService(bookingService);
 
         accommodationDto = AccommodationRestControllerTests.getRequestedAccommodation();
-        bookingDto = BookingRestControllerTests.getRequestedBooking();
+        bookingDto = BookingRestControllerTests.getExistingBooking();
 
         userRestController = new UserRestController(userService, bookingService, accommodationService);
     }

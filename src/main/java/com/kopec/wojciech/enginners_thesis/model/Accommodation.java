@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import lombok.*;
+import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -72,7 +73,9 @@ public class Accommodation extends AbstractEntity {
 
 
     @OneToMany(mappedBy = "accommodation",
+            fetch = FetchType.LAZY,
             orphanRemoval = true)
+    @IndexColumn(name = "id", base = 1)
     @Singular
     private List<Booking> bookings;
 

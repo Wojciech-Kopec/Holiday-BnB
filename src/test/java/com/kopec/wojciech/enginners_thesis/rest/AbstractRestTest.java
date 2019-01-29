@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+//@WebMvcTest(value = {UserRestController.class, AccommodationRestController.class, BookingRestController.class}, secure = false)
 abstract public class AbstractRestTest {
 
     @Autowired
@@ -88,7 +90,7 @@ abstract public class AbstractRestTest {
     public void httpTestTemplate(HttpMethod requestMethod, String requestLocation, Object requestBodyObj, Object expectedResponseBodyObj, HttpStatus expectedStatus, String expectedLocation, String expectedErrorMsg) {
         try {
             //Given
-            String requestBody = mapper.writeValueAsString(requestBodyObj);
+            String requestBody = requestBodyObj != null ? mapper.writeValueAsString(requestBodyObj) : "";
             String expectedResponseBody = expectedResponseBodyObj != null ? mapper.writeValueAsString(expectedResponseBodyObj) : "";
 
             //When

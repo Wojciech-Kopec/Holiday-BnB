@@ -28,20 +28,4 @@ public class TestConfiguration {
     public BookingRepositoryTests bookingRepositoryTests() {
         return new BookingRepositoryTests();
     }
-
-    @Bean
-    public UserRestControllerTests userRestControllerTests() {
-        return new UserRestControllerTests();
-    }
-
-    @Bean
-    public BookingRestControllerTests BookingRestControllerTests() {
-        return new BookingRestControllerTests();
-    }
-
-    @Bean
-    public AccommodationRestControllerTests AccommodationRestControllerTests() {
-        return new AccommodationRestControllerTests();
-    }
-
 }

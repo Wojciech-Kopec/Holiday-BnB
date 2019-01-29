@@ -3,15 +3,12 @@ package com.kopec.wojciech.enginners_thesis.model;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ModelProvider {
 
     public static User createUser_1() {
-        return User.builder()
+        User user = User.builder()
                 .firstName("Test_FirstName1")
                 .lastName("Test_LastName1")
                 .email("user1@test.com")
@@ -19,11 +16,14 @@ public class ModelProvider {
                 .username("User1")
                 .phoneNumber("101010101")
                 .build();
+
+        user.setId(10);
+        return user;
     }
 
 
     public static User createUser_2() {
-        return User.builder()
+        User user = User.builder()
                 .firstName("Test_FirstName2")
                 .lastName("Test_LastName2")
                 .email("user2@test.com")
@@ -31,6 +31,9 @@ public class ModelProvider {
                 .username("User2")
                 .phoneNumber("121212121")
                 .build();
+
+        user.setId(20);
+        return user;
     }
 
     public static Accommodation createAccommodation_1(User userOwner) {
@@ -64,6 +67,7 @@ public class ModelProvider {
                 .localization(localization1)
                 .build();
 
+        accommodation.setId(10);
         return accommodation;
     }
 
@@ -103,11 +107,12 @@ public class ModelProvider {
                 .localization(localization2)
                 .build();
 
+        accommodation.setId(20);
         return accommodation;
     }
 
     public static Booking createBooking_1(User client, Accommodation accommodation) {
-        return Booking.builder()
+        Booking booking = Booking.builder()
                 .user(client)
                 .accommodation(accommodation)
                 .guestsCount(4)
@@ -115,10 +120,13 @@ public class ModelProvider {
                 .startDate(LocalDate.of(2022, 1, 1))
                 .finishDate(LocalDate.of(2022, 1, 15))
                 .build();
+
+        booking.setId(10);
+        return booking;
     }
 
     public static Booking createBooking_2(User client, Accommodation accommodation) {
-        return Booking.builder()
+        Booking booking = Booking.builder()
                 .user(client)
                 .accommodation(accommodation)
                 .guestsCount(3)
@@ -126,5 +134,8 @@ public class ModelProvider {
                 .startDate(LocalDate.of(2022, 2, 10))
                 .finishDate(LocalDate.of(2022, 3, 1))
                 .build();
+
+        booking.setId(20);
+        return booking;
     }
 }

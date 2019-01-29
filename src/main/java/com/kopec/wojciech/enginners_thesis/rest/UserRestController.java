@@ -112,6 +112,7 @@ public class UserRestController {
     public ResponseEntity<List<AccommodationDto>> findAllAccommodations(@PathVariable Integer id) {
         UserDto user = userService.findById(id);
         if (user != null) {
+            LOGGER.info(user.toString());
             List<AccommodationDto> usersAccommodations = accommodationService.findAllByUser(user);
             return new ResponseEntity<>(usersAccommodations, HttpStatus.FOUND);
         } else {

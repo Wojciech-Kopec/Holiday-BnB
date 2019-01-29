@@ -59,8 +59,11 @@ public class BookingRestControllerTests extends AbstractRestTest {
 //        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByUser(ArgumentMatchers.any(UserDto.class));
 //        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByAccommodation(ArgumentMatchers.any(AccommodationDto.class));
 
+        System.out.println(">>>>> BookingMock: AccommodationID=" + requestedBooking.getAccommodation().getId());
+        System.out.println(">>>>> BookingMock: Accommodation=" + requestedBooking.getAccommodation());
         Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByAccommodation(requestedBooking.getAccommodation());
-        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByAccommodation(requestedBooking.getAccommodation());
+        System.out.println(">>>>> BookingMock: UserID=" + requestedBooking.getUser().getId());
+        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByUser(requestedBooking.getUser());
 
 
 //        Mockito.when(bookingService.findAllByUser(requestedBooking.getUser()))
@@ -91,11 +94,11 @@ public class BookingRestControllerTests extends AbstractRestTest {
 
     public static void setUpDTOs() {
         requestedBooking = BookingDto.toDto(
-                createBooking_1(createUser_1(), createAccommodation_1(createUser_2())));
+                createBooking_1(createUser_2(), createAccommodation_1(createUser_1())));
         requestedBooking.setId(10);
         //2nd Booking used for List assertions
         existingBooking = BookingDto.toDto(
-                createBooking_2(createUser_2(), createAccommodation_2(createUser_1())));
+                createBooking_2(createUser_1(), createAccommodation_2(createUser_2())));
         existingBooking.setId(20);
     }
 

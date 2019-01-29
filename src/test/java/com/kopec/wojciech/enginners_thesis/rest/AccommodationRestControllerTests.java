@@ -67,7 +67,12 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
         Mockito.when(accommodationService.findById(requestedAccommodation.getId()))
                 .thenReturn(requestedAccommodation);
 
-        return accommodationService;
+        //  fixme WHICH ONE?
+        Mockito.when(accommodationService.findAllByUser(requestedAccommodation.getUser()))
+                .thenReturn(Collections.singletonList(requestedAccommodation));
+        Mockito.doReturn(Collections.singletonList(requestedAccommodation)).when(accommodationService).findAllByUser(requestedAccommodation.getUser());
+
+    return accommodationService;
     }
 
     @Before
