@@ -3,58 +3,58 @@ package com.kopec.wojciech.enginners_thesis.rest;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
-import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.Booking;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import com.kopec.wojciech.enginners_thesis.service.UserService;
 
+import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 
+/** This class contains of static methods which return Mock Instance of corresponding
+ * com.kopec.wojciech.enginners_thesis.service Classes. Mocks are stubbed with default instances of Model classes */
 public class ServiceMocker {
 
-    public static BookingService mockBookingService(BookingService serviceToMock) {
-        BookingRestControllerTests.setUpDTOs();
-        return BookingRestControllerTests.mockService(serviceToMock,
-                BookingRestControllerTests.getRequestedBooking(), BookingRestControllerTests.getExistingBooking());
+    public static UserService mockUserService(UserService serviceToMock) {
+        return UserRestControllerTests.mockService(
+                serviceToMock,
+                buildPrimaryUserDto(),
+                buildSecondaryUserDto());
     }
 
     public static AccommodationService mockAccommodationService(AccommodationService serviceToMock) {
-        AccommodationRestControllerTests.setUpDTOs();
-        AccommodationDto returnObj1 = AccommodationRestControllerTests.getRequestedAccommodation();
-        AccommodationDto returnObj2 = AccommodationRestControllerTests.getExistingAccommodation();
-        return AccommodationRestControllerTests.mockService(serviceToMock, returnObj1, returnObj2);
+        return AccommodationRestControllerTests.mockService(
+                serviceToMock,
+                buildPrimaryAccommodationDto(), buildSecondaryAccommodationDto());
+    }
+
+    public static BookingService mockBookingService(BookingService serviceToMock) {
+        return BookingRestControllerTests.mockService(
+                serviceToMock,
+                buildPrimaryBookingDto(),
+                buildSecondaryBookingDto());
     }
 
 
-//    public static UserService mockUserService(UserService serviceToMock) {
-//        UserRestControllerTests.setUpDTOs();
-//        UserDto returnObj1 = UserRestControllerTests.getRequestedUser();
-//        UserDto returnObj2 = UserRestControllerTests.getExistingUser();
-//        return UserRestControllerTests.mockService(serviceToMock, returnObj1, returnObj2);
-//    }
-
-    public static UserDto getPrimaryUserDto() {
-        return null;
+    public static UserDto buildPrimaryUserDto() {
+        return UserDto.toDto(createUser_1());
     }
 
-    public static UserDto getSecondaryUserDto() {
-        return null;
+    public static UserDto buildSecondaryUserDto() {
+        return UserDto.toDto(createUser_2());
     }
 
-    public static AccommodationDto getPrimaryAccommodationDto() {
-        return null;
+    public static AccommodationDto buildPrimaryAccommodationDto() {
+        return AccommodationDto.toDto(createAccommodation_1(createUser_1()));
     }
 
-    public static AccommodationDto getSecondaryAccommodatioDto() {
-        return null;
+    public static AccommodationDto buildSecondaryAccommodationDto() {
+        return AccommodationDto.toDto(createAccommodation_2(createUser_2()));
     }
 
-    public static BookingDto getPrimaryBookingDto() {
-        return null;
+    public static BookingDto buildPrimaryBookingDto() {
+        return BookingDto.toDto(createBooking_1(createUser_2(), createAccommodation_1(createUser_1())));
     }
 
-    public static BookingDto getSecondaryBookingDto() {
-        return null;
+    public static BookingDto buildSecondaryBookingDto() {
+        return BookingDto.toDto(createBooking_2(createUser_1(), createAccommodation_2(createUser_2())));
     }
-
 }

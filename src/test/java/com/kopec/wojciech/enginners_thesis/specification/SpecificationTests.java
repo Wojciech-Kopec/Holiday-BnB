@@ -36,8 +36,8 @@ public class SpecificationTests {
 
     @Before
     public void persistObjects() {
-        User user = ModelProvider.createUser_1();
-        accommodationEntity = ModelProvider.createAccommodation_1(user);
+        User user = ModelProvider.createUser_1_noId();
+        accommodationEntity = ModelProvider.createAccommodation_1_noId(user);
 
         userRepository.save(user);
         accommodationRepository.save(accommodationEntity);

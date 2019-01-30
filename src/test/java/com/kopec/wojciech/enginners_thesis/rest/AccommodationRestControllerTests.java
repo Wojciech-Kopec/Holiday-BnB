@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = AccommodationRestController.class, secure = false)
 public class AccommodationRestControllerTests extends AbstractRestTest {
@@ -39,71 +37,73 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
     private AccommodationRestController accommodationRestController;
 
     private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private static AccommodationDto requestedAccommodation;
-    private static AccommodationDto existingAccommodation;
-    private static AccommodationCriteria criteria;
-    private static BookingDto bookingDto;
+    private AccommodationDto requestedAccommodation;
+    private AccommodationDto anotherAccommodation;
+    private AccommodationCriteria filteringCriteria;
 
 
     public void mockServices() {
-        accommodationService = mockService(accommodationService, requestedAccommodation, existingAccommodation);
+        accommodationService = mockService(accommodationService, requestedAccommodation, anotherAccommodation);
         bookingService = ServiceMocker.mockBookingService(bookingService);
-        bookingDto = BookingRestControllerTests.getRequestedBooking();
-        accommodationRestController = new AccommodationRestController(accommodationService, bookingService);
 
+        accommodationRestController = new AccommodationRestController(accommodationService, bookingService);
     }
 
     public static AccommodationService mockService(AccommodationService accommodationService,
-                                                   AccommodationDto requestedAccommodation,
-                                                   AccommodationDto existingAccommodation) {
-        Mockito.when(accommodationService.save(requestedAccommodation))
-                .thenReturn(requestedAccommodation);
-        Mockito.when(accommodationService.update(requestedAccommodation))
-                .thenReturn(requestedAccommodation);
+                                                   AccommodationDto primaryAccommodation,
+                                                   AccommodationDto secondaryAccommodation) {
+
+        mockUnitMethodsForInstance(accommodationService, primaryAccommodation);
+        mockUnitMethodsForInstance(accommodationService, secondaryAccommodation);
+
         Mockito.when(accommodationService.findAll(ArgumentMatchers.any(AccommodationCriteria.class)))
-                .thenReturn(Collections.singletonList(requestedAccommodation));
+                .thenReturn(Collections.singletonList(primaryAccommodation));
         Mockito.when(accommodationService.findAll(ArgumentMatchers.eq(AccommodationCriteria.builder().build())))
-                .thenReturn(Lists.newArrayList(requestedAccommodation, existingAccommodation));
-        Mockito.when(accommodationService.findById(requestedAccommodation.getId()))
-                .thenReturn(requestedAccommodation);
+                //null values
+                .thenReturn(Lists.newArrayList(primaryAccommodation, secondaryAccommodation));
 
-        //  fixme WHICH ONE?
-        Mockito.when(accommodationService.findAllByUser(requestedAccommodation.getUser()))
-                .thenReturn(Collections.singletonList(requestedAccommodation));
-        Mockito.doReturn(Collections.singletonList(requestedAccommodation)).when(accommodationService).findAllByUser(requestedAccommodation.getUser());
+        return accommodationService;
+    }
 
-    return accommodationService;
+    private static void mockUnitMethodsForInstance(AccommodationService accommodationService, AccommodationDto
+            accommodationDto) {
+        Mockito.when(accommodationService.save(accommodationDto))
+                .thenReturn(getSuitableInstance(accommodationDto));
+        Mockito.when(accommodationService.update(accommodationDto))
+                .thenReturn(accommodationDto);
+        Mockito.when(accommodationService.findById(accommodationDto.getId()))
+                .thenReturn(accommodationDto);
+        Mockito.when(accommodationService.findAllByUser(accommodationDto.getUser()))
+                .thenReturn(Collections.singletonList(accommodationDto));
+    }
+
+    /*When calling save method in Controller, Id must be null in order for Controller to call mocked Service,
+    * but Instance with not-null Id must be returned in order to build valid URI for redirection.
+    * This is just a poor solution to return either primary or secondary instance which got their Ids set on build */
+    private static AccommodationDto getSuitableInstance(AccommodationDto accommodationDto) {
+        return accommodationDto.getName().equals(ServiceMocker.buildPrimaryAccommodationDto().getName()) ?
+                ServiceMocker.buildPrimaryAccommodationDto() : ServiceMocker.buildSecondaryAccommodationDto();
     }
 
     @Before
-    //Resets objects to their original state
     public void setUp() {
-        setUpDTOs();
-    }
-
-    public static void setUpDTOs() {
-        requestedAccommodation = AccommodationDto.toDto(
-                createAccommodation_1(createUser_1()));
-        requestedAccommodation.setId(10);
-        //2nd Accommodation used for List assertions
-        existingAccommodation = AccommodationDto.toDto(
-                createAccommodation_2(createUser_2()));
-        existingAccommodation.setId(20);
-
-        criteria = buildCriteria(requestedAccommodation);
+        requestedAccommodation = ServiceMocker.buildPrimaryAccommodationDto();
+        anotherAccommodation = ServiceMocker.buildSecondaryAccommodationDto();
+        filteringCriteria = buildCriteria(requestedAccommodation);
     }
 
     @Test
     public void validCreationTest() {
+        AccommodationDto responseAccommodation = ServiceMocker.buildPrimaryAccommodationDto();
         requestedAccommodation.setId(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.POST,
                 baseEndpoint,
                 requestedAccommodation,
-                requestedAccommodation,
+                responseAccommodation,
                 HttpStatus.CREATED,
-                baseEndpoint,
+                baseEndpoint + "/" + responseAccommodation.getId(),
                 null
         );
     }
@@ -138,7 +138,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidEndpointUpdateUserTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 1;
+        Integer pathVariable = requestedAccommodation.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.PUT,
@@ -168,7 +168,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 1;
+        Integer pathVariable = requestedAccommodation.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -187,7 +187,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedAccommodation, existingAccommodation),
+                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
                 HttpStatus.OK,
                 null,
                 null
@@ -199,7 +199,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
     public void validFindAllAccommodationsWithCriteriaTest() {
         mockedHttpTestTemplate(
                 HttpMethod.GET,
-                baseEndpoint + addCriteriaAsRequestParams(criteria),
+                baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
                 Lists.newArrayList(requestedAccommodation),
                 HttpStatus.OK,
@@ -214,7 +214,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(AccommodationCriteria.builder().build()),
                 null,
-                Lists.newArrayList(requestedAccommodation, existingAccommodation),
+                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
                 HttpStatus.OK,
                 null,
                 null
@@ -223,11 +223,11 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void validFindAllAccommodationsWithCriteriaNullLocalizationTest() {
-        criteria.setLocalization(null);
+        filteringCriteria.setLocalization(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
-                baseEndpoint + addCriteriaAsRequestParams(criteria),
+                baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
                 Lists.newArrayList(requestedAccommodation),
                 HttpStatus.OK,
@@ -238,14 +238,14 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void validFindAllAccommodationsWithPartialCriteriaTest() {
-        criteria.setName(null);
-        criteria.setAmenities(null);
-        criteria.setLocalization(null);
-        criteria.setMinPricePerNight(null);
+        filteringCriteria.setName(null);
+        filteringCriteria.setAmenities(null);
+        filteringCriteria.setLocalization(null);
+        filteringCriteria.setMinPricePerNight(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
-                baseEndpoint + addCriteriaAsRequestParams(criteria),
+                baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
                 Lists.newArrayList(requestedAccommodation),
                 HttpStatus.OK,
@@ -260,7 +260,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(null),
                 null,
-                Lists.newArrayList(requestedAccommodation, existingAccommodation),
+                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
                 HttpStatus.OK,
                 null,
                 null
@@ -284,7 +284,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidDeleteAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 1;
+        Integer pathVariable = requestedAccommodation.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.DELETE,
@@ -299,6 +299,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void validFetchBookings() {
+        BookingDto bookingDto = ServiceMocker.buildPrimaryBookingDto();
         Integer pathVariable = requestedAccommodation.getId();
 
         mockedHttpTestTemplate(
@@ -314,7 +315,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchBookings() {
-        Integer pathVariable = requestedAccommodation.getId() + 1;
+        Integer pathVariable = requestedAccommodation.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -362,7 +363,7 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
             if (criteria.getAmenities() != null && criteria.getAmenities().size() > 0) {
                 criteria.getAmenities().forEach(amenity -> sb.append("amenity=").append(amenity).append("&"));
             }
-            //Localization criteria
+            //Localization filteringCriteria
             if (criteria.getLocalization() != null) {
                 LocalizationDto localization = criteria.getLocalization();
                 if (localization.getCountry() != null) {
@@ -380,13 +381,5 @@ public class AccommodationRestControllerTests extends AbstractRestTest {
             }
         }
         return sb.deleteCharAt(sb.length() - 1).toString();
-    }
-
-    public static AccommodationDto getRequestedAccommodation() {
-        return requestedAccommodation;
-    }
-
-    public static AccommodationDto getExistingAccommodation() {
-        return existingAccommodation;
     }
 }

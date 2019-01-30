@@ -1,9 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.google.common.collect.Lists;
-import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
-import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collections;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BookingRestController.class, secure = false)
 public class BookingRestControllerTests extends AbstractRestTest {
@@ -33,86 +29,66 @@ public class BookingRestControllerTests extends AbstractRestTest {
     private BookingRestController bookingRestController;
 
     private static String baseEndpoint = BookingRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private static BookingDto requestedBooking;
-    private static BookingDto existingBooking;
+    private BookingDto requestedBooking;
+    private BookingDto anotherBooking;
 
 
     public void mockServices() {
-        bookingService = mockService(bookingService, requestedBooking, existingBooking);
+        bookingService = mockService(bookingService, requestedBooking, anotherBooking);
         bookingRestController = new BookingRestController(bookingService);
     }
 
-    public static BookingService mockService(BookingService bookingService, BookingDto requestedBooking, BookingDto
-            existingBooking) {
-        Mockito.when(bookingService.save(requestedBooking))
-                .thenReturn(requestedBooking);
-        Mockito.when(bookingService.update(requestedBooking))
-                .thenReturn(requestedBooking);
+    public static BookingService mockService(BookingService bookingService, BookingDto primaryBooking, BookingDto secondaryBooking) {
+
+        mockUnitMethodsForInstance(bookingService, primaryBooking);
+        mockUnitMethodsForInstance(bookingService, secondaryBooking);
+
         Mockito.when(bookingService.findAll())
-                .thenReturn(Lists.newArrayList(requestedBooking, existingBooking));
-        Mockito.when(bookingService.findById(existingBooking.getId()))
-                .thenReturn(existingBooking);
-        Mockito.when(bookingService.findById(requestedBooking.getId()))
-                .thenReturn(requestedBooking);
-
-//        WORKS!!!
-//        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByUser(ArgumentMatchers.any(UserDto.class));
-//        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByAccommodation(ArgumentMatchers.any(AccommodationDto.class));
-
-        System.out.println(">>>>> BookingMock: AccommodationID=" + requestedBooking.getAccommodation().getId());
-        System.out.println(">>>>> BookingMock: Accommodation=" + requestedBooking.getAccommodation());
-        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByAccommodation(requestedBooking.getAccommodation());
-        System.out.println(">>>>> BookingMock: UserID=" + requestedBooking.getUser().getId());
-        Mockito.doReturn(Collections.singletonList(requestedBooking)).when(bookingService).findAllByUser(requestedBooking.getUser());
-
-
-//        Mockito.when(bookingService.findAllByUser(requestedBooking.getUser()))
-//                .thenReturn(Collections.singletonList(requestedBooking));
-//        Mockito.when(bookingService.findAllByUser(existingBooking.getUser()))
-//                .thenReturn(Collections.singletonList(existingBooking));
-//        Mockito.when(bookingService.findAllByAccommodation(requestedBooking.getAccommodation()))
-//                .thenReturn(Collections.singletonList(requestedBooking));
-//        Mockito.when(bookingService.findAllByAccommodation(existingBooking.getAccommodation()))
-//                .thenReturn(Collections.singletonList(existingBooking));
+                .thenReturn(Lists.newArrayList(primaryBooking, secondaryBooking));
 
         return bookingService;
     }
 
-    public static BookingDto getRequestedBooking() {
-        return requestedBooking;
+    private static void mockUnitMethodsForInstance(BookingService bookingService, BookingDto bookingDto) {
+        Mockito.when(bookingService.save(bookingDto))
+                .thenReturn(getSuitableInstance(bookingDto));
+        Mockito.when(bookingService.update(bookingDto))
+                .thenReturn(bookingDto);
+        Mockito.when(bookingService.findById(bookingDto.getId()))
+                .thenReturn(bookingDto);
+        Mockito.when(bookingService.findAllByUser(bookingDto.getUser()))
+                .thenReturn(Collections.singletonList(bookingDto));
+        Mockito.when(bookingService.findAllByAccommodation(bookingDto.getAccommodation()))
+                .thenReturn(Collections.singletonList(bookingDto));
     }
 
-    public static BookingDto getExistingBooking() {
-        return existingBooking;
+    /*When calling save method in Controller, Id must be null in order for Controller to call mocked Service,
+* but Instance with not-null Id must be returned in order to build valid URI for redirection.
+* This is just a poor solution to return either primary or secondary instance which got their Ids set on build */
+    private static BookingDto getSuitableInstance(BookingDto bookingDto) {
+        return bookingDto.getFinalPrice() == (ServiceMocker.buildPrimaryBookingDto().getFinalPrice()) ?
+                ServiceMocker.buildPrimaryBookingDto() : ServiceMocker.buildSecondaryBookingDto();
     }
-
+    
     @Before
-    //Resets objects to their original state
     public void setUp() {
-        setUpDTOs();
+        requestedBooking = ServiceMocker.buildPrimaryBookingDto();
+        anotherBooking = ServiceMocker.buildSecondaryBookingDto();
     }
 
-    public static void setUpDTOs() {
-        requestedBooking = BookingDto.toDto(
-                createBooking_1(createUser_2(), createAccommodation_1(createUser_1())));
-        requestedBooking.setId(10);
-        //2nd Booking used for List assertions
-        existingBooking = BookingDto.toDto(
-                createBooking_2(createUser_1(), createAccommodation_2(createUser_2())));
-        existingBooking.setId(20);
-    }
 
     @Test
     public void validCreationTest() {
+        BookingDto responseBooking = ServiceMocker.buildPrimaryBookingDto();
         requestedBooking.setId(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.POST,
                 baseEndpoint,
                 requestedBooking,
-                requestedBooking,
+                responseBooking,
                 HttpStatus.CREATED,
-                baseEndpoint,
+                baseEndpoint + "/" + responseBooking.getId(),
                 null
         );
     }
@@ -147,7 +123,7 @@ public class BookingRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidEndpointUpdateUserTest() {
-        Integer pathVariable = requestedBooking.getId() + 1;
+        Integer pathVariable = requestedBooking.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.PUT,
@@ -177,7 +153,7 @@ public class BookingRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchBookingTest() {
-        Integer pathVariable = requestedBooking.getId() + 1;
+        Integer pathVariable = requestedBooking.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -196,7 +172,7 @@ public class BookingRestControllerTests extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedBooking, existingBooking),
+                Lists.newArrayList(requestedBooking, anotherBooking),
                 HttpStatus.OK,
                 null,
                 null
@@ -220,7 +196,7 @@ public class BookingRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidDeleteBookingTest() {
-        Integer pathVariable = requestedBooking.getId() + 1;
+        Integer pathVariable = requestedBooking.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.DELETE,

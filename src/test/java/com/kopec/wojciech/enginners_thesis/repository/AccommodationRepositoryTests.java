@@ -26,11 +26,13 @@ public class AccommodationRepositoryTests implements TestableRepository<Accommod
     @Autowired
     UserRepositoryTests userRepositoryTests;
 
-    private User user1 = createUser_1();
-    private User user2 = createUser_2();
-    private Accommodation accommodation = createAccommodation_1(user1);
-    private Accommodation accommodation2 = createAccommodation_2(user2);
+    private User user1 = createUser_1_noId();
+    private User user2 = createUser_2_noId();
+    private Accommodation accommodation = createAccommodation_1_noId(user1);
+    private Accommodation accommodation2 = createAccommodation_2_noId(user2);
 
+
+    /*TODO states of inner object should be validated as well f.e if Ids of Localization, Amenities etc. are set */
     @Test
     public void createAccommodationEntityTest() {
         userRepositoryTests.createEntityTest(user1, userRepository);

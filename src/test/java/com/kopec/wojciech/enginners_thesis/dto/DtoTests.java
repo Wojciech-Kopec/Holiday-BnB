@@ -23,10 +23,10 @@ public class DtoTests {
 
     @Before
     public void initObjects() {
-        userOwner = createUser_1();
-        userClient = createUser_2();
-        accommodation1 = createAccommodation_1(userOwner);
-        booking1 = createBooking_1(userClient, accommodation1);
+        userOwner = createUser_1_noId();
+        userClient = createUser_2_noId();
+        accommodation1 = createAccommodation_1_noId(userOwner);
+        booking1 = createBooking_1_noId(userClient, accommodation1);
     }
 
     @Test
@@ -134,22 +134,6 @@ public class DtoTests {
 
         booking.getAccommodation().getUser().setPassword(null); //Password is not mapped in DTO
 
-        if(booking.getAccommodation() instanceof Accommodation) {
-            Accommodation accommodation1 = (Accommodation) booking.getAccommodation();
-            Accommodation accommodation2 = (Accommodation) AccommodationDto.toEntity(bookingDto.getAccommodation());
-
-            assertThat(accommodation1.getName(), is(accommodation2.getName()));
-            assertThat(accommodation1.getDescription(), is(accommodation2.getDescription()));
-            assertThat(accommodation1.getAccommodationType(), is(accommodation2.getAccommodationType()));
-            assertThat(accommodation1.getPricePerNight(), is(accommodation2.getPricePerNight()));
-            assertThat(accommodation1.getMaxGuests(), is(accommodation2.getMaxGuests()));
-            assertThat(accommodation1.getCreatedDate(), is(accommodation2.getCreatedDate()));
-
-            assertThat(accommodation1.getLocalization(), is(accommodation2.getLocalization()));
-            assertThat(accommodation1.getUser(), is(accommodation2.getUser()));
-            assertThat(accommodation1.getAmenities(), is(accommodation2.getAmenities()));
-
-        }
         assertThat(booking.getAccommodation(), is(equalTo(AccommodationDto.toEntity(bookingDto.getAccommodation()))));
     }
 

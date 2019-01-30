@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import com.kopec.wojciech.enginners_thesis.service.UserService;
@@ -15,13 +14,11 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -44,27 +41,30 @@ public class UserRestControllerTests extends AbstractRestTest {
     private UserRestController userRestController;
 
     private static String baseEndpoint = UserRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private static UserDto requestedUser;
-    private static UserDto existingUser;
-
-    private static BookingDto bookingDto;
-    private static AccommodationDto accommodationDto;
+    private UserDto requestedUser;
+    private UserDto anotherUser;
 
 
     public void mockServices() {
-        userService = mockService(userService, requestedUser, existingUser);
+        userService = mockService(userService, requestedUser, anotherUser);
         accommodationService = ServiceMocker.mockAccommodationService(accommodationService);
         bookingService = ServiceMocker.mockBookingService(bookingService);
-
-        accommodationDto = AccommodationRestControllerTests.getRequestedAccommodation();
-        bookingDto = BookingRestControllerTests.getExistingBooking();
 
         userRestController = new UserRestController(userService, bookingService, accommodationService);
     }
 
-    public static UserService mockService(UserService userService, UserDto requestedUser, UserDto existingUser) {
+    public static UserService mockService(UserService userService, UserDto primaryUser, UserDto secondaryUser) {
+        mockUnitMethodsForInstance(userService, primaryUser);
+        mockUnitMethodsForInstance(userService, secondaryUser);
+
+        Mockito.when(userService.findAll())
+                .thenReturn(Arrays.asList(primaryUser, secondaryUser));
+        return userService;
+    }
+
+    private static void mockUnitMethodsForInstance(UserService userService, UserDto requestedUser) {
         Mockito.when(userService.save(requestedUser))
-                .thenReturn(requestedUser);
+                .thenReturn(getSuitableInstance(requestedUser));
         Mockito.when(userService.update(requestedUser))
                 .thenReturn(requestedUser);
         Mockito.when(userService.findByUsername(requestedUser.getUsername()))
@@ -72,36 +72,34 @@ public class UserRestControllerTests extends AbstractRestTest {
         Mockito.when(userService.findByUsernameContaining(requestedUser.getUsername()))
                 .thenReturn(Collections
                 .singletonList(requestedUser));
-        Mockito.when(userService.findAll())
-                .thenReturn(Arrays.asList(requestedUser, existingUser));
-        Mockito.when(userService.findById(ArgumentMatchers.anyInt()))
-                .thenReturn(null);
         Mockito.when(userService.findById(requestedUser.getId()))
                 .thenReturn(requestedUser);
-        return userService;
+    }
+
+    private static UserDto getSuitableInstance(UserDto userDto) {
+        return userDto.getUsername().equals(ServiceMocker.buildPrimaryUserDto().getUsername()) ?
+                ServiceMocker.buildPrimaryUserDto() : ServiceMocker.buildSecondaryUserDto();
     }
 
     @Before
     //Resets objects to their original state
-    public void setUpBaseObject() {
-        requestedUser = UserDto.toDto(ModelProvider.createUser_1());
-        requestedUser.setId(10);
-        //2nd User used for List assertions
-        existingUser = UserDto.toDto(ModelProvider.createUser_2());
-        existingUser.setId(20);
+    public void setUp() {
+        requestedUser = ServiceMocker.buildPrimaryUserDto();
+        anotherUser = ServiceMocker.buildSecondaryUserDto();
     }
 
     @Test
     public void validRegistrationTest() throws Exception {
+        UserDto responseUser = ServiceMocker.buildPrimaryUserDto();
         requestedUser.setId(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.POST,
                 baseEndpoint,
                 requestedUser,
-                requestedUser,
+                responseUser,
                 HttpStatus.CREATED,
-                baseEndpoint,
+                baseEndpoint + "/" + responseUser.getId(),
                 null
         );
     }
@@ -136,7 +134,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidEndpointUpdateUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.PUT,
@@ -166,7 +164,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -185,7 +183,7 @@ public class UserRestControllerTests extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedUser, existingUser),
+                Lists.newArrayList(requestedUser, anotherUser),
                 HttpStatus.OK,
                 null,
                 null
@@ -222,7 +220,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidDeleteUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.DELETE,
@@ -237,6 +235,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void validFetchBookings() {
+        BookingDto bookingDto = ServiceMocker.buildSecondaryBookingDto();
         Integer pathVariable = requestedUser.getId();
 
         mockedHttpTestTemplate(
@@ -252,7 +251,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchBookings() {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -267,6 +266,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void validFetchAccommodations() {
+        AccommodationDto accommodationDto = ServiceMocker.buildPrimaryAccommodationDto();
         Integer pathVariable = requestedUser.getId();
 
         mockedHttpTestTemplate(
@@ -282,7 +282,7 @@ public class UserRestControllerTests extends AbstractRestTest {
 
     @Test
     public void invalidFetchAccommodations() {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,

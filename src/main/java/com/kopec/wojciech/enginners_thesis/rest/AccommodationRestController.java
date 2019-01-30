@@ -89,10 +89,8 @@ public class AccommodationRestController {
 
     @GetMapping(value = "/{id}/bookings", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<BookingDto>> findAllBookings(@PathVariable Integer id) {
-        LOGGER.info(">>>> Controller-AccomID=" + id);
         AccommodationDto accommodation = accommodationService.findById(id);
         if (accommodation != null) {
-            LOGGER.info(">>>> Controller-Accom=" + accommodation.toString());
             List<BookingDto> accommodationsBookings = bookingService.findAllByAccommodation(accommodation);
             return new ResponseEntity<>(accommodationsBookings, HttpStatus.FOUND);
         } else {

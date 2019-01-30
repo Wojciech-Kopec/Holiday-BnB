@@ -17,7 +17,7 @@ public class UserRepositoryTests implements TestableRepository<User, UserReposit
     @Autowired
     UserRepository userRepository;
 
-    private User user = ModelProvider.createUser_1();
+    private User user = ModelProvider.createUser_1_noId();
 
     @Test
     public void createBasicUserEntityTest() {
@@ -32,7 +32,7 @@ public class UserRepositoryTests implements TestableRepository<User, UserReposit
 
     @Test
     public void updateBasicUserEntityTest() {
-        User updated = ModelProvider.createUser_2();
+        User updated = ModelProvider.createUser_2_noId();
         updateEntityTest(user, updated, userRepository);
     }
 

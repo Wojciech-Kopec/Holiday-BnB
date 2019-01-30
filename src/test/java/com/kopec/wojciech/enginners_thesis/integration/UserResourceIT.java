@@ -5,7 +5,6 @@ import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
-import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import com.kopec.wojciech.enginners_thesis.rest.*;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
@@ -70,7 +69,7 @@ public class UserResourceIT extends AbstractRestTest {
     public void setUpBaseObject() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(userRestController).build();
         //Basically User object with all NULL properties
-        requestedUser = UserDto.toDto(ModelProvider.createUser_1());
+        requestedUser = UserDto.toDto(ModelProvider.createUser_1_noId());
         requestedUser.setId(10);
     }
 
@@ -119,7 +118,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidEndpointUpdateUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.PUT,
@@ -149,7 +148,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidFetchUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -205,7 +204,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidDeleteUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.DELETE,
@@ -235,7 +234,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidFetchBookings() {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -265,7 +264,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidFetchAccommodations() {
-        Integer pathVariable = requestedUser.getId() + 1;
+        Integer pathVariable = requestedUser.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,

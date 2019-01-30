@@ -33,12 +33,12 @@ public class BookingRepositoryTests implements TestableRepository<Booking, Booki
     @Autowired
     AccommodationRepositoryTests accommodationRepositoryTests;
 
-    private User user1 = createUser_1();
-    private User user2 = createUser_2();
-    private Accommodation accommodation1 = createAccommodation_1(user1);
-    private Accommodation accommodation2 = createAccommodation_2(user2);
-    private Booking booking1 = createBooking_1(user2, accommodation1);
-    private Booking booking2 = createBooking_2(user1, accommodation2);
+    private User user1 = createUser_1_noId();
+    private User user2 = createUser_2_noId();
+    private Accommodation accommodation1 = createAccommodation_1_noId(user1);
+    private Accommodation accommodation2 = createAccommodation_2_noId(user2);
+    private Booking booking1 = createBooking_1_noId(user2, accommodation1);
+    private Booking booking2 = createBooking_2_noId(user1, accommodation2);
 
 
     @Before
