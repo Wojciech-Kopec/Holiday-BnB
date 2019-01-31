@@ -6,7 +6,6 @@ import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,7 +19,7 @@ import java.util.Collections;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BookingRestController.class, secure = false)
-public class BookingRestControllerTests extends AbstractRestTest {
+public class BookingRestControllerTests extends AbstractRestMockedTest {
 
     @MockBean
     private BookingService bookingService;

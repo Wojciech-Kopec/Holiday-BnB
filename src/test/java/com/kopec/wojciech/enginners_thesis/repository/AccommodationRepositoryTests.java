@@ -15,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccommodationRepositoryTests implements TestableRepository<Accommodation, AccommodationRepository> {
+public class AccommodationRepositoryTests extends AbstractRepositoryTests<Accommodation, AccommodationRepository> {
 
     @Autowired
     AccommodationRepository accommodationRepository;

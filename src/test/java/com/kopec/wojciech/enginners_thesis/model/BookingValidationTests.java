@@ -1,16 +1,13 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookingValidationTests implements TestableValidation<Booking> {
-    private final Logger logger = LoggerFactory.getLogger(BookingValidationTests.class);
+public class BookingValidationTests extends AbstractValidationTest<Booking> {
 
     @Test
     public void shouldNotValidateNulls() {

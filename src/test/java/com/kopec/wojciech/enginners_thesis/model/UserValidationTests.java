@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserValidationTests implements TestableValidation<User> {
+public class UserValidationTests extends AbstractValidationTest<User> {
     private final Logger logger = LoggerFactory.getLogger(UserValidationTests.class);
 
     @Test

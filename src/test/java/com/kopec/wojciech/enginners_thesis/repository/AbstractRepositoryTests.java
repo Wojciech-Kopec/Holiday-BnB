@@ -8,9 +8,9 @@ import javax.persistence.EntityNotFoundException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public interface TestableRepository<T extends AbstractEntity, S extends JpaRepository<T, Integer>> {
+abstract public class AbstractRepositoryTests<T extends AbstractEntity, S extends JpaRepository<T, Integer>> {
 
-    default void createEntityTest(T objToPersist, S repository) {
+    public void createEntityTest(T objToPersist, S repository) {
         Integer oldId = objToPersist.getId();
         int prePersistEntityCount = (int) repository.count();
 
@@ -22,14 +22,14 @@ public interface TestableRepository<T extends AbstractEntity, S extends JpaRepos
         assertThat(objToPersist, equalTo(persistedObj));
     }
 
-    default void readEntityTest(T instance, S repository) {
+    public void readEntityTest(T instance, S repository) {
         createEntityTest(instance, repository);
 
         T fetched = repository.findById(instance.getId()).orElseThrow(EntityNotFoundException::new);
         assertThat(instance, equalTo(fetched));
     }
 
-    default void updateEntityTest(T original, T updated, S repository) {
+    public void updateEntityTest(T original, T updated, S repository) {
         createEntityTest(original, repository);
 
         updated.setId(original.getId());
@@ -40,7 +40,7 @@ public interface TestableRepository<T extends AbstractEntity, S extends JpaRepos
         assertThat(updatedPersisted, equalTo(updated));
     }
 
-    default void deleteEntityTest(T instance, S repository) {
+    public void deleteEntityTest(T instance, S repository) {
         createEntityTest(instance, repository);
 
         T t = repository.findById(instance.getId()).orElseThrow(EntityNotFoundException::new);
@@ -50,5 +50,5 @@ public interface TestableRepository<T extends AbstractEntity, S extends JpaRepos
         assertThat(repository.findById(t.getId()).orElse(null), is(nullValue()));
     }
 
-    void wipe();
+    abstract void wipe();
 }

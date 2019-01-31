@@ -16,7 +16,7 @@ import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BookingRepositoryTests implements TestableRepository<Booking, BookingRepository> {
+public class BookingRepositoryTests extends AbstractRepositoryTests<Booking, BookingRepository> {
 
     @Autowired
     BookingRepository bookingRepository;

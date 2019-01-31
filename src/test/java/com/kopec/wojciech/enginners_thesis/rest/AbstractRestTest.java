@@ -1,25 +1,27 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@WebMvcTest(value = {UserRestController.class, AccommodationRestController.class, BookingRestController.class}, secure = false)
 abstract public class AbstractRestTest {
 
     @Autowired
@@ -30,8 +32,6 @@ abstract public class AbstractRestTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    abstract protected void mockServices();
 
     protected MockHttpServletRequestBuilder buildRequest(HttpMethod httpMethod, String content, String urlTemplate) {
         if (content == null) {
@@ -62,7 +62,7 @@ abstract public class AbstractRestTest {
                 + response.getErrorMessage() + "\n");
     }
 
-    protected void thenAssert(MockHttpServletResponse response, String expectedResponseBody, HttpStatus expectedStatus,
+    protected void thenAssert(MockHttpServletResponse response, HttpStatus expectedStatus, String expectedResponseBody,
                               String expectedLocation, String expectedErrorMsg) throws UnsupportedEncodingException {
 
         assertThat(response.getStatus(), equalTo(expectedStatus.value()));
@@ -78,36 +78,36 @@ abstract public class AbstractRestTest {
                 MediaType.APPLICATION_JSON_UTF8_VALUE : null));
     }
 
-
-    public void mockedHttpTestTemplate(HttpMethod requestMethod, String requestLocation,
-                                       Object requestBodyObj, Object expectedResponseBodyObj,
-                                       HttpStatus expectedStatus, String expectedLocation, String expectedErrorMsg) {
-        mockServices();
-        httpTestTemplate(requestMethod, requestLocation, requestBodyObj, expectedResponseBodyObj,
-                expectedStatus, expectedLocation, expectedErrorMsg);
-    }
-
-    public void httpTestTemplate(HttpMethod requestMethod, String requestLocation, Object requestBodyObj, Object expectedResponseBodyObj, HttpStatus expectedStatus, String expectedLocation, String expectedErrorMsg) {
+    public void httpTestTemplate(HttpMethod requestMethod, String requestLocation, Object requestBodyObj, Object
+            expectedResponseBodyObj, HttpStatus expectedStatus, String expectedLocation, String expectedErrorMsg) {
         try {
-            //Given
-            String requestBody = requestBodyObj != null ? mapper.writeValueAsString(requestBodyObj) : "";
-            String expectedResponseBody = expectedResponseBodyObj != null ? mapper.writeValueAsString(expectedResponseBodyObj) : "";
-
             //When
-            MockHttpServletRequestBuilder request = buildRequest(requestMethod, requestBody, requestLocation);
-            MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+            MockHttpServletResponse response = performRequest(requestMethod, requestLocation, requestBodyObj);
             printResponseDetails(response);
 
+
+            String expectedResponseBody = expectedResponseBodyObj != null ? mapper.writeValueAsString
+                    (expectedResponseBodyObj) : "";
             //Then
-            //TODO TBA how about using MockMVC build-in assertion checker?
             thenAssert(response,
-                    expectedResponseBody,
                     expectedStatus,
+                    expectedResponseBody,
                     expectedLocation,
                     expectedErrorMsg);
 
         } catch (Exception e) {
             e.printStackTrace();
+            Assert.fail();
         }
+    }
+
+    public MockHttpServletResponse performRequest(HttpMethod requestMethod, String requestLocation, Object
+            requestBodyObj) throws Exception {
+        String requestBody = requestBodyObj != null ? mapper.writeValueAsString(requestBodyObj) : "";
+
+
+        //When
+        MockHttpServletRequestBuilder request = buildRequest(requestMethod, requestBody, requestLocation);
+        return mockMvc.perform(request).andReturn().getResponse();
     }
 }

@@ -59,14 +59,10 @@ public class AccommodationDto {
 
 
     public static AccommodationDto toDto(Accommodation accommodation) {
-        if(accommodation != null)
-        return modelMapper.map(accommodation, AccommodationDto.class);
-    return null;
+        return accommodation != null ? modelMapper.map(accommodation, AccommodationDto.class) : null;
     }
 
     public static Accommodation toEntity(AccommodationDto accommodationDto) {
-        if(accommodationDto != null)
-        return modelMapper.map(accommodationDto, Accommodation.class);
-    return null;
+        return accommodationDto != null ? modelMapper.map(accommodationDto, Accommodation.class) : null;
     }
 }

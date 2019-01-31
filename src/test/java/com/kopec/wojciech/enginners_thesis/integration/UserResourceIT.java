@@ -4,88 +4,73 @@ import com.google.common.collect.Lists;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import com.kopec.wojciech.enginners_thesis.rest.*;
-import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
-import com.kopec.wojciech.enginners_thesis.service.BookingService;
-import com.kopec.wojciech.enginners_thesis.service.UserService;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc(secure = false, addFilters = false)
 @TestPropertySource(locations = "classpath:application.properties")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserResourceIT extends AbstractRestTest {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private BookingService bookingService;
-
-    @Autowired
-    private AccommodationService accommodationService;
-
-    @Autowired
-    private UserRestController userRestController;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-
     private static String baseEndpoint = UserRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private static UserDto requestedUser;
-    private static UserDto existingUser;
-
-    private static BookingDto bookingDto;
-    private static AccommodationDto accommodationDto;
-
-
-    public void mockServices() {
-    }
+    private UserDto requestedUser;
+    private UserDto anotherUser;
 
     @Before
-    public void setUpBaseObject() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(userRestController).build();
-        //Basically User object with all NULL properties
-        requestedUser = UserDto.toDto(ModelProvider.createUser_1_noId());
-        requestedUser.setId(10);
+    public void setUp() {
+        requestedUser = ServiceMocker.buildPrimaryUserDto();
+        requestedUser.setId(null);
+        requestedUser = UserDto.toDto(userRepository.save(UserDto.toEntity(requestedUser)));
+
+        anotherUser = ServiceMocker.buildSecondaryUserDto();
+        anotherUser.setId(null);
+        anotherUser = UserDto.toDto(userRepository.save(UserDto.toEntity(anotherUser)));
+
+        assertThat(userRepository.count(), is(2L));
     }
 
     @Test
     public void validRegistrationTest() throws Exception {
+        userRepository.deleteAll();
+        UserDto responseUser = ServiceMocker.buildPrimaryUserDto();
         requestedUser.setId(null);
 
-        httpTestTemplate(
+        MockHttpServletResponse response = performRequest(
                 HttpMethod.POST,
                 baseEndpoint,
-                requestedUser,
-                requestedUser,
+                requestedUser
+        );
+        Integer createdId = userRepository.findByUsername(responseUser.getUsername()).getId();
+        responseUser.setId(createdId);
+
+        thenAssert(response,
                 HttpStatus.CREATED,
-                baseEndpoint,
+                mapper.writeValueAsString(requestedUser),
+                baseEndpoint + "/" + createdId,
                 null
         );
+        assertThat(userRepository.count(), is(1L));
     }
 
     @Test
@@ -103,8 +88,9 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void validEndpointUpdateUserTest() throws Exception {
+        requestedUser.setUsername("UpdatesUsername1");
         Integer pathVariable = requestedUser.getId();
-    //TODO modifications to User to check if update is performed
+
         httpTestTemplate(
                 HttpMethod.PUT,
                 baseEndpoint + "/" + pathVariable,
@@ -114,6 +100,7 @@ public class UserResourceIT extends AbstractRestTest {
                 null,
                 null
         );
+        assertThat(userRepository.findById(requestedUser.getId()), is(requestedUser));
     }
 
     @Test
@@ -167,7 +154,7 @@ public class UserResourceIT extends AbstractRestTest {
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedUser, existingUser),
+                Lists.newArrayList(requestedUser, anotherUser),
                 HttpStatus.OK,
                 null,
                 null
@@ -200,6 +187,7 @@ public class UserResourceIT extends AbstractRestTest {
                 null,
                 null
         );
+        assertThat(userRepository.count(), is(1L));
     }
 
     @Test
@@ -219,6 +207,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void validFetchBookings() {
+        BookingDto bookingDto = ServiceMocker.buildSecondaryBookingDto();
         Integer pathVariable = requestedUser.getId();
 
         httpTestTemplate(
@@ -249,6 +238,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void validFetchAccommodations() {
+        AccommodationDto accommodationDto = ServiceMocker.buildPrimaryAccommodationDto();
         Integer pathVariable = requestedUser.getId();
 
         httpTestTemplate(
@@ -277,10 +267,8 @@ public class UserResourceIT extends AbstractRestTest {
         );
     }
 
-    @AfterClass
-    public static void afterClass() {
-        System.out.println("----- TESTS HAVE ENDED -----");
-        System.out.println("----- TESTS HAVE ENDED -----");
-        System.out.println("----- TESTS HAVE ENDED -----");
+    @After
+    public void tearDown() {
+        userRepository.deleteAll();
     }
 }

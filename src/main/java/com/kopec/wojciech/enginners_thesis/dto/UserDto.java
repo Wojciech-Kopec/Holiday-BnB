@@ -35,17 +35,17 @@ public class UserDto {
     @Size(min = 7, max = 14)
     private String phoneNumber;
 
+    @NotNull
+    @Size(min = 5, max = 100)
+    private String password;
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public static UserDto toDto(User user) {
-        if (user != null)
-            return modelMapper.map(user, UserDto.class);
-        return null;
+        return user != null ? modelMapper.map(user, UserDto.class) : null;
     }
 
     public static User toEntity(UserDto userDto) {
-        if (userDto != null)
-        return modelMapper.map(userDto, User.class);
-    return null;
+        return userDto != null ? modelMapper.map(userDto, User.class) : null;
     }
 }

@@ -11,7 +11,6 @@ import com.kopec.wojciech.enginners_thesis.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,7 +25,7 @@ import java.util.Collections;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = UserRestController.class, secure = false)
-public class UserRestControllerTests extends AbstractRestTest {
+public class UserRestControllerTests extends AbstractRestMockedTest {
 
     @MockBean
     private UserService userService;

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = AccommodationRestController.class, secure = false)
-public class AccommodationRestControllerTests extends AbstractRestTest {
+public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @MockBean
     private AccommodationService accommodationService;

@@ -9,8 +9,6 @@ import java.util.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ModelProvider {
-    /* TODO not having ID in builder causes a lot of trouble to remember to set it after building instance
-    * Analyze if implementing Lombok @SuperBuilder would make sense here*/
 
     public static User createUser_1_noId() {
         return User.builder()
@@ -20,6 +18,7 @@ public class ModelProvider {
                 .password("password1")
                 .username("User1")
                 .phoneNumber("101010101")
+                .password("password")
                 .build();
     }
 
@@ -32,6 +31,7 @@ public class ModelProvider {
                 .password("password2")
                 .username("User2")
                 .phoneNumber("121212121")
+                .password("password")
                 .build();
     }
 

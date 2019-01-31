@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRepositoryTests implements TestableRepository<User, UserRepository> {
+public class UserRepositoryTests extends AbstractRepositoryTests<User, UserRepository> {
 
     @Autowired
     UserRepository userRepository;
