@@ -1,72 +1,35 @@
 package com.kopec.wojciech.enginners_thesis.integration;
 
 import com.google.common.collect.Lists;
-import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
-import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
-import com.kopec.wojciech.enginners_thesis.dto.UserDto;
-import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import com.kopec.wojciech.enginners_thesis.rest.*;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc(secure = false, addFilters = false)
-@TestPropertySource(locations = "classpath:application.properties")
-public class UserResourceIT extends AbstractRestTest {
-
-    @Autowired
-    private UserRepository userRepository;
-
+public class UserResourceIT extends AbstractRestIT {
     private static String baseEndpoint = UserRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private UserDto requestedUser;
-    private UserDto anotherUser;
-
-    @Before
-    public void setUp() {
-        requestedUser = ServiceMocker.buildPrimaryUserDto();
-        requestedUser.setId(null);
-        requestedUser = UserDto.toDto(userRepository.save(UserDto.toEntity(requestedUser)));
-
-        anotherUser = ServiceMocker.buildSecondaryUserDto();
-        anotherUser.setId(null);
-        anotherUser = UserDto.toDto(userRepository.save(UserDto.toEntity(anotherUser)));
-
-        assertThat(userRepository.count(), is(2L));
-    }
 
     @Test
     public void validRegistrationTest() throws Exception {
-        userRepository.deleteAll();
-        UserDto responseUser = ServiceMocker.buildPrimaryUserDto();
-        requestedUser.setId(null);
+        this.tearDown();
+        primaryUserDto.setId(null);
 
         MockHttpServletResponse response = performRequest(
                 HttpMethod.POST,
                 baseEndpoint,
-                requestedUser
+                primaryUserDto
         );
-        Integer createdId = userRepository.findByUsername(responseUser.getUsername()).getId();
-        responseUser.setId(createdId);
+        Integer createdId = userRepository.findByUsername(primaryUserDto.getUsername()).getId();
+        primaryUserDto.setId(createdId);
 
         thenAssert(response,
                 HttpStatus.CREATED,
-                mapper.writeValueAsString(requestedUser),
+                mapper.writeValueAsString(primaryUserDto),
                 baseEndpoint + "/" + createdId,
                 null
         );
@@ -74,11 +37,11 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void invalidRegistrationTest() throws Exception {
+    public void invalidRegistrationTest() {
         httpTestTemplate(
                 HttpMethod.POST,
                 baseEndpoint,
-                requestedUser,
+                primaryUserDto,
                 null,
                 HttpStatus.BAD_REQUEST,
                 null,
@@ -87,30 +50,30 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void validEndpointUpdateUserTest() throws Exception {
-        requestedUser.setUsername("UpdatesUsername1");
-        Integer pathVariable = requestedUser.getId();
+    public void validEndpointUpdateTest() {
+        primaryUserDto.setUsername("UpdatesUsername1");
+        Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
                 HttpMethod.PUT,
                 baseEndpoint + "/" + pathVariable,
-                requestedUser,
-                requestedUser,
+                primaryUserDto,
+                primaryUserDto,
                 HttpStatus.OK,
                 null,
                 null
         );
-        assertThat(userRepository.findById(requestedUser.getId()), is(requestedUser));
+        assertThat(userRepository.findById(primaryUserDto.getId()), is(primaryUserDto));
     }
 
     @Test
-    public void invalidEndpointUpdateUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 10;
+    public void invalidEndpointUpdateTest() {
+        int pathVariable = primaryUserDto.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.PUT,
                 baseEndpoint + "/" + pathVariable,
-                requestedUser,
+                primaryUserDto,
                 null,
                 HttpStatus.BAD_REQUEST,
                 null,
@@ -119,14 +82,14 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void validFetchUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId();
+    public void validFetchUserTest() {
+        Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable,
                 null,
-                requestedUser,
+                primaryUserDto,
                 HttpStatus.FOUND,
                 null,
                 null
@@ -134,8 +97,8 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void invalidFetchUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 10;
+    public void invalidFetchUserTest() {
+        int pathVariable = primaryUserDto.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -149,12 +112,12 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void validFindAllUsersNoParamTest() throws Exception {
+    public void validFindAllUsersNoParamTest() {
         httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedUser, anotherUser),
+                Lists.newArrayList(primaryUserDto, secondaryUserDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -162,12 +125,12 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void validFindAllUsersWithParamTest() throws Exception {
+    public void validFindAllUsersWithParamTest() {
         httpTestTemplate(
                 HttpMethod.GET,
-                baseEndpoint + "?username=" + requestedUser.getUsername(),
+                baseEndpoint + "?username=" + primaryUserDto.getUsername(),
                 null,
-                Lists.newArrayList(requestedUser),
+                Lists.newArrayList(primaryUserDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -175,8 +138,8 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void validDeleteUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId();
+    public void validDeleteUserTest() {
+        Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
                 HttpMethod.DELETE,
@@ -191,13 +154,13 @@ public class UserResourceIT extends AbstractRestTest {
     }
 
     @Test
-    public void invalidDeleteUserTest() throws Exception {
-        Integer pathVariable = requestedUser.getId() + 10;
+    public void invalidDeleteUserTest() {
+        int pathVariable = primaryUserDto.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.DELETE,
                 baseEndpoint + "/" + pathVariable,
-                requestedUser,
+                primaryUserDto,
                 null,
                 HttpStatus.NOT_FOUND,
                 null,
@@ -207,14 +170,13 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void validFetchBookings() {
-        BookingDto bookingDto = ServiceMocker.buildSecondaryBookingDto();
-        Integer pathVariable = requestedUser.getId();
+        Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
-                Lists.newArrayList(bookingDto),
+                Lists.newArrayList(secondaryBookingDto),
                 HttpStatus.FOUND,
                 null,
                 null
@@ -223,7 +185,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidFetchBookings() {
-        Integer pathVariable = requestedUser.getId() + 10;
+        Integer pathVariable = primaryUserDto.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -238,14 +200,13 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void validFetchAccommodations() {
-        AccommodationDto accommodationDto = ServiceMocker.buildPrimaryAccommodationDto();
-        Integer pathVariable = requestedUser.getId();
+        Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable + "/accommodations",
                 null,
-                Lists.newArrayList(accommodationDto),
+                Lists.newArrayList(primaryAccommodationDto),
                 HttpStatus.FOUND,
                 null,
                 null
@@ -254,7 +215,7 @@ public class UserResourceIT extends AbstractRestTest {
 
     @Test
     public void invalidFetchAccommodations() {
-        Integer pathVariable = requestedUser.getId() + 10;
+        int pathVariable = primaryUserDto.getId() + 10;
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -265,10 +226,5 @@ public class UserResourceIT extends AbstractRestTest {
                 null,
                 null
         );
-    }
-
-    @After
-    public void tearDown() {
-        userRepository.deleteAll();
     }
 }
