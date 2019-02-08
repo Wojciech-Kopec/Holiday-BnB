@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class TimeLoggerAspect {
     private static final Logger logger = LoggerFactory.getLogger(TimeLoggerAspect.class);
 
-
+/* TODO Uncomment when implementation will be complete - as for now it is only polluting logs.
     @Around("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
     public Object measureExecTime(ProceedingJoinPoint pjp) throws Throwable {
         Instant before = Instant.now();
@@ -29,5 +29,5 @@ public class TimeLoggerAspect {
             Duration execTime = Duration.between(before, after);
             logger.debug("{} execution took {} ms", pjp.toShortString(), execTime.toMillis());
         }
-    }
+    }*/
 }

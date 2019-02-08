@@ -106,7 +106,7 @@ public class BookingRestControllerTests extends AbstractRestMockedTest {
     }
 
     @Test
-    public void validEndpointUpdateUserTest() {
+    public void validEndpointUpdateTest() {
         Integer pathVariable = requestedBooking.getId();
 
         mockedHttpTestTemplate(
@@ -121,7 +121,7 @@ public class BookingRestControllerTests extends AbstractRestMockedTest {
     }
 
     @Test
-    public void invalidEndpointUpdateUserTest() {
+    public void invalidEndpointUpdateTest() {
         Integer pathVariable = requestedBooking.getId() + 10;
 
         mockedHttpTestTemplate(

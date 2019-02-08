@@ -1,119 +1,63 @@
-package com.kopec.wojciech.enginners_thesis.rest;
+package com.kopec.wojciech.enginners_thesis.integration;
 
 import com.google.common.collect.Lists;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
-import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
-import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
-import com.kopec.wojciech.enginners_thesis.service.BookingService;
+import com.kopec.wojciech.enginners_thesis.rest.AccommodationRestController;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationCriteria;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(value = AccommodationRestController.class, secure = false)
-public class AccommodationRestControllerTests extends AbstractRestMockedTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-    @MockBean
-    private AccommodationService accommodationService;
-
-    @MockBean
-    private BookingService bookingService;
-
-    @InjectMocks
-    private AccommodationRestController accommodationRestController;
+public class AccommodationResourceIT extends AbstractRestIT {
 
     private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value()[0];
-    private AccommodationDto requestedAccommodation;
-    private AccommodationDto anotherAccommodation;
     private AccommodationCriteria filteringCriteria;
 
-
-    public void mockServices() {
-        accommodationService = mockService(accommodationService, requestedAccommodation, anotherAccommodation);
-        bookingService = ServiceMocker.mockBookingService(bookingService);
-
-        accommodationRestController = new AccommodationRestController(accommodationService, bookingService);
-    }
-
-    public static AccommodationService mockService(AccommodationService accommodationService,
-                                                   AccommodationDto primaryAccommodation,
-                                                   AccommodationDto secondaryAccommodation) {
-
-        mockUnitMethodsForInstance(accommodationService, primaryAccommodation);
-        mockUnitMethodsForInstance(accommodationService, secondaryAccommodation);
-
-        Mockito.when(accommodationService.findAll(ArgumentMatchers.any(AccommodationCriteria.class)))
-                .thenReturn(Collections.singletonList(primaryAccommodation));
-        Mockito.when(accommodationService.findAll(ArgumentMatchers.eq(AccommodationCriteria.builder().build())))
-                //null values
-                .thenReturn(Lists.newArrayList(primaryAccommodation, secondaryAccommodation));
-
-        return accommodationService;
-    }
-
-    private static void mockUnitMethodsForInstance(AccommodationService accommodationService, AccommodationDto
-            accommodationDto) {
-        Mockito.when(accommodationService.save(accommodationDto))
-                .thenReturn(getSuitableInstance(accommodationDto));
-        Mockito.when(accommodationService.update(accommodationDto))
-                .thenReturn(accommodationDto);
-        Mockito.when(accommodationService.findById(accommodationDto.getId()))
-                .thenReturn(accommodationDto);
-        Mockito.when(accommodationService.findAllByUser(accommodationDto.getUser()))
-                .thenReturn(Collections.singletonList(accommodationDto));
-    }
-
-    /*When calling save method in Controller, Id must be null in order for Controller to call mocked Service,
-    * but Instance with not-null Id must be returned in order to build valid URI for redirection.
-    * This is just a poor solution to return either primary or secondary instance which got their Ids set on build */
-    private static AccommodationDto getSuitableInstance(AccommodationDto accommodationDto) {
-        return accommodationDto.getName().equals(ServiceMocker.buildPrimaryAccommodationDto().getName()) ?
-                ServiceMocker.buildPrimaryAccommodationDto() : ServiceMocker.buildSecondaryAccommodationDto();
-    }
-
     @Before
+    @Override
     public void setUp() {
-        requestedAccommodation = ServiceMocker.buildPrimaryAccommodationDto();
-        anotherAccommodation = ServiceMocker.buildSecondaryAccommodationDto();
-        filteringCriteria = buildCriteria(requestedAccommodation);
+        super.setUp();
+        filteringCriteria = buildCriteria(primaryAccommodationDto);
     }
 
     @Test
-    public void validCreationTest() {
-        AccommodationDto responseAccommodation = ServiceMocker.buildPrimaryAccommodationDto();
-        requestedAccommodation.setId(null);
+    public void validCreationTest() throws Exception {
+        accommodationRepository.deleteAll();
+        primaryAccommodationDto.setId(null);
+        primaryAccommodationDto.getLocalization().setId(null);
 
-        mockedHttpTestTemplate(
+        MockHttpServletResponse response = performRequest(
                 HttpMethod.POST,
                 baseEndpoint,
-                requestedAccommodation,
-                responseAccommodation,
+                primaryAccommodationDto
+        );
+        primaryAccommodationDto = AccommodationDto.toDto(accommodationRepository.findAll().get(0));
+
+        thenAssert(response,
                 HttpStatus.CREATED,
-                baseEndpoint + "/" + responseAccommodation.getId(),
+                mapper.writeValueAsString(primaryAccommodationDto),
+                baseEndpoint + "/" + primaryAccommodationDto.getId(),
                 null
         );
+        assertThat(accommodationRepository.count(), is(1L));
     }
 
     @Test
     public void invalidCreationTest() {
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.POST,
                 baseEndpoint,
-                requestedAccommodation,
+                primaryAccommodationDto,
                 null,
                 HttpStatus.BAD_REQUEST,
                 null,
@@ -123,13 +67,13 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validEndpointUpdateTest() {
-        Integer pathVariable = requestedAccommodation.getId();
+        Integer pathVariable = primaryAccommodationDto.getId();
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.PUT,
                 baseEndpoint + "/" + pathVariable,
-                requestedAccommodation,
-                requestedAccommodation,
+                primaryAccommodationDto,
+                primaryAccommodationDto,
                 HttpStatus.OK,
                 null,
                 null
@@ -138,12 +82,12 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void invalidEndpointUpdateTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 10;
+        int pathVariable = primaryAccommodationDto.getId() + 10;
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.PUT,
                 baseEndpoint + "/" + pathVariable,
-                requestedAccommodation,
+                primaryAccommodationDto,
                 null,
                 HttpStatus.BAD_REQUEST,
                 null,
@@ -153,13 +97,13 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFetchAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId();
+        Integer pathVariable = primaryAccommodationDto.getId();
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable,
                 null,
-                requestedAccommodation,
+                primaryAccommodationDto,
                 HttpStatus.FOUND,
                 null,
                 null
@@ -168,9 +112,9 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void invalidFetchAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 10;
+        int pathVariable = primaryAccommodationDto.getId() + 10;
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable,
                 null,
@@ -183,11 +127,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFindAllAccommodationsNoCriteriaTest() {
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint,
                 null,
-                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
+                Lists.newArrayList(primaryAccommodationDto, secondaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -197,11 +141,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
     @Test
     //FIXME
     public void validFindAllAccommodationsWithCriteriaTest() {
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
-                Lists.newArrayList(requestedAccommodation),
+                Lists.newArrayList(primaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -210,11 +154,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFindAllAccommodationsWithCriteriaNullValuesTest() {
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(AccommodationCriteria.builder().build()),
                 null,
-                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
+                Lists.newArrayList(primaryAccommodationDto, secondaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -225,11 +169,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
     public void validFindAllAccommodationsWithCriteriaNullLocalizationTest() {
         filteringCriteria.setLocalization(null);
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
-                Lists.newArrayList(requestedAccommodation),
+                Lists.newArrayList(primaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -243,11 +187,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
         filteringCriteria.setLocalization(null);
         filteringCriteria.setMinPricePerNight(null);
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(filteringCriteria),
                 null,
-                Lists.newArrayList(requestedAccommodation),
+                Lists.newArrayList(primaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -256,11 +200,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFindAllAccommodationsWithNullCriteriaTest() {
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + addCriteriaAsRequestParams(null),
                 null,
-                Lists.newArrayList(requestedAccommodation, anotherAccommodation),
+                Lists.newArrayList(primaryAccommodationDto, secondaryAccommodationDto),
                 HttpStatus.OK,
                 null,
                 null
@@ -269,9 +213,9 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validDeleteAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId();
+        Integer pathVariable = primaryAccommodationDto.getId();
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.DELETE,
                 baseEndpoint + "/" + pathVariable,
                 null,
@@ -280,16 +224,17 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 null,
                 null
         );
+        assertThat(accommodationRepository.count(), is(1L));
     }
 
     @Test
     public void invalidDeleteAccommodationTest() {
-        Integer pathVariable = requestedAccommodation.getId() + 10;
+        int pathVariable = primaryAccommodationDto.getId() + 10;
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.DELETE,
                 baseEndpoint + "/" + pathVariable,
-                requestedAccommodation,
+                primaryAccommodationDto,
                 null,
                 HttpStatus.NOT_FOUND,
                 null,
@@ -299,14 +244,13 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFetchBookings() {
-        BookingDto bookingDto = ServiceMocker.buildPrimaryBookingDto();
-        Integer pathVariable = requestedAccommodation.getId();
+        Integer pathVariable = primaryAccommodationDto.getId();
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
-                Lists.newArrayList(bookingDto),
+                Lists.newArrayList(primaryBookingDto),
                 HttpStatus.FOUND,
                 null,
                 null
@@ -315,9 +259,9 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void invalidFetchBookings() {
-        Integer pathVariable = requestedAccommodation.getId() + 10;
+        int pathVariable = primaryAccommodationDto.getId() + 10;
 
-        mockedHttpTestTemplate(
+        httpTestTemplate(
                 HttpMethod.GET,
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,

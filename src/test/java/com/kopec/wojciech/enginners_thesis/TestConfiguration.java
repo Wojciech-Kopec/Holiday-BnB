@@ -1,5 +1,8 @@
 package com.kopec.wojciech.enginners_thesis;
 
+import com.kopec.wojciech.enginners_thesis.integration.AccommodationResourceIT;
+import com.kopec.wojciech.enginners_thesis.integration.BookingResourceIT;
+import com.kopec.wojciech.enginners_thesis.integration.UserResourceIT;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepositoryTests;
 import com.kopec.wojciech.enginners_thesis.repository.BookingRepositoryTests;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepositoryTests;
@@ -28,4 +31,20 @@ public class TestConfiguration {
     public BookingRepositoryTests bookingRepositoryTests() {
         return new BookingRepositoryTests();
     }
+
+
+//    @Bean
+//    public UserResourceIT userResourceIntegrationTests() {
+//        return new UserResourceIT();
+//    }
+//
+//    @Bean
+//    public AccommodationResourceIT accommodationResourceIntegrationTests() {
+//        return new AccommodationResourceIT();
+//    }
+//
+//    @Bean
+//    public BookingResourceIT bookingResourceIntegrationTests() {
+//        return new BookingResourceIT();
+//    }
 }

@@ -50,7 +50,7 @@ public class Accommodation extends AbstractEntity {
     @Positive
     private int pricePerNight;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @MapsId
     @NotNull
     private Localization localization;
@@ -102,5 +102,12 @@ public class Accommodation extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getName(), getDescription(), getAccommodationType(), getMaxGuests(), getPricePerNight(), getLocalization(), getAmenities(), getUser(), getCreatedDate());
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings.clear();
+        if(bookings != null) {
+            this.bookings.addAll(bookings);
+        }
     }
 }

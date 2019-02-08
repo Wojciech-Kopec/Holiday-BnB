@@ -117,7 +117,7 @@ public class UserRestControllerTests extends AbstractRestMockedTest {
     }
 
     @Test
-    public void validEndpointUpdateUserTest() throws Exception {
+    public void validEndpointUpdateTest() throws Exception {
         Integer pathVariable = requestedUser.getId();
 
         mockedHttpTestTemplate(
@@ -132,7 +132,7 @@ public class UserRestControllerTests extends AbstractRestMockedTest {
     }
 
     @Test
-    public void invalidEndpointUpdateUserTest() throws Exception {
+    public void invalidEndpointUpdateTest() throws Exception {
         Integer pathVariable = requestedUser.getId() + 10;
 
         mockedHttpTestTemplate(

@@ -38,6 +38,7 @@ abstract public class AbstractRepositoryTests<T extends AbstractEntity, S extend
 
         assertThat(original.getId(), is(updatedPersisted.getId()));
         assertThat(updatedPersisted, equalTo(updated));
+        assertThat(repository.count(), is(1L));
     }
 
     public void deleteEntityTest(T instance, S repository) {
