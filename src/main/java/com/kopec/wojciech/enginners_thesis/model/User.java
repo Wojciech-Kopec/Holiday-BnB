@@ -79,4 +79,18 @@ public class User extends AbstractEntity {
     @IndexColumn(name = "id", base = 1)
     @Singular
     private List<Accommodation> accommodations;
+
+
+    public void setAccommodations(List<Accommodation> accommodations) {
+        this.accommodations.clear();
+        if (accommodations != null) {
+            this.accommodations.addAll(accommodations);
+        }
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings.clear();
+        this.bookings.addAll(bookings);
+    }
+
 }
