@@ -2,6 +2,9 @@ package com.kopec.wojciech.enginners_thesis.model;
 
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Future;
@@ -24,11 +27,13 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class Booking extends AbstractEntity {
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "accommodation_id")
     @NotNull
     private Accommodation accommodation;
 
-    @ManyToOne()
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;

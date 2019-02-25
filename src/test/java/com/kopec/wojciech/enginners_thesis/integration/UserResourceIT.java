@@ -51,7 +51,7 @@ public class UserResourceIT extends AbstractRestIT {
 
     @Test
     public void validEndpointUpdateTest() {
-        primaryUserDto.setUsername("UpdatesUsername1");
+        primaryUserDto.setUsername("UpdatedUsername1");
         Integer pathVariable = primaryUserDto.getId();
 
         httpTestTemplate(
@@ -63,7 +63,6 @@ public class UserResourceIT extends AbstractRestIT {
                 null,
                 null
         );
-        assertThat(userRepository.findById(primaryUserDto.getId()), is(primaryUserDto));
     }
 
     @Test
@@ -151,6 +150,8 @@ public class UserResourceIT extends AbstractRestIT {
                 null
         );
         assertThat(userRepository.count(), is(1L));
+        assertThat(accommodationRepository.count(), is(1L));
+        assertThat(bookingRepository.count(), is(0L));
     }
 
     @Test

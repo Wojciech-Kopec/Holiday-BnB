@@ -1,6 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.repository;
 
-import com.kopec.wojciech.enginners_thesis.model.ModelProvider;
+import com.kopec.wojciech.enginners_thesis.utils.ModelProvider;
 import com.kopec.wojciech.enginners_thesis.model.User;
 import org.junit.After;
 import org.junit.Test;
@@ -28,6 +28,11 @@ public class UserRepositoryTests extends AbstractRepositoryTests<User, UserRepos
     @Transactional
     public void readBasicUserEntityTest() {
         readEntityTest(user, userRepository);
+    }
+
+    @Test
+    public void updateUserSinglePropertyTest() {
+
     }
 
     @Test

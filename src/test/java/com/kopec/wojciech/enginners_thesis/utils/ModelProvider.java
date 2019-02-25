@@ -1,5 +1,6 @@
-package com.kopec.wojciech.enginners_thesis.model;
+package com.kopec.wojciech.enginners_thesis.utils;
 
+import com.kopec.wojciech.enginners_thesis.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;

@@ -6,11 +6,10 @@ import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.Booking;
 import com.kopec.wojciech.enginners_thesis.model.User;
-import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
-import com.kopec.wojciech.enginners_thesis.repository.BookingRepository;
-import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
+import com.kopec.wojciech.enginners_thesis.repository.*;
 import com.kopec.wojciech.enginners_thesis.rest.AbstractRestTest;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
+import static com.kopec.wojciech.enginners_thesis.utils.ModelProvider.*;
 
 
 /**
@@ -30,7 +29,7 @@ import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc(secure = false, addFilters = false)
-@TestPropertySource(locations = "classpath:application.properties")
+@TestPropertySource(locations = "classpath:application-it.properties")
 public abstract class AbstractRestIT extends AbstractRestTest {
 
     @Autowired
@@ -42,6 +41,12 @@ public abstract class AbstractRestIT extends AbstractRestTest {
     @Autowired
     protected BookingRepository bookingRepository;
 
+    @Autowired
+    protected LocalizationRepository localizationRepository;
+
+    @Autowired
+    protected AmenityRepository amenityRepository;
+
     protected UserDto primaryUserDto;
     protected UserDto secondaryUserDto;
 
@@ -51,11 +56,13 @@ public abstract class AbstractRestIT extends AbstractRestTest {
     protected BookingDto primaryBookingDto;
     protected BookingDto secondaryBookingDto;
 
-    /**
-     *
-     */
+
     @Before
     public void setUp() {
+        bookingRepository.deleteAll();
+        accommodationRepository.deleteAll();
+        userRepository.deleteAll();
+
         User primaryUser = userRepository.save(createUser_1_noId());
         User secondaryUser = userRepository.save(createUser_2_noId());
         primaryUserDto = UserDto.toDto(primaryUser);
@@ -78,5 +85,10 @@ public abstract class AbstractRestIT extends AbstractRestTest {
         bookingRepository.deleteAll();
         accommodationRepository.deleteAll();
         userRepository.deleteAll();
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        System.out.println("Tests are over!\nHook for Debug");
     }
 }

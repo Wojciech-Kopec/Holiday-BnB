@@ -10,14 +10,16 @@ import org.hibernate.annotations.IndexColumn;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"bookings", "accommodations", "roles", "password"}, callSuper = false)
-@ToString(exclude = {"password", "bookings", "accommodations"}, callSuper = true)
+@EqualsAndHashCode(exclude = {"roles", "password"}, callSuper = false)
+//@EqualsAndHashCode(exclude = {"bookings", "accommodations", "roles", "password"}, callSuper = false)
+@ToString(exclude = {"password"}, callSuper = true)
 //exclusions for lists needed to solve StackOverFlowException with bilateral-referencing
 @Builder
 
@@ -60,37 +62,37 @@ public class User extends AbstractEntity {
     @Singular
     private Set<Role> roles;
 
-    @Fetch(value = FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "user",
-            fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL, COULD NOT DELETE OBJECTS WITH THIS
-            orphanRemoval = true)
-//    @OrderColumn(name = "booking_id")
-    @IndexColumn(name = "id", base = 1)
-    @Singular
-    private List<Booking> bookings;
+//    @Fetch(value = FetchMode.SUBSELECT)
+//    @OneToMany(mappedBy = "user",
+//            fetch = FetchType.LAZY,
+//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, /*COULD NOT DELETE OBJECTS WITH THIS*/
+//            orphanRemoval = true)
+////    @OrderColumn(name = "booking_id")
+//    @IndexColumn(name = "id", base = 1)
+//    @Singular
+//    private List<Booking> bookings;
+//
+//    @Fetch(value = FetchMode.SUBSELECT)
+//    @OneToMany(mappedBy = "user",
+//            fetch = FetchType.LAZY,
+//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH},
+//            orphanRemoval = true)
+////    @OrderColumn(name = "accommodation_id")
+//    @IndexColumn(name = "id", base = 1)
+//    @Singular
+//    private List<Accommodation> accommodations;
 
-    @Fetch(value = FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "user",
-            fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-//    @OrderColumn(name = "accommodation_id")
-    @IndexColumn(name = "id", base = 1)
-    @Singular
-    private List<Accommodation> accommodations;
 
-
-    public void setAccommodations(List<Accommodation> accommodations) {
-        this.accommodations.clear();
-        if (accommodations != null) {
-            this.accommodations.addAll(accommodations);
-        }
-    }
-
-    public void setBookings(List<Booking> bookings) {
-        this.bookings.clear();
-        this.bookings.addAll(bookings);
-    }
+    //    public void setAccommodations(List<Accommodation> accommodations) {
+//        this.accommodations.clear();
+//        if (accommodations != null) {
+//            this.accommodations.addAll(accommodations);
+//        }
+//    }
+//
+//    public void setBookings(List<Booking> bookings) {
+//        this.bookings.clear();
+//        this.bookings.addAll(bookings);
+//    }
 
 }

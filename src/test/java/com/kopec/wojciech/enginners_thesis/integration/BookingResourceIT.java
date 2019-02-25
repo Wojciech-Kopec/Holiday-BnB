@@ -35,7 +35,7 @@ public class BookingResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + primaryBookingDto.getId(),
                 null
         );
-        assertThat(accommodationRepository.count(), is(1L));
+        assertThat(bookingRepository.count(), is(1L));
     }
 
     @Test

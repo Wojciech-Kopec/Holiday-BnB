@@ -1,7 +1,10 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.IndexColumn;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,8 +21,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@EqualsAndHashCode(exclude = {"bookings"}, callSuper = true)
-@ToString(exclude = "bookings", callSuper = true)
+@ToString(callSuper = true)
 @Builder
 
 @Entity
@@ -50,19 +52,22 @@ public class Accommodation extends AbstractEntity {
     @Positive
     private int pricePerNight;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @MapsId
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "localization_id")
     @NotNull
     private Localization localization;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @JoinColumn(name = "amenity_id")
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    @JoinColumn(name = "accommodation_id")
     @Singular
     private List<Amenity> amenities;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
@@ -72,12 +77,13 @@ public class Accommodation extends AbstractEntity {
     private final LocalDateTime createdDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
 
-    @OneToMany(mappedBy = "accommodation",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true)
-    @IndexColumn(name = "id", base = 1)
-    @Singular
-    private List<Booking> bookings;
+//    @OneToMany(mappedBy = "accommodation",
+//            fetch = FetchType.LAZY,
+//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH},
+//            orphanRemoval = true)
+//    @IndexColumn(name = "id", base = 1)
+//    @Singular
+//    private List<Booking> bookings;
 
     //Got to be implemented because of Hibernate PersistentBag lack of equals() implementation
     @Override
@@ -101,13 +107,7 @@ public class Accommodation extends AbstractEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getName(), getDescription(), getAccommodationType(), getMaxGuests(), getPricePerNight(), getLocalization(), getAmenities(), getUser(), getCreatedDate());
-    }
-
-    public void setBookings(List<Booking> bookings) {
-        this.bookings.clear();
-        if(bookings != null) {
-            this.bookings.addAll(bookings);
-        }
+        return Objects.hash(super.hashCode(), getName(), getDescription(), getAccommodationType(), getMaxGuests(),
+                getPricePerNight(), getLocalization(), getAmenities(), getUser(), getCreatedDate());
     }
 }

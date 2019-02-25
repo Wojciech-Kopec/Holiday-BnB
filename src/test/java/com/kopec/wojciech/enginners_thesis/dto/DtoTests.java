@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
+import static com.kopec.wojciech.enginners_thesis.utils.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

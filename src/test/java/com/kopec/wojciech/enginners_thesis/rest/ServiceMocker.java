@@ -7,7 +7,7 @@ import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import com.kopec.wojciech.enginners_thesis.service.UserService;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
+import static com.kopec.wojciech.enginners_thesis.utils.ModelProvider.*;
 
 /** This class contains of static methods which return Mock Instance of corresponding
  * com.kopec.wojciech.enginners_thesis.service Classes. Mocks are stubbed with default instances of Model classes */

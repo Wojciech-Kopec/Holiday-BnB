@@ -75,11 +75,11 @@ public class UserService {
         return UserDto.toDto(userRepository.findById(id).orElse(null));
     }
 
-    public UserDto findByAccommodation(AccommodationDto accommodation) {
-        return UserDto.toDto(userRepository.findByAccommodationsContains(AccommodationDto.toEntity(accommodation)));
-    }
-
-    public UserDto findByBooking(BookingDto booking) {
-        return UserDto.toDto(userRepository.findByBookingsContains(BookingDto.toEntity(booking)));
-    }
+//    public UserDto findByAccommodation(AccommodationDto accommodation) {
+//        return UserDto.toDto(userRepository.findByAccommodationsContains(AccommodationDto.toEntity(accommodation)));
+//    }
+//
+//    public UserDto findByBooking(BookingDto booking) {
+//        return UserDto.toDto(userRepository.findByBookingsContains(BookingDto.toEntity(booking)));
+//    }
 }

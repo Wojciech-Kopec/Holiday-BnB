@@ -340,7 +340,7 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 .build();
     }
 
-    private String addCriteriaAsRequestParams(AccommodationCriteria criteria) {
+    public static String addCriteriaAsRequestParams(AccommodationCriteria criteria) {
         StringBuilder sb = new StringBuilder("?");
 
         if (criteria != null) {

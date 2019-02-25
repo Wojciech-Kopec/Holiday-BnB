@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.rest.AccommodationRestController;
+import com.kopec.wojciech.enginners_thesis.rest.AccommodationRestControllerTests;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationCriteria;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AccommodationResourceIT extends AbstractRestIT {
 
-    private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value()[0];
+    private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value
+            ()[0];
     private AccommodationCriteria filteringCriteria;
 
     @Before
@@ -33,8 +35,12 @@ public class AccommodationResourceIT extends AbstractRestIT {
     @Test
     public void validCreationTest() throws Exception {
         accommodationRepository.deleteAll();
+        localizationRepository.deleteAll();
+        amenityRepository.deleteAll();
+
         primaryAccommodationDto.setId(null);
         primaryAccommodationDto.getLocalization().setId(null);
+        primaryAccommodationDto.getAmenities().forEach(amenityDto -> amenityDto.setId(null));
 
         MockHttpServletResponse response = performRequest(
                 HttpMethod.POST,
@@ -50,6 +56,8 @@ public class AccommodationResourceIT extends AbstractRestIT {
                 null
         );
         assertThat(accommodationRepository.count(), is(1L));
+        assertThat(localizationRepository.count(), is(1L));
+        assertThat(amenityRepository.count(), is(2L));
     }
 
     @Test
@@ -225,6 +233,8 @@ public class AccommodationResourceIT extends AbstractRestIT {
                 null
         );
         assertThat(accommodationRepository.count(), is(1L));
+        assertThat(localizationRepository.count(), is(1L));
+        assertThat(amenityRepository.count(), is(3L));
     }
 
     @Test
@@ -285,45 +295,6 @@ public class AccommodationResourceIT extends AbstractRestIT {
     }
 
     private String addCriteriaAsRequestParams(AccommodationCriteria criteria) {
-        StringBuilder sb = new StringBuilder("?");
-
-        if (criteria != null) {
-            if (criteria.getName() != null) {
-                sb.append("name=").append(criteria.getName()).append("&");
-            }
-            if (criteria.getAccommodationTypes() != null && criteria.getAccommodationTypes().size() > 0) {
-                criteria.getAccommodationTypes().forEach(type -> sb.append("accommodationType=").append(type.name())
-                        .append("&"));
-            }
-            if (criteria.getRequiredGuestCount() != null) {
-                sb.append("requiredGuestCount=").append(criteria.getRequiredGuestCount().toString()).append("&");
-            }
-            if (criteria.getMinPricePerNight() != null) {
-                sb.append("minPricePerNight=").append(criteria.getMinPricePerNight().toString()).append("&");
-            }
-            if (criteria.getMaxPricePerNight() != null) {
-                sb.append("maxPricePerNight=").append(criteria.getMaxPricePerNight().toString()).append("&");
-            }
-            if (criteria.getAmenities() != null && criteria.getAmenities().size() > 0) {
-                criteria.getAmenities().forEach(amenity -> sb.append("amenity=").append(amenity).append("&"));
-            }
-            //Localization filteringCriteria
-            if (criteria.getLocalization() != null) {
-                LocalizationDto localization = criteria.getLocalization();
-                if (localization.getCountry() != null) {
-                    sb.append("country=").append(localization.getCountry()).append("&");
-                }
-                if (localization.getState() != null) {
-                    sb.append("state=").append(localization.getState()).append("&");
-                }
-                if (localization.getCity() != null) {
-                    sb.append("city=").append(localization.getCity()).append("&");
-                }
-                if (localization.getAddress() != null) {
-                    sb.append("address=").append(localization.getAddress()).append("&");
-                }
-            }
-        }
-        return sb.deleteCharAt(sb.length() - 1).toString();
+        return AccommodationRestControllerTests.addCriteriaAsRequestParams(criteria);
     }
 }

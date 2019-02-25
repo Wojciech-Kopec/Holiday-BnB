@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.kopec.wojciech.enginners_thesis.model.ModelProvider.*;
+import static com.kopec.wojciech.enginners_thesis.utils.ModelProvider.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringRunner.class)

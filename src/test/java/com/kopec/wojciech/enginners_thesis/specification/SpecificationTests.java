@@ -5,6 +5,7 @@ import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.model.*;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
+import com.kopec.wojciech.enginners_thesis.utils.ModelProvider;
 import org.assertj.core.util.Lists;
 import org.junit.*;
 import org.junit.runner.RunWith;
