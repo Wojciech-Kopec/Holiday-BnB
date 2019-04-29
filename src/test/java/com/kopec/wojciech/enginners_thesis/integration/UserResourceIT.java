@@ -16,7 +16,7 @@ public class UserResourceIT extends AbstractRestIT {
 
     @Test
     public void validRegistrationTest() throws Exception {
-        this.tearDown();
+        this.cleanUpDbTables();
         primaryUserDto.setId(null);
 
         MockHttpServletResponse response = performRequest(

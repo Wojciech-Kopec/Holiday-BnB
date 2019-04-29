@@ -51,5 +51,6 @@ abstract public class AbstractRepositoryTests<T extends AbstractEntity, S extend
         assertThat(repository.findById(t.getId()).orElse(null), is(nullValue()));
     }
 
+    @SuppressWarnings("unused")
     abstract void wipe();
 }

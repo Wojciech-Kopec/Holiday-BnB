@@ -61,7 +61,6 @@ public class Accommodation extends AbstractEntity {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     @JoinColumn(name = "accommodation_id")
     @Singular
     private List<Amenity> amenities;

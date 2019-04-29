@@ -96,8 +96,7 @@ abstract public class AbstractRestTest {
                     expectedErrorMsg);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail();
+            throw new RuntimeException(e);
         }
     }
 

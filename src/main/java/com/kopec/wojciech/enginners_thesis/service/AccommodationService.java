@@ -4,11 +4,13 @@ import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
+import com.kopec.wojciech.enginners_thesis.repository.AmenityRepository;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationCriteria;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -17,10 +19,13 @@ import java.util.stream.StreamSupport;
 public class AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
+    private final AmenityRepository amenityRepository;
+
 
     @Autowired
-    public AccommodationService(AccommodationRepository accommodationRepository) {
+    public AccommodationService(AccommodationRepository accommodationRepository, AmenityRepository amenityRepository) {
         this.accommodationRepository = accommodationRepository;
+        this.amenityRepository = amenityRepository;
     }
 
     public AccommodationDto save(AccommodationDto accommodationDto) {
@@ -37,8 +42,12 @@ public class AccommodationService {
         return mapSavedAccommodation(accommodationDto);
     }
 
+    @Transactional
     public void delete(final AccommodationDto accommodationDto) {
-        accommodationRepository.delete(AccommodationDto.toEntity(accommodationDto));
+        Accommodation accommodation = AccommodationDto.toEntity(accommodationDto);
+        //TODO find a way to do it within JPA
+        amenityRepository.deleteAll(accommodation.getAmenities());
+        accommodationRepository.delete(accommodation);
     }
 
     public List<AccommodationDto> findAll(AccommodationCriteria criteria) {

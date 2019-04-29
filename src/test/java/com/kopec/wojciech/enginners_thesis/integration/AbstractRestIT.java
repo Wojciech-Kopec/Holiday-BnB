@@ -11,6 +11,7 @@ import com.kopec.wojciech.enginners_thesis.rest.AbstractRestTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -56,12 +57,9 @@ public abstract class AbstractRestIT extends AbstractRestTest {
     protected BookingDto primaryBookingDto;
     protected BookingDto secondaryBookingDto;
 
-
     @Before
     public void setUp() {
-        bookingRepository.deleteAll();
-        accommodationRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanUpDbTables();
 
         User primaryUser = userRepository.save(createUser_1_noId());
         User secondaryUser = userRepository.save(createUser_2_noId());
@@ -81,7 +79,9 @@ public abstract class AbstractRestIT extends AbstractRestTest {
     }
 
     @After
-    public void tearDown() {
+    public void cleanUpDbTables() {
+        //FIXME
+        amenityRepository.deleteAll();
         bookingRepository.deleteAll();
         accommodationRepository.deleteAll();
         userRepository.deleteAll();
