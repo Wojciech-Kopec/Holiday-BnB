@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="row">
+        <div class="mx-auto">
+            <h2 ng-if="ctrl.user.id">Edit User</h2>
+            <h2 ng-if="!ctrl.user.id">New User</h2>
+        </div>
+    </div>
+    <div class="row" ng-if="ctrl.msg">
+        <div class="mx-auto">
+            <p class="text-danger">{{ctrl.msg}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <form class="mx-auto col-10 col-md-6">
+            <p>Id: {{ctrl.user.id}}</p>
+            <div class="form-group">
+                <label for="usernameInput">Username:</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Username" ng-model="ctrl.user.username">
+            </div>
+            <div class="form-group">
+                <label for="firstNameInput">First Name:</label>
+                <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" ng-model="ctrl.user.firstName">
+            </div>
+            <div class="form-group">
+                <label for="lastNameInput">Last Name:</label>
+                <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" ng-model="ctrl.user.lastName">
+            </div>
+            <div class="form-group">
+                <label for="emailInput">E-mail:</label>
+                <input type="text" class="form-control" id="emailInput" placeholder="E-mail" ng-model="ctrl.user.email">
+            </div>
+            <div class="form-group">
+                <label for="phoneNumberInput">Phone No.:</label>
+                <input type="text" class="form-control" id="phoneNumberInput" placeholder="Phone No." ng-model="ctrl.user.phoneNumber">
+            </div>
+            <div class="form-group">
+                <label for="passwordInput">Password:</label>
+                <input type="text" class="form-control" id="passwordInput" placeholder="Password" ng-model="ctrl.user.password">
+            </div>
+
+            <div class="form-group mb-3">
+                <button ng-if="!ctrl.user.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveUser()">Save</button>
+                <button ng-if="ctrl.user.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateUser()">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

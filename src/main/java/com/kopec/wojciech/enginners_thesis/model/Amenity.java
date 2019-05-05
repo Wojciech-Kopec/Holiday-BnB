@@ -31,7 +31,7 @@ public class Amenity extends AbstractEntity {
     @NotBlank
     private String description;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     private Accommodation accommodation;
 }

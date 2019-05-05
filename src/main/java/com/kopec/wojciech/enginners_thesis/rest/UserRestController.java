@@ -70,7 +70,7 @@ public class UserRestController {
     public ResponseEntity<UserDto> get(@PathVariable Integer id) {
         UserDto user = userService.findById(id);
         if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.FOUND);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

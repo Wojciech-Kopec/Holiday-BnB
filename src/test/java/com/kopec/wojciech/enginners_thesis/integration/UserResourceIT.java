@@ -89,7 +89,7 @@ public class UserResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 primaryUserDto,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

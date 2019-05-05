@@ -155,7 +155,7 @@ public class UserRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 requestedUser,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

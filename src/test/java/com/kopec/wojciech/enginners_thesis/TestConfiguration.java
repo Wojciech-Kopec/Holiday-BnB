@@ -31,20 +31,4 @@ public class TestConfiguration {
     public BookingRepositoryTests bookingRepositoryTests() {
         return new BookingRepositoryTests();
     }
-
-
-//    @Bean
-//    public UserResourceIT userResourceIntegrationTests() {
-//        return new UserResourceIT();
-//    }
-//
-//    @Bean
-//    public AccommodationResourceIT accommodationResourceIntegrationTests() {
-//        return new AccommodationResourceIT();
-//    }
-//
-//    @Bean
-//    public BookingResourceIT bookingResourceIntegrationTests() {
-//        return new BookingResourceIT();
-//    }
 }

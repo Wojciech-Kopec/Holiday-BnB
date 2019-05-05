@@ -1,10 +1,11 @@
-package com.kopec.wojciech.enginners_thesis.utils;
+package com.kopec.wojciech.enginners_thesis;
 
 import com.kopec.wojciech.enginners_thesis.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class ModelProvider {
 
@@ -178,3 +179,4 @@ public class ModelProvider {
         return booking;
     }
 }
+

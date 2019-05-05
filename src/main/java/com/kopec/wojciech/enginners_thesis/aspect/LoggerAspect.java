@@ -13,24 +13,26 @@ import org.springframework.stereotype.Component;
 public class LoggerAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggerAspect.class);
 
-    @Before("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
-    public void logInfoBefore(JoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
-        logger.debug("Log @Before: {} with args: {}",
-                joinPoint.getSignature(), Arrays.toString(args));
-    }
+//    @Before("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
+//    public void logInfoBefore(JoinPoint joinPoint) {
+//        Object[] args = joinPoint.getArgs();
+//        logger.debug("@Before: {} with args: {}".replace(toShorten, ""),
+//                joinPoint.getSignature(), Arrays.toString(args));
+//    }
 
-    @After("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
-    public void logInfoAfter(JoinPoint joinPoint) {
-        logger.debug("Log @After: Method {} executed", joinPoint.getSignature());
-    }
+//    @After("com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()")
+//    public void logInfoAfter(JoinPoint joinPoint) {
+//        logger.debug("@After: Method {} executed".replace(toShorten, ""), joinPoint.getSignature());
+//    }
 
     @AfterThrowing(
             pointcut = "com.kopec.wojciech.enginners_thesis.aspect.AspectUtil.allMethods()",
             throwing = "error")
     public void logError(JoinPoint joinPoint, Throwable error) {
-        logger.error("Log @AfterThrowing, Error: Method {} finished with error {",
-                joinPoint.getSignature(), error.getMessage());
+        logger.error(
+                "@AfterThrowing, Error: Method {} with args {}\nfinished with error {}",
+                joinPoint.getSignature(), joinPoint.getArgs(), error.getMessage()
+        );
     }
 
     @AfterReturning(
@@ -39,7 +41,9 @@ public class LoggerAspect {
     public void logSuccess(JoinPoint joinPoint, Object result) {
         Object[] args = joinPoint.getArgs();
         if (result != null)
-            logger.debug("Log @AfterReturning: Method " + joinPoint.getSignature() + " successfully returned value {} for args {}",
-                    result, Arrays.toString(args));
+            logger.debug(
+                    "@AfterReturning: Method {} with args {}\nsuccessfully returned value: {}",
+                    joinPoint.getSignature(), Arrays.toString(args), result
+            );
     }
 }
