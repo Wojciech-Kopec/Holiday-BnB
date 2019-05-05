@@ -4,7 +4,6 @@ import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
-import com.kopec.wojciech.enginners_thesis.repository.AmenityRepository;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationCriteria;
 import com.kopec.wojciech.enginners_thesis.specification.AccommodationSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,10 @@ import java.util.stream.StreamSupport;
 public class AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
-    private final AmenityRepository amenityRepository;
-
 
     @Autowired
-    public AccommodationService(AccommodationRepository accommodationRepository, AmenityRepository amenityRepository) {
+    public AccommodationService(AccommodationRepository accommodationRepository) {
         this.accommodationRepository = accommodationRepository;
-        this.amenityRepository = amenityRepository;
     }
 
     public AccommodationDto save(AccommodationDto accommodationDto) {
@@ -46,7 +42,6 @@ public class AccommodationService {
     public void delete(final AccommodationDto accommodationDto) {
         Accommodation accommodation = AccommodationDto.toEntity(accommodationDto);
         //TODO find a way to do it within JPA
-        amenityRepository.deleteAll(accommodation.getAmenities());
         accommodationRepository.delete(accommodation);
     }
 
