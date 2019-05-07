@@ -64,7 +64,7 @@ public class AccommodationRestController {
     public ResponseEntity<AccommodationDto> get(@PathVariable Integer id) {
         AccommodationDto accommodation = accommodationService.findById(id);
         if (accommodation != null) {
-            return new ResponseEntity<>(accommodation, HttpStatus.FOUND);
+            return new ResponseEntity<>(accommodation, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -92,7 +92,7 @@ public class AccommodationRestController {
         AccommodationDto accommodation = accommodationService.findById(id);
         if (accommodation != null) {
             List<BookingDto> accommodationsBookings = bookingService.findAllByAccommodation(accommodation);
-            return new ResponseEntity<>(accommodationsBookings, HttpStatus.FOUND);
+            return new ResponseEntity<>(accommodationsBookings, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

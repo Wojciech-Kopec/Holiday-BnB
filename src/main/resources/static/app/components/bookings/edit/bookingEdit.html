@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="row">
+        <div class="mx-auto">
+            <h2 ng-if="ctrl.booking.id">Edit Booking</h2>
+            <h2 ng-if="!ctrl.booking.id">New Booking</h2>
+        </div>
+    </div>
+    <div class="row" ng-if="ctrl.msg">
+        <div class="mx-auto">
+            <p class="text-danger">{{ctrl.msg}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <form class="mx-auto col-10 col-md-6">
+            <p>Id: {{ctrl.booking.id}}</p>
+            <div class="form-group">
+                <label for="accommodationInput">Accommodation:</label>
+                <input type="text" class="form-control" id="accommodationInput" placeholder="Accommodation" ng-model="ctrl.booking.accommodation">
+            </div>
+            <div class="form-group">
+                <label for="userInput">User:</label>
+                <input type="text" class="form-control" id="userInput" placeholder="User" ng-model="ctrl.booking.user">
+            </div>
+            <div class="form-group">
+                <label for="guestsCountInput">Guests:</label>
+                <input type="text" class="form-control" id="guestsCountInput" placeholder="Guests" ng-model="ctrl.booking.guestsCount">
+            </div>
+            <div class="form-group">
+                <label for="statusInput">Status:</label>
+                <input type="text" class="form-control" id="statusInput" placeholder="Status" ng-model="ctrl.booking.status">
+            </div>
+            <div class="form-group">
+                <label for="startDateInput">Start Date:</label>
+                <input type="text" class="form-control" id="startDateInput" placeholder="Start Date" ng-model="ctrl.booking.startDate">
+            </div>
+            <div class="form-group">
+                <label for="finishDateInput">Finish Date:</label>
+                <input type="text" class="form-control" id="finishDateInput" placeholder="Finish Date" ng-model="ctrl.booking.finishDate">
+            </div>
+            <div class="form-group">
+                <label for="finalPriceInput">Final Price:</label>
+                <input type="text" class="form-control" id="finalPriceInput" placeholder="Final Price" ng-model="ctrl.booking.finalPrice">
+            </div>
+
+            <div class="form-group mb-3">
+                <button ng-if="!ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveBooking()">Save</button>
+                <button ng-if="ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateBooking()">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

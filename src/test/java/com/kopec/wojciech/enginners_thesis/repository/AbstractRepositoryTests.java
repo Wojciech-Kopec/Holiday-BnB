@@ -8,6 +8,14 @@ import javax.persistence.EntityNotFoundException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+
+/*
+* TODO
+* Add these Test Cases:
+* 1. User with 2 Accommodations - deletion of Accommodation & User
+* 2. Same as above but with Bookings - User/Booking & Accommodation/Booking
+* 3. Add assertions with Localization & Amenities entities in TCs with Accommodation
+* */
 abstract public class AbstractRepositoryTests<T extends AbstractEntity, S extends JpaRepository<T, Integer>> {
 
     public void createEntityTest(T objToPersist, S repository) {

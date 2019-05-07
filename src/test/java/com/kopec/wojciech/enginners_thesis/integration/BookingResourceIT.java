@@ -75,7 +75,7 @@ public class BookingResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 primaryBookingDto,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/booking")
+@RequestMapping("/api/bookings")
 public class BookingRestController {
 
     private BookingService bookingService;
@@ -57,7 +57,7 @@ public class BookingRestController {
     public ResponseEntity<BookingDto> get(@PathVariable Integer id) {
         BookingDto booking = bookingService.findById(id);
         if (booking != null) {
-            return new ResponseEntity<>(booking, HttpStatus.FOUND);
+            return new ResponseEntity<>(booking, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

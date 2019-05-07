@@ -160,7 +160,7 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 requestedAccommodation,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );
@@ -307,7 +307,7 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
                 Lists.newArrayList(bookingDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

@@ -1,0 +1,80 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="form">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" id="nameSearchInput" placeholder="Name" ng-model="name">
+                    <input type="text" class="form-control" id="descriptionSearchInput" placeholder="Description" ng-model="description">
+                    <input type="text" class="form-control" id="accommodationTypeSearchInput" placeholder="accommodationType" ng-model="accommodationType">
+                    <input type="text" class="form-control" id="maxGuestsSearchInput" placeholder="Max Guests" ng-model="maxGuests">
+                    <input type="text" class="form-control" id="pricePerNightInput" placeholder="Price per night" ng-model="pricePerNight">
+                    <input type="text" class="form-control" id="localizationInput" placeholder="Localization" ng-model="localization">
+                    <input type="text" class="form-control" id="userSearchInput" placeholder="User" ng-model="user">
+                    <input type="text" class="form-control" id="amenitiesSearchInput" placeholder="Amenities" ng-model="amenities">
+                    <input type="text" class="form-control" id="createdDateSearchInput" placeholder="Created" ng-model="createdDate">
+                    <button class="btn btn-primary mx-1">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Max Guests</th>
+                    <th scope="col">Price per night</th>
+                    <th scope="col">Localization</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Amenities</th>
+                    <th scope="col">Created</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="accommodation in ctrl.accommodations">
+                    <th scope="row">{{accommodation.id}}</th>
+                    <td>{{accommodation.name}}</td>
+                    <td>{{accommodation.description}}</td>
+                    <td>{{accommodation.accommodationType}}</td>
+                    <td>{{accommodation.maxGuests}}</td>
+                    <td>{{accommodation.pricePerNight}}</td>
+                    <td>{{accommodation.localization}}</td>
+                    <td>{{accommodation.user}}</td>
+                    <td>{{accommodation.amenities}}</td>
+                    <td>{{accommodation.createdDate}}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary" title="Edit">
+                            <a ng-href="#!accommodation-edit/{{accommodation.id}}" class="text-white">
+                                <i class="fas fa-user-edit"></i>
+                            </a>
+                        </button>
+                        <button class="btn btn-sm btn-warning" title="Manage Bookings">
+                            <a ng-href="#!accommodation-bookings/{{accommodation.id}}" class="text-white">
+                                <i class="fas fa-wrench"></i>
+                            </a>
+                        </button>
+                        <button class="btn btn-sm btn-danger" title="Remove"
+                                ng-click="ctrl.removeAccommodation(accommodation)">
+
+                            <i class="fas fa-user-minus"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <a class="btn btn-primary mb-3" ng-href="#!accommodation-add">Add Accommodation</a>
+    </div>
+</div>

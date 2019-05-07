@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="row">
+        <div class="mx-auto">
+            <h2 ng-if="ctrl.accommodation.id">Edit accommodation</h2>
+            <h2 ng-if="!ctrl.accommodation.id">New accommodation</h2>
+        </div>
+    </div>
+    <div class="row" ng-if="ctrl.msg">
+        <div class="mx-auto">
+            <p class="text-danger">{{ctrl.msg}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <form class="mx-auto col-10 col-md-6">
+            <p>Id: {{ctrl.accommodation.id}}</p>
+            <div class="form-group">
+                <label for="nameInput">Name:</label>
+                <input type="text" class="form-control" id="nameInput" placeholder="Name" ng-model="ctrl.accommodation.name">
+            </div>
+            <div class="form-group">
+                <label for="descriptionInput">Description:</label>
+                <input type="text" class="form-control" id="descriptionInput" placeholder="Description" ng-model="ctrl.accommodation.description">
+            </div>
+            <div class="form-group">
+                <label for="accommodationTypeInput">Type:</label>
+                <input type="text" class="form-control" id="accommodationTypeInput" placeholder="Type" ng-model="ctrl.accommodation.accommodationType">
+            </div>
+            <div class="form-group">
+                <label for="maxGuestsInput">Max Guests:</label>
+                <input type="text" class="form-control" id="maxGuestsInput" placeholder="Max Guests" ng-model="ctrl.accommodation.maxGuests">
+            </div>
+            <div class="form-group">
+                <label for="pricePerNightInput">Price per night:</label>
+                <input type="text" class="form-control" id="pricePerNightInput" placeholder="Price per night" ng-model="ctrl.accommodation.pricePerNight">
+            </div>
+            <div class="form-group">
+                <label for="localizationInput">Localization:</label>
+                <input type="text" class="form-control" id="localizationInput" placeholder="Localization" ng-model="ctrl.accommodation.localization">
+            </div>
+            <div class="form-group">
+                <label for="userInput">User:</label>
+                <input type="text" class="form-control" id="userInput" placeholder="User" ng-model="ctrl.accommodation.user">
+            </div>
+            <div class="form-group">
+                <label for="amenitiesInput">Amenities:</label>
+                <input type="text" class="form-control" id="amenitiesInput" placeholder="Amenities" ng-model="ctrl.accommodation.amenities">
+            </div>
+            <div class="form-group">
+                <label for="createdDateInput">Amenities:</label>
+                <input type="text" class="form-control" id="createdDateInput" placeholder="Created" ng-model="ctrl.accommodation.createdDate">
+            </div>
+
+            <div class="form-group mb-3">
+                <button ng-if="!ctrl.accommodation.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveaccommodation()">Save</button>
+                <button ng-if="ctrl.accommodation.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateaccommodation()">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

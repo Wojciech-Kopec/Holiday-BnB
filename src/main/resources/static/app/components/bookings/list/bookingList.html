@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Accommodation</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Guests</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">Finish Date</th>
+                            <th scope="col">Final Price</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="booking in ctrl.bookings">
+                            <th scope="row">{{booking.id}}</th>
+                            <td>{{booking.accommodation}}</td>
+                            <td>{{booking.user}}</td>
+                            <td>{{booking.guestsCount}}</td>
+                            <td>{{booking.status}}</td>
+                            <td>{{booking.startDate}}</td>
+                            <td>{{booking.finishDate}}</td>
+                            <td>{{booking.finalPrice}}</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-primary" title="Edit">
+                                    <a ng-href="#!booking-edit/{{booking.id}}" class="text-white">
+                                        <i class="fas fa-user-edit"></i>
+                                    </a>
+                                </button>
+                                <button class="btn btn-sm btn-danger" title="Remove"
+                                        ng-click="ctrl.removeBooking(booking)">
+
+                                    <i class="fas fa-user-minus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <a class="btn btn-primary mb-3" ng-href="#!booking-add">Add Booking</a>
+            </div>
+        </div>

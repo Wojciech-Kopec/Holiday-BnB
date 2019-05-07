@@ -178,7 +178,7 @@ public class UserResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
                 Lists.newArrayList(secondaryBookingDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );
@@ -208,7 +208,7 @@ public class UserResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable + "/accommodations",
                 null,
                 Lists.newArrayList(primaryAccommodationDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

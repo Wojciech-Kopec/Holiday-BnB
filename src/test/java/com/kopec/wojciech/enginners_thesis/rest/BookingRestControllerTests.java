@@ -144,7 +144,7 @@ public class BookingRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 requestedBooking,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

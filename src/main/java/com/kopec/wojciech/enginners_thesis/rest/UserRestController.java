@@ -102,7 +102,7 @@ public class UserRestController {
         UserDto user = userService.findById(id);
         if (user != null) {
             List<BookingDto> usersBookings = bookingService.findAllByUser(user);
-            return new ResponseEntity<>(usersBookings, HttpStatus.FOUND);
+            return new ResponseEntity<>(usersBookings, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -113,7 +113,7 @@ public class UserRestController {
         UserDto user = userService.findById(id);
         if (user != null) {
             List<AccommodationDto> usersAccommodations = accommodationService.findAllByUser(user);
-            return new ResponseEntity<>(usersAccommodations, HttpStatus.FOUND);
+            return new ResponseEntity<>(usersAccommodations, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

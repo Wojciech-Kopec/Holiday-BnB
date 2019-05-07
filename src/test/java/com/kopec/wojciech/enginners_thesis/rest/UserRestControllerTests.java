@@ -242,7 +242,7 @@ public class UserRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
                 Lists.newArrayList(bookingDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );
@@ -273,7 +273,7 @@ public class UserRestControllerTests extends AbstractRestMockedTest {
                 baseEndpoint + "/" + pathVariable + "/accommodations",
                 null,
                 Lists.newArrayList(accommodationDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );

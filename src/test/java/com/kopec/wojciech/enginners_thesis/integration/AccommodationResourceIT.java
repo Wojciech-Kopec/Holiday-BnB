@@ -112,7 +112,7 @@ public class AccommodationResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable,
                 null,
                 primaryAccommodationDto,
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );
@@ -261,7 +261,7 @@ public class AccommodationResourceIT extends AbstractRestIT {
                 baseEndpoint + "/" + pathVariable + "/bookings",
                 null,
                 Lists.newArrayList(primaryBookingDto),
-                HttpStatus.FOUND,
+                HttpStatus.OK,
                 null,
                 null
         );
