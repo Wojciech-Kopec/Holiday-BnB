@@ -80,6 +80,7 @@ public class UserResourceIT extends AbstractRestIT {
         );
     }
 
+    //TODO add Test for fetching User with param='Username'
     @Test
     public void validFetchUserTest() {
         Integer pathVariable = primaryUserDto.getId();
