@@ -1,7 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 public enum AmenityType {
-    WIFI("WI-FI"), KITCHEN("Kitchen"), TV("TV"), HEATING("HEATING"), BACKYARD("BACKYARD"), OTHER("");
+    WIFI("WI-FI"), KITCHEN("Kitchen"), TV("TV"), HEATING("Heating"), BACKYARD("Backyard"), OTHER("Other");
 
 
     private String type;
