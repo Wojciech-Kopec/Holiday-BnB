@@ -4,6 +4,8 @@ import com.kopec.wojciech.enginners_thesis.model.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class ModelProvider {
@@ -48,7 +50,6 @@ public class ModelProvider {
 
         Localization localization1 = Localization.builder()
                 .country("Poland")
-                .state("Lubuskie")
                 .city("Łąkie")
                 .address("Łąkie 52")
                 .build();
@@ -62,6 +63,7 @@ public class ModelProvider {
                 .pricePerNight(500)
                 .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2)))
                 .localization(localization1)
+                .createdDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
         return accommodation;
@@ -87,7 +89,6 @@ public class ModelProvider {
 
         Localization localization2 = Localization.builder()
                 .country("Poland")
-                .state("Dolnoslaskie")
                 .city("Wrocław")
                 .address("Rynek 10")
                 .build();
@@ -101,6 +102,7 @@ public class ModelProvider {
                 .pricePerNight(350)
                 .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2, amenity3)))
                 .localization(localization2)
+                .createdDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
         return accommodation;
@@ -114,6 +116,7 @@ public class ModelProvider {
                 .status(BookingStatus.VERIFIED)
                 .startDate(LocalDate.of(2022, 1, 1))
                 .finishDate(LocalDate.of(2022, 1, 15))
+                .submissionDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
     }
 
@@ -125,6 +128,7 @@ public class ModelProvider {
                 .status(BookingStatus.SUBMITTED)
                 .startDate(LocalDate.of(2022, 2, 10))
                 .finishDate(LocalDate.of(2022, 3, 1))
+                .submissionDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
     }
 

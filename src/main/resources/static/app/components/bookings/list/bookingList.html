@@ -20,8 +20,9 @@
                         <tbody>
                         <tr ng-repeat="booking in ctrl.bookings">
                             <th scope="row">{{booking.id}}</th>
-                            <td>{{booking.accommodation}}</td>
-                            <td>{{booking.user}}</td>
+                            <td><a ng-href="#!accommodation-edit/{{booking.accommodation.id}}">{{booking.accommodation.name}}</a>
+                            </td>
+                            <td><a ng-href="#!user-edit/{{booking.user.id}}">{{booking.user.username}}</a></td>
                             <td>{{booking.guestsCount}}</td>
                             <td>{{booking.status}}</td>
                             <td>{{booking.startDate}}</td>
@@ -48,3 +49,5 @@
                 <a class="btn btn-primary mb-3" ng-href="#!booking-add">Add Booking</a>
             </div>
         </div>
+    </div>
+</div>

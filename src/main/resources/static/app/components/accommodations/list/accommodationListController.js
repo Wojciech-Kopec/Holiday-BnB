@@ -3,21 +3,23 @@ angular.module('app')
         const vm = this;
 
         vm.accommodations = AccommodationService.getAll();
-        vm.amenities = AccommodationService.getAmenities();
 
-        vm.search = (name, accommodationTypes, requiredGuestCount, minPricePerNight, maxPricePerNight, localization, amenities) => {
+        vm.search = (name, accommodationType, requiredGuestCount, minPricePerNight, maxPricePerNight, localization, amenityFilter1, amenityFilter2, amenityFilter3) => {
 
             if (name === "") name = null;
-            if (accommodationTypes === "") accommodationTypes = null;
+            if (accommodationType === "") accommodationType = null;
             if (requiredGuestCount === "") requiredGuestCount = null;
             if (minPricePerNight === "") minPricePerNight = null;
             if (maxPricePerNight === "") maxPricePerNight = null;
             if (localization === "") localization = null;
-            if (amenities === "") amenities = null;
+            let amenities = [];
+            if (amenityFilter1) amenities.push(amenityFilter1);
+            if (amenityFilter2) amenities.push(amenityFilter2);
+            if (amenityFilter3) amenities.push(amenityFilter3);
 
             vm.accommodations = AccommodationService.getAll({
                 name,
-                accommodationTypes,
+                accommodationType,
                 requiredGuestCount,
                 minPricePerNight,
                 maxPricePerNight,
@@ -40,9 +42,20 @@ angular.module('app')
                 .then(deleteCallback)
                 .catch(logErr);            // }
         };
-    })
-/*.directive('AmenitySelect', function () {
-return {
 
-}
-})*/;
+        vm.amenityTypes = [
+            "WIFI",
+            "KITCHEN",
+            "TV",
+            "POOL",
+            "BACKYARD",
+            "SAUNA",
+            "PARKING",
+            "TERRACE",
+            "AC",
+            "OTHER"
+        ];
+
+        vm.accommodationTypes = ["FLAT", "HOUSE", "CABIN", "RESORT", "SUITE", "ROOM"];
+
+    });

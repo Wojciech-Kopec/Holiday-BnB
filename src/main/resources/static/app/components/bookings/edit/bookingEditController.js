@@ -27,4 +27,5 @@ angular.module('app')
                 .catch(errorCallback);
         };
 
+        vm.bookingStatuses = ["VERIFIED", "SUBMITTED", "REJECTED"];
     });

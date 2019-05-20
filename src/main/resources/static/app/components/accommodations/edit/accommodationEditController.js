@@ -7,6 +7,8 @@ angular.module('app')
         else
             vm.accommodation = new Accommodation();
 
+        vm.iteration = [0,1,2,3,4];
+
         const saveCallback = () => {
             $location.path(`/accommodation-edit/${vm.accommodation.id}`);
         };

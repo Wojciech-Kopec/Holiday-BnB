@@ -29,8 +29,6 @@ public class Localization extends AbstractEntity {
     @Size(min = 5, max = 30)
     private String country;
 
-    private String state;
-
     @NotNull
     @Size(min = 5, max = 30)
     private String city;

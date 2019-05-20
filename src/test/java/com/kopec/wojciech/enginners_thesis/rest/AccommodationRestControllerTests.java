@@ -369,9 +369,6 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 if (localization.getCountry() != null) {
                     sb.append("country=").append(localization.getCountry()).append("&");
                 }
-                if (localization.getState() != null) {
-                    sb.append("state=").append(localization.getState()).append("&");
-                }
                 if (localization.getCity() != null) {
                     sb.append("city=").append(localization.getCity()).append("&");
                 }

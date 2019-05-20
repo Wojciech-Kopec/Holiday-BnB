@@ -26,7 +26,7 @@ public class AccommodationDto {
     @Size(min = 10, max = 120)
     private String name;
 
-    @NotBlank //todo
+    @NotBlank
     @Size(min = 100)
     private String description;
 

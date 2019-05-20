@@ -47,8 +47,7 @@ public class Booking extends AbstractEntity {
     private BookingStatus status;
 
     @Column(name = "submission_date")
-    @Builder.Default
-    private final LocalDateTime submissionDate;
+    private LocalDateTime submissionDate;
 
     @Column(name = "start_date")
     @Future
@@ -72,22 +71,25 @@ public class Booking extends AbstractEntity {
     }
 
     public Booking() {
-        this.submissionDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         this.status = BookingStatus.SUBMITTED;
         if (startDate != null && finishDate != null && accommodation != null)
-            this.finalPrice = isFinishDateAfterStartDate() ?
-                    (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight()) : -1;
+            calculateFinalPrice();
     }
 
     @Builder
-    public Booking(Accommodation accommodation, User user, int guestsCount, LocalDate startDate, LocalDate finishDate, BookingStatus status /*TODO to remove?*/) {
+    public Booking(Accommodation accommodation, User user, int guestsCount, LocalDate startDate, LocalDate
+            finishDate, BookingStatus status, LocalDateTime submissionDate) {
         this.accommodation = accommodation;
         this.user = user;
         this.guestsCount = guestsCount;
         this.status = status;
-        this.submissionDate = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         this.startDate = startDate;
         this.finishDate = finishDate;
+        this.submissionDate = submissionDate;
+        calculateFinalPrice();
+    }
+
+    public void calculateFinalPrice() {
         this.finalPrice = isFinishDateAfterStartDate() ?
                 (int) (DAYS.between(startDate, finishDate) * accommodation.getPricePerNight()) : -1;
     }

@@ -16,17 +16,12 @@ public final class LocalizationSpecification {
     public static Predicate withCriteria(LocalizationDto criteria) {
         return new BooleanBuilder(
                 withCountry(criteria.getCountry()))
-                .and(withState(criteria.getState()))
                 .and(withCity(criteria.getCity()))
                 .and(withAddressContains(criteria.getAddress()));
     }
 
     private static Predicate withCountry(String country) {
         return country != null ? QLocalization.localization.country.eq(country) : null;
-    }
-
-    private static Predicate withState(String state) {
-        return state != null ? QLocalization.localization.state.eq(state) : null;
     }
 
     private static Predicate withCity(String city) {

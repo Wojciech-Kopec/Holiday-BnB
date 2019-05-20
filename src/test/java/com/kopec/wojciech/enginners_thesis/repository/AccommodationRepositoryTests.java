@@ -24,6 +24,9 @@ public class AccommodationRepositoryTests extends AbstractRepositoryTests<Accomm
     UserRepository userRepository;
 
     @Autowired
+    AmenityRepository amenityRepository;
+
+    @Autowired
     UserRepositoryTests userRepositoryTests;
 
     private User user1 = createUser_1_noId();
@@ -47,12 +50,13 @@ public class AccommodationRepositoryTests extends AbstractRepositoryTests<Accomm
     }
 
     @Test
-    public void updateAccommodationEntityTest() {
+    public void updateAccommodationEntityTest1() {
         userRepositoryTests.createEntityTest(user1, userRepository);
         userRepositoryTests.createEntityTest(user2, userRepository);
 
         Accommodation updated = accommodation2;
         updateEntityTest(accommodation, updated, accommodationRepository);
+
     }
 
     @Test

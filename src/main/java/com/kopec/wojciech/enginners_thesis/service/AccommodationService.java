@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -25,12 +27,14 @@ public class AccommodationService {
     }
 
     public AccommodationDto save(AccommodationDto accommodationDto) {
+        if(accommodationDto.getCreatedDate() == null)
+        accommodationDto.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         return mapSavedAccommodation(accommodationDto);
     }
 
     private AccommodationDto mapSavedAccommodation(AccommodationDto accommodationDto) {
         Accommodation accommodation = AccommodationDto.toEntity(accommodationDto);
-        Accommodation savedAccommodation = accommodationRepository.save(accommodation);
+        Accommodation savedAccommodation = accommodationRepository.saveEntity(accommodation);
         return AccommodationDto.toDto(savedAccommodation);
     }
 
@@ -41,7 +45,6 @@ public class AccommodationService {
     @Transactional
     public void delete(final AccommodationDto accommodationDto) {
         Accommodation accommodation = AccommodationDto.toEntity(accommodationDto);
-        //TODO find a way to do it within JPA
         accommodationRepository.delete(accommodation);
     }
 

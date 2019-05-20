@@ -5,6 +5,7 @@
             <h2 ng-if="!ctrl.accommodation.id">New accommodation</h2>
         </div>
     </div>
+    <hr>
     <div class="row" ng-if="ctrl.msg">
         <div class="mx-auto">
             <p class="text-danger">{{ctrl.msg}}</p>
@@ -12,47 +13,119 @@
     </div>
     <div class="row">
         <form class="mx-auto col-10 col-md-6">
-            <p>Id: {{ctrl.accommodation.id}}</p>
+            <br>
+            <h5>Id: {{ctrl.accommodation.id}}</h5>
+            <br>
             <div class="form-group">
                 <label for="nameInput">Name:</label>
-                <input type="text" class="form-control" id="nameInput" placeholder="Name" ng-model="ctrl.accommodation.name">
+                <input type="text" class="form-control" id="nameInput" placeholder="Name"
+                       ng-model="ctrl.accommodation.name">
             </div>
             <div class="form-group">
                 <label for="descriptionInput">Description:</label>
-                <input type="text" class="form-control" id="descriptionInput" placeholder="Description" ng-model="ctrl.accommodation.description">
+                <textarea rows="10" class="form-control" id="descriptionInput" placeholder="Description"
+                          ng-model="ctrl.accommodation.description"></textarea>
             </div>
             <div class="form-group">
-                <label for="accommodationTypeInput">Type:</label>
-                <input type="text" class="form-control" id="accommodationTypeInput" placeholder="Type" ng-model="ctrl.accommodation.accommodationType">
+                <label for="accommodationTypeSelect">Type:</label>
+
+                <select ng-controller="AccommodationListController as accomListCtrl" class="form-control"
+                        id="accommodationTypeSelect"
+                        ng-model="ctrl.accommodation.accommodationType"
+                        ng-options="type for type in accomListCtrl.accommodationTypes"
+                        title="accommodationType">
+                </select>
             </div>
             <div class="form-group">
                 <label for="maxGuestsInput">Max Guests:</label>
-                <input type="text" class="form-control" id="maxGuestsInput" placeholder="Max Guests" ng-model="ctrl.accommodation.maxGuests">
+                <input type="number" class="form-control" id="maxGuestsInput" placeholder="Max Guests"
+                       ng-model="ctrl.accommodation.maxGuests">
             </div>
             <div class="form-group">
                 <label for="pricePerNightInput">Price per night:</label>
-                <input type="text" class="form-control" id="pricePerNightInput" placeholder="Price per night" ng-model="ctrl.accommodation.pricePerNight">
+                <input type="number" class="form-control" id="pricePerNightInput" placeholder="Price per night"
+                       ng-model="ctrl.accommodation.pricePerNight">
+            </div>
+            <br><br>
+            <div class="form-group">
+                <label><b>Localization:</b></label>
+                <br>
+                <div class="form-group">
+                    <label for="countryInput">Country:</label>
+                    <input type="text" class="form-control" id="countryInput" placeholder="Country"
+                           ng-model="ctrl.accommodation.localization.country">
+                </div>
+                <div class="form-group">
+                    <label for="cityInput">City:</label>
+                    <input type="text" class="form-control" id="cityInput" placeholder="City"
+                           ng-model="ctrl.accommodation.localization.city">
+                </div>
+                <div class="form-group">
+                    <label for="addressInput">Address:</label>
+                    <input type="text" class="form-control" id="addressInput" placeholder="Address"
+                           ng-model="ctrl.accommodation.localization.address">
+                </div>
+                <br>
             </div>
             <div class="form-group">
-                <label for="localizationInput">Localization:</label>
-                <input type="text" class="form-control" id="localizationInput" placeholder="Localization" ng-model="ctrl.accommodation.localization">
+                <label>User:</label><br>
+                <a ng-href="#!/user-edit/{{ctrl.accommodation.user.id}}">{{ctrl.accommodation.user.username}} ({{ctrl.accommodation.user.email}})</a>
+            </div>
+            <br>
+            <div class="form-group">
+                <label><b>Amenities:</b></label>
+                <br>
+                <div ng-controller="AccommodationListController as accomListCtrl">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Type</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="index in ctrl.iteration">
+                            <td>
+                                <select class="form-control"
+                                        ng-model="ctrl.accommodation.amenities[index].type"
+                                        ng-options="type for type in accomListCtrl.amenityTypes"
+                                        title="amenity">
+                                    <option value="" style="color: red">DELETE</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" id="amenityDescription"
+                                       placeholder="Description"
+                                       ng-model="ctrl.accommodation.amenities[index].description">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
             </div>
             <div class="form-group">
-                <label for="userInput">User:</label>
-                <input type="text" class="form-control" id="userInput" placeholder="User" ng-model="ctrl.accommodation.user">
+                <label for="createdDateInput">Created Date:</label>
+                <input ng-if="ctrl.accommodation.id" type="text" class="form-control" id="createdDateInput" placeholder="Created"
+                       ng-model="ctrl.accommodation.createdDate" disabled>
             </div>
-            <div class="form-group">
-                <label for="amenitiesInput">Amenities:</label>
-                <input type="text" class="form-control" id="amenitiesInput" placeholder="Amenities" ng-model="ctrl.accommodation.amenities">
-            </div>
-            <div class="form-group">
-                <label for="createdDateInput">Amenities:</label>
-                <input type="text" class="form-control" id="createdDateInput" placeholder="Created" ng-model="ctrl.accommodation.createdDate">
-            </div>
+            <br><br>
 
             <div class="form-group mb-3">
-                <button ng-if="!ctrl.accommodation.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveaccommodation()">Save</button>
-                <button ng-if="ctrl.accommodation.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateaccommodation()">Update</button>
+                <button ng-if="!ctrl.accommodation.id" type="submit" class="btn btn-primary"
+                        ng-click="ctrl.saveAccommodation()">Save
+                </button>
+                <button ng-if="ctrl.accommodation.id" type="submit" class="btn btn-primary"
+                        ng-click="ctrl.updateAccommodation()">Update
+                </button>
+
+                <button ng-if="ctrl.accommodation.id" class="btn btn-primary btn-warning">
+                    <a ng-href="#!accommodation-bookings/{{ctrl.accommodation.id}}" class="text-white">Manage
+                        Bookings</a>
+                </button>
+                <button ng-if="ctrl.accommodation.id" class="btn btn-primary btn-danger"
+                        ng-click="ctrl.removeAccommodation(accommodation)">Remove
+                </button>
             </div>
         </form>
     </div>

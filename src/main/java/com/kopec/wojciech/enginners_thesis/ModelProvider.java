@@ -49,7 +49,6 @@ public class ModelProvider {
 
         Localization localization1 = Localization.builder()
                 .country("Poland")
-                .state("Lubuskie")
                 .city("Łąkie")
                 .address("Łąkie 52")
                 .build();
@@ -88,7 +87,6 @@ public class ModelProvider {
 
         Localization localization2 = Localization.builder()
                 .country("Poland")
-                .state("Dolnoslaskie")
                 .city("Wrocław")
                 .address("Rynek 10")
                 .build();

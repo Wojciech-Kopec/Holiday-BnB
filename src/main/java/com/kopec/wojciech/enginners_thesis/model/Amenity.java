@@ -15,8 +15,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, exclude = {"accommodation"})
-@ToString(callSuper = true, exclude = {"accommodation"})
+@EqualsAndHashCode(callSuper = false, exclude = {"accommodationId"})
+@ToString(callSuper = true, exclude = {"accommodationId"})
 @Builder
 
 @Entity
@@ -32,6 +32,5 @@ public class Amenity extends AbstractEntity {
     private String description;
 
     @ManyToOne
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Accommodation accommodation;
+    private Accommodation accommodationId;
 }

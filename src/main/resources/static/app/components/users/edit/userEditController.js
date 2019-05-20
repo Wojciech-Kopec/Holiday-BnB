@@ -7,24 +7,26 @@ angular.module('app')
         else
             vm.user = new User();
 
-        const saveCallback = () => {
-            $location.path(`/user-edit/${vm.user.id}`);
-        };
-        const errorCallback = err => {
-            vm.msg = `Błąd zapisu: ${err.data.message}`;
-        };
-
         vm.saveUser = () => {
             UserService.save(vm.user)
                 .then(saveCallback)
                 .catch(errorCallback);
         };
-
-        const updateCallback = response => vm.msg = 'Zapisano zmiany';
         vm.updateUser = () => {
             UserService.update(vm.user)
                 .then(updateCallback)
                 .catch(errorCallback);
+        };
+
+        const saveCallback = () => {
+            $location.path(`/user-edit/${vm.user.id}`);
+            vm.msg = 'Save successful!'
+        };
+
+        const updateCallback = response => vm.msg = 'Update successful!';
+
+        const errorCallback = err => {
+            vm.msg = 'Saving Error: ${err.data.message}';
         };
 
     });

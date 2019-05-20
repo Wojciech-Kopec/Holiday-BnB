@@ -10,41 +10,61 @@
             <p class="text-danger">{{ctrl.msg}}</p>
         </div>
     </div>
+    <hr>
     <div class="row">
         <form class="mx-auto col-10 col-md-6">
-            <p>Id: {{ctrl.booking.id}}</p>
+            <h4>Id: {{ctrl.booking.id}}</h4>
+            <br>
             <div class="form-group">
-                <label for="accommodationInput">Accommodation:</label>
-                <input type="text" class="form-control" id="accommodationInput" placeholder="Accommodation" ng-model="ctrl.booking.accommodation">
+                <label>Accommodation:</label><br>
+                <a ng-href="#!accommodation-edit/{{ctrl.booking.accommodation.id}}">
+                {{ctrl.booking.accommodation.name}}</a>
             </div>
             <div class="form-group">
-                <label for="userInput">User:</label>
-                <input type="text" class="form-control" id="userInput" placeholder="User" ng-model="ctrl.booking.user">
+                <label>User:</label><br>
+                <a ng-href="#!user-edit/{{ctrl.booking.user.id}}">{{ctrl.booking.user.username}}
+                    ({{ctrl.booking.user.email}})</a>
             </div>
             <div class="form-group">
                 <label for="guestsCountInput">Guests:</label>
-                <input type="text" class="form-control" id="guestsCountInput" placeholder="Guests" ng-model="ctrl.booking.guestsCount">
+                <input type="number" class="form-control" id="guestsCountInput" placeholder="Guests"
+                       ng-model="ctrl.booking.guestsCount">
             </div>
             <div class="form-group">
-                <label for="statusInput">Status:</label>
-                <input type="text" class="form-control" id="statusInput" placeholder="Status" ng-model="ctrl.booking.status">
+                <label>Status:</label>
+                <select class="form-control"
+                        id="statusSelect"
+                        ng-model="ctrl.booking.status"
+                        ng-options="status for status in ctrl.bookingStatuses"
+                        title="bookingStatus"></select>
             </div>
             <div class="form-group">
                 <label for="startDateInput">Start Date:</label>
-                <input type="text" class="form-control" id="startDateInput" placeholder="Start Date" ng-model="ctrl.booking.startDate">
+                <input type="text" class="form-control" id="startDateInput" placeholder="Start Date"
+                       ng-model="ctrl.booking.startDate">
             </div>
             <div class="form-group">
                 <label for="finishDateInput">Finish Date:</label>
-                <input type="text" class="form-control" id="finishDateInput" placeholder="Finish Date" ng-model="ctrl.booking.finishDate">
+                <input type="text" class="form-control" id="finishDateInput" placeholder="Finish Date"
+                       ng-model="ctrl.booking.finishDate">
             </div>
             <div class="form-group">
                 <label for="finalPriceInput">Final Price:</label>
-                <input type="text" class="form-control" id="finalPriceInput" placeholder="Final Price" ng-model="ctrl.booking.finalPrice">
+                <input type="text" class="form-control" id="finalPriceInput" placeholder="Final Price"
+                       ng-model="ctrl.booking.finalPrice">
             </div>
 
             <div class="form-group mb-3">
-                <button ng-if="!ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveBooking()">Save</button>
-                <button ng-if="ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateBooking()">Update</button>
+                <button ng-if="!ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveBooking()">
+                    Save
+                </button>
+                <button ng-if="ctrl.booking.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateBooking()">
+                    Update
+                </button>
+                <button ng-if="ctrl.booking.id" class="btn btn-primary btn-danger"
+                        ng-click="ctrl.removeBooking(booking)">Remove
+                </button>
+
             </div>
         </form>
     </div>

@@ -8,6 +8,8 @@ import com.kopec.wojciech.enginners_thesis.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,12 +24,14 @@ public class BookingService {
     }
 
     public BookingDto save(BookingDto bookingDto) {
+        if (bookingDto.getSubmissionDate() == null)
+            bookingDto.setSubmissionDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         return mapSavedBooking(bookingDto);
     }
 
     private BookingDto mapSavedBooking(BookingDto bookingDto) {
         Booking booking = BookingDto.toEntity(bookingDto);
-        Booking savedBooking = bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.saveEntity(booking);
         return BookingDto.toDto(savedBooking);
     }
 
@@ -56,7 +60,8 @@ public class BookingService {
 
     //TODO to be used in Accommodation REST API
     public List<BookingDto> findAllByAccommodation(AccommodationDto accommodation) {
-        return bookingRepository.findAllByAccommodationOrderBySubmissionDateDesc(AccommodationDto.toEntity(accommodation))
+        return bookingRepository.findAllByAccommodationOrderBySubmissionDateDesc(AccommodationDto.toEntity
+                (accommodation))
                 .stream()
                 .map(BookingDto::toDto)
                 .collect(Collectors.toList());
