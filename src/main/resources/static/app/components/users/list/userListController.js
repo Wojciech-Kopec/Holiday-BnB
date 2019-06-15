@@ -1,5 +1,14 @@
 angular.module('app')
-    .controller('UserListController', function (UserService, $route) {
+    .controller('UserListController', function ($rootScope, $window, UserService, $route) {
+        let authUser = $window.sessionStorage.getItem('authUser');
+
+        if (authUser)
+            $rootScope.authUser = JSON.parse(authUser);
+        else
+            $rootScope.authUser = null;
+
+        $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
+
         const vm = this;
         vm.users = UserService.getAll();
 

@@ -8,6 +8,7 @@ import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import com.kopec.wojciech.enginners_thesis.model.AccommodationType;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -22,12 +23,12 @@ public class AccommodationDto {
 
     private Integer id;
 
-    @NotNull
-    @Size(min = 10, max = 120)
+    @NotBlank
+    @Size(min = 10, max = 150)
     private String name;
 
     @NotBlank
-    @Size(min = 100)
+    @Size(min = 100, max = 2000)
     private String description;
 
     @NotNull

@@ -19,7 +19,7 @@ import static javafx.scene.input.KeyCode.T;
 public interface AccommodationRepository extends JpaRepository<Accommodation, Integer>, QuerydslPredicateExecutor<Accommodation> {
 
     default Accommodation saveEntity(Accommodation accommodation) {
-        if(accommodation.getCreatedDate() == null)
+        if(accommodation.getId() == null)
         accommodation.setCreatedDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         return save(accommodation);
     }

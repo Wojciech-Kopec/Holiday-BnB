@@ -1,10 +1,15 @@
 angular.module('app')
-    .controller('UserEditController', function ($routeParams, $location, $timeout, UserService, User) {
+    .controller('UserEditController', function ($rootScope, $window, $routeParams, $location, $timeout, UserService, User) {
+        $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
+        $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
+
         const vm = this;
         const userId = $routeParams.userId;
-        if (userId)
+        if (userId) {
             vm.user = UserService.get(userId);
-        else
+            if (userId === $rootScope.authUser.id)
+                vm.editAllowed = true;
+        } else
             vm.user = new User();
 
         vm.saveUser = () => {

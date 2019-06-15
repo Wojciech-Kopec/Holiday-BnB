@@ -21,9 +21,10 @@
     <script src="app/index.js"></script>
     <script src="app/config.js"></script>
 
-    <script src="app/services/userServices.js"></script>
+    <script src="app/services/userService.js"></script>
     <script src="app/services/accommodationService.js"></script>
     <script src="app/services/bookingService.js"></script>
+    <script src="app/services/authenticationService.js"></script>
 
     <script src="app/components/users/list/userListController.js"></script>
     <script src="app/components/users/edit/userEditController.js"></script>
@@ -36,36 +37,54 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Holiday B&B</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-asset">
-                    <a class="nav-link" href="#!accommodations">Accommodations</a>
-                </li>
-                <li class="nav-asset">
-                    <a class="nav-link" href="#!bookings">Bookings</a>
-                </li>
-                <li class="nav-asset">
-                    <a class="nav-link" href="#!users">Users</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Holiday B&B</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-asset">
+                <a class="nav-link" href="#!accommodations">Accommodations</a>
+            </li>
+            <li class="nav-asset">
+                <a class="nav-link" href="#!bookings">Bookings</a>
+            </li>
+            <li class="nav-asset">
+                <a class="nav-link" href="#!users">Users</a>
+            </li>
 
-    <main class="container">
-        <div class="jumbotron jumbo-custom text-white text-center my-2">
-            <h1>Holiday B&B</h1>
-            <p></p>
-            <p class="lead">Book place for your dream holidays!</p>
-            <p class="lead">All in one place and suited to your needs.</p>
-        </div>
-    </main>
+            <li class="nav-asset">
+                <a class="nav-link">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</a>
+            </li>
+            <li ng-if="authenticated && authUser" class="nav-asset">
+                <a class="nav-link">Logged as <b>{{authUser.username}}</b>&emsp;&emsp;</a>
+            </li>
+            <li ng-if="authenticated && authUser" class="nav-asset">
+                <a class="nav-link" ng-href="#!/user-edit/{{authUser.id}}">Profile</a>
 
-    <div ng-view></div>
+            </li>
+            <li ng-if="authenticated && authUser" ng-controller="AuthenticationController as authCtrl" class="nav-asset">
+                <a class="nav-link" ng-click="authCtrl.logout()">Logout</a>
+            </li>
+            <li ng-if="!authenticated" class="nav-asset">
+                <a class="nav-link" href="#!login">Login</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="jumbotron jumbo-custom text-white text-center my-2">
+        <h1>Holiday B&B</h1>
+        <p></p>
+        <p class="lead">Book place for your dream holidays!</p>
+        <p class="lead">All in one place and suited to your needs.</p>
+    </div>
+</main>
+
+<div ng-view></div>
 
 </body>
 </html>

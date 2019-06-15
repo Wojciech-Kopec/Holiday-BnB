@@ -29,12 +29,12 @@ import java.util.Objects;
 
 public class Accommodation extends AbstractEntity {
 
-    @NotNull
-    @Size(min = 10, max = 120)
+    @NotBlank
+    @Size(min = 10, max = 150)
     private String name;
 
     @NotBlank
-    @Size(min = 100)
+    @Size(min = 100, max = 2000)
     private String description;
 
     @Column(name = "accommodation_type")

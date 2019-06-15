@@ -14,7 +14,7 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     default Booking saveEntity(Booking booking) {
-        if(booking.getSubmissionDate() == null)
+        if(booking.getId() == null)
             booking.setSubmissionDate(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         booking.calculateFinalPrice();
         return save(booking);

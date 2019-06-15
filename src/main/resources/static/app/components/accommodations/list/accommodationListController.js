@@ -1,5 +1,8 @@
 angular.module('app')
-    .controller('AccommodationListController', function (AccommodationService, $route) {
+    .controller('AccommodationListController', function ($rootScope, $window, AccommodationService, $route) {
+        $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
+        $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
+
         const vm = this;
 
         vm.accommodations = AccommodationService.getAll();

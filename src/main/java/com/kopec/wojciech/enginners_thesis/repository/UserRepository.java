@@ -13,12 +13,7 @@ import java.util.List;
 @RepositoryRestResource()
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-//    @Query("SELECT user FROM User user left join fetch user.accommodations left join fetch user.bookings WHERE user.username=:username")
-    User findByUsername(/*@Param("username")*/ String username);
-
-//    User findByAccommodationsContains(Accommodation accommodation);
-//
-//    User findByBookingsContains(Booking booking);
+    User findByUsername(String username);
 
     User findByEmail(String email);
 
