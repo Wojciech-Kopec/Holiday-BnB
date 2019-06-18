@@ -27,7 +27,6 @@ public class EnginnersThesisApplication {
         ConfigurableApplicationContext context = SpringApplication.run(EnginnersThesisApplication.class, args);
         logger.info("Application started");
         persistEntities(context);
-
     }
 
     private static void persistEntities(ApplicationContext context) {
@@ -39,11 +38,11 @@ public class EnginnersThesisApplication {
         User primaryUser = userRepository.save(createUser_1_noId());
         User secondaryUser = userRepository.save(createUser_2_noId());
 
-        Accommodation primaryAccommodation = accommodationRepository.save(createAccommodation_1_noId(primaryUser));
-        Accommodation secondaryAccommodation = accommodationRepository.save(createAccommodation_2_noId(secondaryUser));
+        Accommodation primaryAccommodation = accommodationRepository.saveEntity(createAccommodation_1_noId(primaryUser));
+        Accommodation secondaryAccommodation = accommodationRepository.saveEntity(createAccommodation_2_noId(secondaryUser));
 
-        Booking primaryBooking = bookingRepository.save(createBooking_1_noId(secondaryUser, primaryAccommodation));
-        Booking secondaryBooking = bookingRepository.save(createBooking_2_noId(primaryUser, secondaryAccommodation));
+        Booking primaryBooking = bookingRepository.saveEntity(createBooking_1_noId(secondaryUser, primaryAccommodation));
+        Booking secondaryBooking = bookingRepository.saveEntity(createBooking_2_noId(primaryUser, secondaryAccommodation));
         logger.info("FINISHED: Persisting entities at Application Start-up");
 
     }

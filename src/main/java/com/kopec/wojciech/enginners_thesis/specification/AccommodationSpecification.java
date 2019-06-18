@@ -17,7 +17,7 @@ public final class AccommodationSpecification {
     public static Predicate withCriteria(AccommodationCriteria criteria) {
         return new BooleanBuilder(
                 withAccommodationCriteria(criteria))
-                .and(withLocalization(criteria.getLocalization()));
+                .and(withLocalization(criteria.getCountry(), criteria.getCity()));
     }
 
     private static Predicate withAccommodationCriteria(AccommodationCriteria criteria) {
@@ -74,8 +74,8 @@ public final class AccommodationSpecification {
         return booleanBuilder;
     }
 
-    private static Predicate withLocalization(LocalizationDto localization) {
-        return localization != null ? LocalizationSpecification.withCriteria(localization) : null;
+    private static Predicate withLocalization(String country, String city) {
+        return LocalizationSpecification.withCriteria(country, city);
     }
 }
 

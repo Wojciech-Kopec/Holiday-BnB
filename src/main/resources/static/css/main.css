@@ -1,3 +1,14 @@
 .jumbo-custom {
     background: url('../img/background.jpg') center;
 }
+
+.string {
+    white-space: pre-wrap;
+}
+
+.no-overflow {
+    white-space: nowrap;
+    width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

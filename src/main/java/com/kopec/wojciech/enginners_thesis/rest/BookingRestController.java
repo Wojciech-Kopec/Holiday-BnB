@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
+import com.kopec.wojciech.enginners_thesis.exception.GuestsCountBiggerThanAvailable;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

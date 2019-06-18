@@ -1,5 +1,5 @@
 angular.module('app')
-    .controller('AccommodationListController', function ($rootScope, $window, AccommodationService, $route) {
+    .controller('AccommodationListController', function ($rootScope, $window, $mdDialog, $scope, AccommodationService, $route) {
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
@@ -7,18 +7,21 @@ angular.module('app')
 
         vm.accommodations = AccommodationService.getAll();
 
-        vm.search = (name, accommodationType, requiredGuestCount, minPricePerNight, maxPricePerNight, localization, amenityFilter1, amenityFilter2, amenityFilter3) => {
+        vm.search = () => {
+            let name, accommodationType, requiredGuestCount, minPricePerNight, maxPricePerNight, country, city;
 
-            if (name === "") name = null;
-            if (accommodationType === "") accommodationType = null;
-            if (requiredGuestCount === "") requiredGuestCount = null;
-            if (minPricePerNight === "") minPricePerNight = null;
-            if (maxPricePerNight === "") maxPricePerNight = null;
-            if (localization === "") localization = null;
+            name = $scope.name !== "" ? $scope.name : null;
+            accommodationType = $scope.accommodationType !== "" ? $scope.accommodationType : null;
+            requiredGuestCount = $scope.requiredGuestCount !== "" ? $scope.requiredGuestCount : null;
+            minPricePerNight = $scope.minPricePerNight !== "" ? $scope.minPricePerNight : null;
+            maxPricePerNight = $scope.maxPricePerNight !== "" ? $scope.maxPricePerNight : null;
+            country = $scope.country !== "" ? $scope.country : null;
+            city = $scope.city !== "" ? $scope.city : null;
+
             let amenities = [];
-            if (amenityFilter1) amenities.push(amenityFilter1);
-            if (amenityFilter2) amenities.push(amenityFilter2);
-            if (amenityFilter3) amenities.push(amenityFilter3);
+            if ($scope.amenityFilter1) amenities.push($scope.amenityFilter1);
+            if ($scope.amenityFilter2) amenities.push($scope.amenityFilter2);
+            if ($scope.amenityFilter3) amenities.push($scope.amenityFilter3);
 
             vm.accommodations = AccommodationService.getAll({
                 name,
@@ -26,9 +29,25 @@ angular.module('app')
                 requiredGuestCount,
                 minPricePerNight,
                 maxPricePerNight,
-                localization,
+                country,
+                city,
                 amenities
             })
+        };
+
+        vm.clearFilters = () => {
+            $scope.name = null;
+            $scope.accommodationType = null;
+            $scope.requiredGuestCount = null;
+            $scope.minPricePerNight = null;
+            $scope.maxPricePerNight = null;
+            $scope.country = null;
+            $scope.city = null;
+            $scope.amenityFilter1 = null;
+            $scope.amenityFilter2 = null;
+            $scope.amenityFilter3 = null;
+
+            vm.search();
         };
 
         const deleteCallback = () => {
@@ -44,6 +63,20 @@ angular.module('app')
             AccommodationService.remove(accommodation)
                 .then(deleteCallback)
                 .catch(logErr);            // }
+        };
+
+        vm.removePopup = (event, accommodation) => {
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove this entry?')
+                .targetEvent(event)
+                .ok('Remove')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function () {
+                vm.removeAccommodation(accommodation)
+            }, function () {
+                console.log("Remove cancelled")
+            });
         };
 
         vm.amenityTypes = [

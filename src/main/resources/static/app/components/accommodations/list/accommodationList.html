@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="form">
@@ -52,9 +52,15 @@
                     </select>
 
                     <button class="btn btn-primary mx-1"
-                            ng-click="ctrl.search(name, accommodationType, requiredGuestCount, minPricePerNight, maxPricePerNight, localization, amenityFilter1,amenityFilter2,amenityFilter3)">
+                            ng-click="ctrl.search()">
                         Filter Accommodations
                     </button>
+                    &emsp;&emsp;
+                    <button class="btn btn-primary mx-1"
+                            ng-click="ctrl.clearFilters()">
+                        Clear filters
+                    </button>
+                    <br><br>
                 </div>
             </div>
         </div>
@@ -62,71 +68,96 @@
 
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" ng-repeat="accommodation in ctrl.accommodations">
             <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Max Guests</th>
-                    <th scope="col">Price per night</th>
-                    <th scope="col">Localization</th>
-                    <th scope="col">User</th>
-                    <th scope="col">Amenities</th>
-                    <th scope="col">Created</th>
-                    <th scope="col" class="text-center">Action</th>
-                </tr>
-                </thead>
                 <tbody>
-                <tr ng-repeat="accommodation in ctrl.accommodations">
-                    <th scope="row">{{accommodation.id}}</th>
-                    <td>{{accommodation.name}}</td>
-                    <td>{{accommodation.description}}</td>
-                    <td>{{accommodation.accommodationType}}</td>
-                    <td>{{accommodation.maxGuests}}</td>
-                    <td>{{accommodation.pricePerNight}}</td>
+                <tr>
                     <td>
                         <table>
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Guests</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Localization</th>
+                                <th scope="col">Added</th>
+                            </tr>
+                            </thead>
                             <tbody>
                             <tr>
-                                <td>{{accommodation.localization.country}}</td>
-                                <td>{{accommodation.localization.city}}</td>
-                                <td>{{accommodation.localization.address}}</td>
+                                <td>{{accommodation.name}}</td>
+                                <td>{{accommodation.accommodationType}}</td>
+                                <td>{{accommodation.maxGuests}}</td>
+                                <td>{{accommodation.pricePerNight}} / day</td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td>{{accommodation.localization.country}}</td>
+                                            <td>{{accommodation.localization.city}}</td>
+                                            <td>{{accommodation.localization.address}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>{{accommodation.createdDate}}</td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td><a ng-href="#!user-edit/{{accommodation.user.id}}">{{accommodation.user.username}}</a></td>
-                    <td>
-                        <table>
-                            <tbody>
-                            <tr ng-repeat="amenity in accommodation.amenities">
-                                <td>{{amenity.type}}</td>
-                                <td>{{amenity.description}}</td>
+                            <tr>
+                                <td class="string" colspan="4"><b>Description: </b><br><br>{{accommodation.description}}
+                                </td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th colspan="2">Amenities</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="amenity in accommodation.amenities">
+                                            <td>{{amenity.type}}</td>
+                                            <td>{{amenity.description}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                <b>User:</b><br>
+                                <a ng-href="#!users/{{accommodation.user.id}}">{{accommodation.user.username}}</a>
+                                </td>
+                            <tr>
+                                <td class="text-center">
+                                    <button class="btn btn-primary" title="Edit">
+                                        <a ng-href="#!accommodations/{{accommodation.id}}/booking-add" class="text-white">
+                                            <i class="fas fa-user-edit">&emsp;BOOK NOW</i>
+                                        </a>
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary" title="Edit">
+                                        <a ng-href="#!accommodations/{{accommodation.id}}" class="text-white">
+                                            <i class="fas fa-user-edit">&emsp;Show Accommodation</i>
+                                        </a>
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-warning" title="Manage Bookings">
+                                        <a ng-href="#!accommodations/{{accommodation.id}}/bookings" class="text-white">
+                                            <i class="fas fa-wrench">&emsp;Show Bookings</i>
+                                        </a>
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger" title="Remove"
+                                            ng-click="ctrl.removePopup($event, accommodation)">
+                                        <i class="fas fa-user-minus">&emsp;Remove</i>
+                                    </button>
+                                    <br><br>
                                 </td>
                             </tr>
+                            </tr>
                             </tbody>
                         </table>
-                    <td>{{accommodation.createdDate}}</td>
-
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-primary" title="Edit">
-                            <a ng-href="#!accommodation-edit/{{accommodation.id}}" class="text-white">
-                                <i class="fas fa-user-edit"></i>
-                            </a>
-                        </button>
-                        <button class="btn btn-sm btn-warning" title="Manage Bookings">
-                            <a ng-href="#!accommodation-bookings/{{accommodation.id}}" class="text-white">
-                                <i class="fas fa-wrench"></i>
-                            </a>
-                        </button>
-                        <button class="btn btn-sm btn-danger" title="Remove"
-                                ng-click="ctrl.removeAccommodation(accommodation)">
-
-                            <i class="fas fa-user-minus"></i>
-                        </button>
                     </td>
                 </tr>
                 </tbody>

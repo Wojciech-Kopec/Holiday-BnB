@@ -40,7 +40,7 @@
                         <td>{{user.roles}}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-primary" title="Edit">
-                                <a ng-href="#!user-edit/{{user.id}}" class="text-white">
+                                <a ng-href="#!users/{{user.id}}" class="text-white">
                                     <i class="fas fa-user-edit"></i>
                                 </a>
                             </button>
@@ -54,7 +54,7 @@
                                     <i class="fas fa-wrench"></i>
                                 </a>
                             </button>
-                            <button class="btn btn-sm btn-danger" title="Remove" ng-click="ctrl.removeUser(user)">
+                            <button class="btn btn-sm btn-danger" title="Remove" ng-click="ctrl.removePopup($event, user)">
 
                                 <i class="fas fa-user-minus"></i>
                             </button>
@@ -63,8 +63,5 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="row">
-        <a class="btn btn-primary mb-3" ng-href="#!user-add">Add User</a>
     </div>
 </div>

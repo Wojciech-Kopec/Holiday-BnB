@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +61,8 @@ public class SpecificationTests {
                 .maxPricePerNight(accommodationDto.getPricePerNight())
                 .amenities(accommodationDto.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
-                .localization(accommodationDto.getLocalization())
+                .country(accommodationDto.getLocalization().getCountry())
+                .city(accommodationDto.getLocalization().getCity())
                 .build();
 
 
@@ -84,10 +87,11 @@ public class SpecificationTests {
 
     @Test
     public void localizationCriteriaTest() {
-        LocalizationDto criteria = LocalizationDto.toDto(accommodationEntity.getLocalization());
+        String country = accommodationEntity.getLocalization().getCountry();
+        String city = accommodationEntity.getLocalization().getCity();
 
         List<Accommodation> filteredResults = (List<Accommodation>) accommodationRepository.findAll(
-                LocalizationSpecification.withCriteria(criteria));
+                LocalizationSpecification.withCriteria(country, city));
 
         assertThat(filteredResults.size(), is(1));
         Accommodation filterResult = filteredResults.get(0);

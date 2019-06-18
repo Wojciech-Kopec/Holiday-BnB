@@ -175,7 +175,8 @@ public class AccommodationResourceIT extends AbstractRestIT {
 
     @Test
     public void validFindAllAccommodationsWithCriteriaNullLocalizationTest() {
-        filteringCriteria.setLocalization(null);
+        filteringCriteria.setCountry(null);
+        filteringCriteria.setCity(null);
 
         httpTestTemplate(
                 HttpMethod.GET,
@@ -192,7 +193,8 @@ public class AccommodationResourceIT extends AbstractRestIT {
     public void validFindAllAccommodationsWithPartialCriteriaTest() {
         filteringCriteria.setName(null);
         filteringCriteria.setAmenities(null);
-        filteringCriteria.setLocalization(null);
+        filteringCriteria.setCountry(null);
+        filteringCriteria.setCity(null);
         filteringCriteria.setMinPricePerNight(null);
 
         httpTestTemplate(
@@ -290,7 +292,8 @@ public class AccommodationResourceIT extends AbstractRestIT {
                 .maxPricePerNight(accommodation.getPricePerNight())
                 .amenities(accommodation.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
-                .localization(accommodation.getLocalization())
+                .country(accommodation.getLocalization().getCountry())
+                .city(accommodation.getLocalization().getCity())
                 .build();
     }
 

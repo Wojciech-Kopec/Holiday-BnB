@@ -15,7 +15,7 @@ public class ModelProvider {
                 .lastName("Test_LastName1")
                 .email("user1@test.com")
                 .password("password1")
-                .username("User1")
+                .username("BIURO NIERUCHOMOSCI BRACIA JARACZ WROCLAW")
                 .phoneNumber("101010101")
                 .password("password")
                 .build();
@@ -47,20 +47,57 @@ public class ModelProvider {
                 .description("Fully functional kitchen")
                 .build();
 
+        Amenity amenity3 = Amenity.builder()
+                .type(AmenityType.BACKYARD)
+                .description("Spacious yard just behind the property")
+                .build();
+
+        Amenity amenity4 = Amenity.builder()
+                .type(AmenityType.TV)
+                .description("50 inch TV set with cable in property")
+                .build();
+
+        Amenity amenity5 = Amenity.builder()
+                .type(AmenityType.OTHER)
+                .description("Roof of property is fully accessible for guests")
+                .build();
+
         Localization localization1 = Localization.builder()
                 .country("Poland")
-                .city("Łąkie")
-                .address("Łąkie 52")
+                .city("Kędzierzyn Koźle")
+                .address("Plac Nowaka-Jeziorańskiego 23a/11")
                 .build();
 
         accommodation = Accommodation.builder()
                 .user(userOwner)
-                .name("Test_AccommodationName1")
-                .description("Test_Description1_ " + StringUtils.repeat("AAAAAAAAA ", 10))
+                .name("Platinum Palace Boutique Hotel")
+                .description("Hotel Sofia usytuowany jest naprzeciwko dworca kolejowego Wrocław Główny, 1,5 km od " +
+                        "rynku. Ten trzygwiazdkowy obiekt oferuje bezpłatne WiFi, eleganckie, klimatyzowane pokoje " +
+                        "oraz zaplecze biznesowe.\n" +
+                        "\n" +
+                        "Codziennie rano w jadalni serwowane jest śniadanie w formie bufetu. Całodobowy bar w holu " +
+                        "zaprasza na drinki i ciepłe napoje.\n" +
+                        "\n" +
+                        "Wszystkie pokoje w hotelu Sofia wyposażone są w telewizor z płaskim ekranem i obejmują " +
+                        "miejsce do pracy oraz nowoczesną łazienkę z prysznicem. Z narożnych pokoi typu superior " +
+                        "roztacza się wspaniały widok na całą okolicę.\n" +
+                        "\n" +
+                        "W czynnej przez całą dobę recepcji można zamówić transfer i skorzystać z usług konsjerża.\n" +
+                        "\n" +
+                        "Hotel Sofia położony jest 20 minut jazdy od lotniska im. Mikołaja Kopernika.\n" +
+                        "\n" +
+                        "Stare Miasto to świetny wybór dla osób, które interesują się restauracjami, atmosferą i " +
+                        "kulturą.\n" +
+                        "\n" +
+                        "Z autentycznych opinii naszych Gości wynika, że to ich ulubiona część miasta Wrocław.\n" +
+                        "\n" +
+                        "Parom bardzo się podoba ta lokalizacja – za pobyt dla 2 osób oceniają ją na 9,0\n" +
+                        "\n" +
+                        "Mówimy w Twoim języku!")
                 .accommodationType(AccommodationType.HOUSE)
                 .maxGuests(5)
                 .pricePerNight(500)
-                .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2)))
+                .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2, amenity3, amenity4, amenity5)))
                 .localization(localization1)
                 .build();
 
@@ -93,7 +130,7 @@ public class ModelProvider {
 
         accommodation = Accommodation.builder()
                 .user(userOwner)
-                .name("Test_AccommodationName2")
+                .name("D&C APARTHOTELS MARKET SQUARE")
                 .description("Test_Description2_ " + StringUtils.repeat("AAAAAAAAA ", 10))
                 .accommodationType(AccommodationType.FLAT)
                 .maxGuests(4)
@@ -145,7 +182,7 @@ public class ModelProvider {
         accommodation.getLocalization().setId(1);
 
         for (int i = 0; i < accommodation.getAmenities().size(); i++) {
-            accommodation.getAmenities().get(i).setId(i+1); //Id must be positive
+            accommodation.getAmenities().get(i).setId(i + 1); //Id must be positive
         }
 
         accommodation.setId(1);
@@ -158,7 +195,7 @@ public class ModelProvider {
 
         final int primaryAccommodationAmenitiesSize = 2; //For keeping IDs unique
         for (int i = 0; i < accommodation.getAmenities().size(); i++) {
-            accommodation.getAmenities().get(i).setId(i+1+primaryAccommodationAmenitiesSize); //Id must be positive
+            accommodation.getAmenities().get(i).setId(i + 1 + primaryAccommodationAmenitiesSize); //Id must be positive
         }
 
         accommodation.setId(2);
@@ -166,13 +203,13 @@ public class ModelProvider {
     }
 
     public static Booking createBooking_1(User client, Accommodation accommodation) {
-        Booking booking = createBooking_1_noId(client,accommodation);
+        Booking booking = createBooking_1_noId(client, accommodation);
         booking.setId(1);
         return booking;
     }
 
     public static Booking createBooking_2(User client, Accommodation accommodation) {
-        Booking booking = createBooking_1_noId(client,accommodation);
+        Booking booking = createBooking_1_noId(client, accommodation);
         booking.setId(2);
         return booking;
     }

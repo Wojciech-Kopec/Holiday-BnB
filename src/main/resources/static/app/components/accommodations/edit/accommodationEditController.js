@@ -3,23 +3,29 @@ angular.module('app')
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
-        if(!$rootScope.authenticated)
-            $location.path('/login');
 
         const vm = this;
         const accommodationId = $routeParams.accommodationId;
         if (accommodationId) {
-            vm.accommodation = AccommodationService.get(accommodationId);
+            let promise = AccommodationService.get(accommodationId);
+            console.log(promise);
+            promise.$promise.then((result) => vm.accommodation = result.value);
+            console.log(vm.accommodation);
+            if (vm.accommodation) {
+                vm.editAllowed = $rootScope.authUser !== null && vm.accommodation.user.id == $rootScope.authUser.id;
+            } else
+                $location.path('/error');
         } else {
             vm.accommodation = new Accommodation();
             vm.accommodation.amenities = [];
             vm.accommodation.user = $rootScope.authUser;
+            vm.editAllowed = $rootScope.authenticated;
         }
 
         vm.iteration = [0, 1, 2, 3, 4];
 
         const saveCallback = () => {
-            $location.path(`/accommodation-edit/${vm.accommodation.id}`);
+            $location.path(`/accommodations/${vm.accommodation.id}`);
         };
         const updateCallback = response => vm.msg = 'SUCCESS!';
 
@@ -28,13 +34,14 @@ angular.module('app')
         };
 
         vm.saveAccommodation = () => {
-            var amenityArray = [];
-            var index;
+            let amenityArray = [];
+            let index;
 
             for (index = 0; index < vm.accommodation.amenities.length; index++) {
                 let amenity = vm.accommodation.amenities[index];
-                amenity = {...amenity, accommodationId: null};
-                amenityArray.push(amenity);
+                // amenity = {...amenity, accommodationId: null};
+                if (amenity.type !== null)
+                    amenityArray.push(amenity);
             }
             vm.accommodation.amenities = amenityArray;
 

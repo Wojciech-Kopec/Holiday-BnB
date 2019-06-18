@@ -36,7 +36,8 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
     @InjectMocks
     private AccommodationRestController accommodationRestController;
 
-    private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value()[0];
+    private static String baseEndpoint = AccommodationRestController.class.getAnnotation(RequestMapping.class).value
+            ()[0];
     private AccommodationDto requestedAccommodation;
     private AccommodationDto anotherAccommodation;
     private AccommodationCriteria filteringCriteria;
@@ -223,7 +224,8 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
 
     @Test
     public void validFindAllAccommodationsWithCriteriaNullLocalizationTest() {
-        filteringCriteria.setLocalization(null);
+        filteringCriteria.setCountry(null);
+        filteringCriteria.setCity(null);
 
         mockedHttpTestTemplate(
                 HttpMethod.GET,
@@ -240,7 +242,8 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
     public void validFindAllAccommodationsWithPartialCriteriaTest() {
         filteringCriteria.setName(null);
         filteringCriteria.setAmenities(null);
-        filteringCriteria.setLocalization(null);
+        filteringCriteria.setCountry(null);
+        filteringCriteria.setCity(null);
         filteringCriteria.setMinPricePerNight(null);
 
         mockedHttpTestTemplate(
@@ -336,11 +339,12 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 .maxPricePerNight(accommodation.getPricePerNight())
                 .amenities(accommodation.getAmenities().stream().map(
                         amenity -> amenity.getType().toString()).collect(Collectors.toList()))
-                .localization(accommodation.getLocalization())
+                .country(accommodation.getLocalization().getCountry())
+                .city(accommodation.getLocalization().getCity())
                 .build();
     }
 
-        public static String addCriteriaAsRequestParams(AccommodationCriteria criteria) {
+    public static String addCriteriaAsRequestParams(AccommodationCriteria criteria) {
         StringBuilder sb = new StringBuilder("?");
 
         if (criteria != null) {
@@ -364,17 +368,11 @@ public class AccommodationRestControllerTests extends AbstractRestMockedTest {
                 criteria.getAmenities().forEach(amenity -> sb.append("amenity=").append(amenity).append("&"));
             }
             //Localization filteringCriteria
-            if (criteria.getLocalization() != null) {
-                LocalizationDto localization = criteria.getLocalization();
-                if (localization.getCountry() != null) {
-                    sb.append("country=").append(localization.getCountry()).append("&");
-                }
-                if (localization.getCity() != null) {
-                    sb.append("city=").append(localization.getCity()).append("&");
-                }
-                if (localization.getAddress() != null) {
-                    sb.append("address=").append(localization.getAddress()).append("&");
-                }
+            if (criteria.getCountry() != null) {
+                sb.append("country=").append(criteria.getCountry()).append("&");
+            }
+            if (criteria.getCity() != null) {
+                sb.append("city=").append(criteria.getCity()).append("&");
             }
         }
         return sb.deleteCharAt(sb.length() - 1).toString();

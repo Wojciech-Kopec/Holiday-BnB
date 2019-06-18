@@ -1,5 +1,5 @@
 angular.module('app')
-    .controller('BookingEditController', function ($rootScope, $window, $routeParams, $location, $timeout, BookingService, Booking) {
+    .controller('BookingEditController', function ($rootScope, $window, $routeParams, $location, $timeout, BookingService, Booking, AccommodationService) {
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
@@ -8,13 +8,29 @@ angular.module('app')
 
         const vm = this;
         const bookingId = $routeParams.bookingId;
-        if (bookingId)
-            vm.booking = BookingService.get(bookingId);
-        else
-            vm.booking = new Booking();
+        const accommodationId = $routeParams.accommodationId;
+
+        if (accommodationId) {
+            const accommodation = AccommodationService.get(accommodationId);
+            if(accommodation) {
+                if (bookingId) {
+                    vm.booking = BookingService.get(bookingId);
+                    vm.editAllowed = $rootScope.authUser !== null && vm.booking.user.id == $rootScope.authUser.id;
+                    vm.owner = accommodationId == vm.booking.accommodation.id;
+                } else {
+                    vm.booking = new Booking();
+                    vm.booking.user = $rootScope.authUser;
+                    vm.booking.accommodation = accommodation;
+                    vm.booking.status = "SUBMITTED";
+                    vm.editAllowed = $rootScope.authenticated;
+                }
+            } else {
+                $location.path('/error');
+            }
+        }
 
         const saveCallback = () => {
-            $location.path(`/booking-edit/${vm.booking.id}`);
+            $location.path(`/${vm.booking.accommodation.id}/bookings/${vm.booking.id}`);
         };
         const errorCallback = err => {
             vm.msg = `Błąd zapisu: ${err.data.message}`;

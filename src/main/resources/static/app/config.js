@@ -8,7 +8,7 @@ angular.module('app')
                 controller: 'AccommodationListController',
                 controllerAs: 'ctrl'
             })
-            .when('/accommodation-edit/:accommodationId', {
+            .when('/accommodations/:accommodationId', {
                 templateUrl: 'app/components/accommodations/edit/accommodationEdit.html',
                 controller: 'AccommodationEditController',
                 controllerAs: 'ctrl'
@@ -24,12 +24,17 @@ angular.module('app')
                 controller: 'BookingListController',
                 controllerAs: 'ctrl'
             })
-            .when('/booking-edit/:bookingId', {
+            .when('/accommodations/:accommodationId/bookings', {
+                templateUrl: 'app/components/bookings/list/bookingList.html',
+                controller: 'BookingListController',
+                controllerAs: 'ctrl'
+            })
+            .when('/accommodations/:accommodationId/bookings/:bookingId', {
                 templateUrl: 'app/components/bookings/edit/bookingEdit.html',
                 controller: 'BookingEditController',
                 controllerAs: 'ctrl'
             })
-            .when('/booking-add', {
+            .when('/accommodations/:accommodationId/booking-add', {
                 templateUrl: 'app/components/bookings/edit/bookingEdit.html',
                 controller: 'BookingEditController',
                 controllerAs: 'ctrl'
@@ -40,20 +45,33 @@ angular.module('app')
                 controller: 'UserListController',
                 controllerAs: 'ctrl'
             })
-            .when('/user-edit/:userId', {
+            .when('/users/:userId', {
                 templateUrl: 'app/components/users/edit/userEdit.html',
                 controller: 'UserEditController',
                 controllerAs: 'ctrl'
             })
-            .when('/user-add', {
+            .when('/register', {
                 templateUrl: 'app/components/users/edit/userEdit.html',
                 controller: 'UserEditController',
+                controllerAs: 'ctrl'
+            })
+            .when('/users/:userId/accommodations', {
+                templateUrl: 'app/components/accommodations/list/accommodationList.html',
+                controller: 'AccommodationListController',
+                controllerAs: 'ctrl'
+            })
+            .when('/users/:userId/bookings', {
+                templateUrl: 'app/components/bookings/list/bookingList.html',
+                controller: 'BookingListController',
                 controllerAs: 'ctrl'
             })
             .when('/login', {
                 templateUrl: 'login.html',
                 controller: 'AuthenticationController',
                 controllerAs: 'authCtrl'
+            })
+            .when('/error', {
+                templateUrl: 'error.html',
             })
             .otherwise({
                 redirectTo: '/accommodations'

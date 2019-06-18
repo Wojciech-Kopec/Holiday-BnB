@@ -11,37 +11,54 @@
         </div>
     </div>
     <div class="row">
-        <form class="mx-auto col-10 col-md-6">
+        <form id="form" class="mx-auto col-10 col-md-6">
             <h4>Id: {{ctrl.user.id}}</h4>
             <div class="form-group">
                 <label for="usernameInput">Username:</label>
-                <input type="text" class="form-control" id="usernameInput" placeholder="Username" ng-model="ctrl.user.username">
+                <input type="text" class="form-control" id="usernameInput" placeholder="Username"
+                       ng-model="ctrl.user.username" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="firstNameInput">First Name:</label>
-                <input type="text" class="form-control" id="firstNameInput" placeholder="First Name" ng-model="ctrl.user.firstName">
+                <input type="text" class="form-control" id="firstNameInput" placeholder="First Name"
+                       ng-model="ctrl.user.firstName" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="lastNameInput">Last Name:</label>
-                <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name" ng-model="ctrl.user.lastName">
+                <input type="text" class="form-control" id="lastNameInput" placeholder="Last Name"
+                       ng-model="ctrl.user.lastName" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="emailInput">E-mail:</label>
-                <input type="text" class="form-control" id="emailInput" placeholder="E-mail" ng-model="ctrl.user.email">
+                <input type="text" class="form-control" id="emailInput" placeholder="E-mail" ng-model="ctrl.user.email" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="phoneNumberInput">Phone No.:</label>
-                <input type="text" class="form-control" id="phoneNumberInput" placeholder="Phone No." ng-model="ctrl.user.phoneNumber">
+                <input type="text" class="form-control" id="phoneNumberInput" placeholder="Phone No."
+                       ng-model="ctrl.user.phoneNumber" ng-disabled="!ctrl.editAllowed">
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-if="ctrl.editAllowed">
                 <label for="passwordInput">Password:</label>
-                <input type="text" class="form-control" id="passwordInput" placeholder="Password" ng-model="ctrl.user.password">
+                <input type="password" class="form-control" id="passwordInput" placeholder="Password"
+                       ng-model="ctrl.user.password">
             </div>
-
+            <br><br>
             <div class="form-group mb-3">
-                <button ng-if="!ctrl.user.id" type="submit" class="btn btn-primary" ng-click="ctrl.saveUser()">Create</button>
-                <button ng-if="ctrl.user.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateUser()">Update</button>
-                <button ng-if="ctrl.user.id" type="submit" class="btn btn-primary" ng-click="ctrl.updateUser()">Add Accommodation</button>
+                <button ng-if="!ctrl.user.id && !authenticated" type="submit" class="btn btn-primary" ng-click="ctrl.saveUser()">Create
+                </button>
+                <button ng-if="ctrl.user.id && ctrl.editAllowed" type="submit" class="btn btn-primary" ng-click="ctrl.updateUser()">Update
+                </button>
+                <a ng-if="ctrl.user.id && ctrl.editAllowed" class="btn btn-primary" ng-href="#!accommodation-add">Add
+                    Accommodation
+                </a>
+                <br><br>
+                <button ng-if="ctrl.user.id" class="btn btn-primary" type="submit" ng-click="ctrl.getUsersAccommodations()">
+                    Show {{ctrl.user.username}}'s Accommodations
+                </button>
+                <br><br>
+                <button ng-if="ctrl.user.id" class="btn btn-primary" type="submit" ng-click="ctrl.getUsersBookings()">
+                    Show {{ctrl.user.username}}'s Bookings
+                </button>
             </div>
         </form>
     </div>

@@ -1,5 +1,5 @@
 angular.module('app')
-    .controller('UserListController', function ($rootScope, $window, UserService, $route) {
+    .controller('UserListController', function ($rootScope, $window, UserService, $route, $mdDialog) {
         let authUser = $window.sessionStorage.getItem('authUser');
 
         if (authUser)
@@ -25,10 +25,22 @@ angular.module('app')
         };
 
         vm.removeUser = user => {
-            // if (popupService.showPopup('Do you want to delete this entry?')) {
             UserService.remove(user)
                 .then(deleteCallback)
                 .catch(logErr);
-            // }
+        };
+
+        vm.removePopup = (event, user) => {
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to remove this entry?')
+                .targetEvent(event)
+                .ok('Remove')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function() {
+                vm.removeUser(user)
+            }, function() {
+                console.log("Remove cancelled")
+            });
         };
     });

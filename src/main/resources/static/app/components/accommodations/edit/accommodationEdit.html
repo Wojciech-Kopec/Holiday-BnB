@@ -19,12 +19,12 @@
             <div class="form-group">
                 <label for="nameInput">Name:</label>
                 <input type="text" class="form-control" id="nameInput" placeholder="Name"
-                       ng-model="ctrl.accommodation.name">
+                       ng-model="ctrl.accommodation.name" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="descriptionInput">Description:</label>
-                <textarea rows="10" class="form-control" id="descriptionInput" placeholder="Description"
-                          ng-model="ctrl.accommodation.description"></textarea>
+                <textarea rows="10" class="string form-control" id="descriptionInput" placeholder="Description"
+                          ng-model="ctrl.accommodation.description" ng-disabled="!ctrl.editAllowed"></textarea>
             </div>
             <div class="form-group">
                 <label for="accommodationTypeSelect">Type:</label>
@@ -32,6 +32,7 @@
                 <select ng-controller="AccommodationListController as accomListCtrl" class="form-control"
                         id="accommodationTypeSelect"
                         ng-model="ctrl.accommodation.accommodationType"
+                        ng-disabled="!ctrl.editAllowed"
                         ng-options="type for type in accomListCtrl.accommodationTypes"
                         title="accommodationType">
                 </select>
@@ -39,12 +40,12 @@
             <div class="form-group">
                 <label for="maxGuestsInput">Max Guests:</label>
                 <input type="number" class="form-control" id="maxGuestsInput" placeholder="Max Guests"
-                       ng-model="ctrl.accommodation.maxGuests">
+                       ng-model="ctrl.accommodation.maxGuests" ng-disabled="!ctrl.editAllowed">
             </div>
             <div class="form-group">
                 <label for="pricePerNightInput">Price per night:</label>
                 <input type="number" class="form-control" id="pricePerNightInput" placeholder="Price per night"
-                       ng-model="ctrl.accommodation.pricePerNight">
+                       ng-model="ctrl.accommodation.pricePerNight" ng-disabled="!ctrl.editAllowed">
             </div>
             <br><br>
             <div class="form-group">
@@ -53,23 +54,23 @@
                 <div class="form-group">
                     <label for="countryInput">Country:</label>
                     <input type="text" class="form-control" id="countryInput" placeholder="Country"
-                           ng-model="ctrl.accommodation.localization.country">
+                           ng-model="ctrl.accommodation.localization.country" ng-disabled="!ctrl.editAllowed">
                 </div>
                 <div class="form-group">
                     <label for="cityInput">City:</label>
                     <input type="text" class="form-control" id="cityInput" placeholder="City"
-                           ng-model="ctrl.accommodation.localization.city">
+                           ng-model="ctrl.accommodation.localization.city" ng-disabled="!ctrl.editAllowed">
                 </div>
                 <div class="form-group">
                     <label for="addressInput">Address:</label>
                     <input type="text" class="form-control" id="addressInput" placeholder="Address"
-                           ng-model="ctrl.accommodation.localization.address">
+                           ng-model="ctrl.accommodation.localization.address" ng-disabled="!ctrl.editAllowed">
                 </div>
                 <br>
             </div>
             <div class="form-group">
                 <label>User:</label><br>
-                <a ng-href="#!/user-edit/{{ctrl.accommodation.user.id}}">{{ctrl.accommodation.user.username}} ({{ctrl.accommodation.user.email}})</a>
+                <a ng-href="#!/users/{{ctrl.accommodation.user.id}}">{{ctrl.accommodation.user.username}} ({{ctrl.accommodation.user.email}})</a>
             </div>
             <br>
             <div class="form-group">
@@ -88,6 +89,7 @@
                             <td>
                                 <select class="form-control"
                                         ng-model="ctrl.accommodation.amenities[index].type"
+                                        ng-disabled="!ctrl.editAllowed"
                                         ng-options="type for type in accomListCtrl.amenityTypes"
                                         title="amenity">
                                     <option value="" style="color: red">DELETE</option>
@@ -96,7 +98,8 @@
                             <td>
                                 <input type="text" class="form-control" id="amenityDescription"
                                        placeholder="Description"
-                                       ng-model="ctrl.accommodation.amenities[index].description">
+                                       ng-model="ctrl.accommodation.amenities[index].description"
+                                       ng-disabled="!ctrl.editAllowed">
                             </td>
                         </tr>
                         </tbody>
@@ -112,19 +115,22 @@
             <br><br>
 
             <div class="form-group mb-3">
-                <button ng-if="!ctrl.accommodation.id" type="submit" class="btn btn-primary"
+                <button ng-if="!ctrl.accommodation.id && authenticated" type="submit" class="btn btn-primary"
                         ng-click="ctrl.saveAccommodation()">Save
                 </button>
-                <button ng-if="ctrl.accommodation.id" type="submit" class="btn btn-primary"
+                <button ng-if="ctrl.accommodation.id && ctrl.editAllowed" type="submit" class="btn btn-primary"
                         ng-click="ctrl.updateAccommodation()">Update
                 </button>
-
+                <br>
+                <button ng-if="ctrl.accommodation.id && authenticated && !ctrl.editAllowed" class="btn btn-primary">
+                    <a ng-href="#!accommodations/{{accommodation.id}}/booking-new" class="text-white">BOOK NOW</a>
+                </button>
                 <button ng-if="ctrl.accommodation.id" class="btn btn-primary btn-warning">
-                    <a ng-href="#!accommodation-bookings/{{ctrl.accommodation.id}}" class="text-white">Manage
+                    <a ng-href="#!accommodations/{{accommodation.id}}/bookings" class="text-white">Show
                         Bookings</a>
                 </button>
-                <button ng-if="ctrl.accommodation.id" class="btn btn-primary btn-danger"
-                        ng-click="ctrl.removeAccommodation(accommodation)">Remove
+                <button ng-if="ctrl.accommodation.id && ctrl.editAllowed" class="btn btn-primary btn-danger"
+                        ng-click="ctrl.removePopup($event, accommodation)">Remove
                 </button>
             </div>
         </form>

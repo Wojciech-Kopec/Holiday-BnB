@@ -1,23 +1,18 @@
 package com.kopec.wojciech.enginners_thesis.specification;
 
-import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
-import com.kopec.wojciech.enginners_thesis.model.Localization;
 import com.kopec.wojciech.enginners_thesis.model.QLocalization;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.Expressions;
-import lombok.Builder;
 
 public final class LocalizationSpecification {
 
     private LocalizationSpecification() {
     }
 
-    public static Predicate withCriteria(LocalizationDto criteria) {
+    public static Predicate withCriteria(String country, String city) {
         return new BooleanBuilder(
-                withCountry(criteria.getCountry()))
-                .and(withCity(criteria.getCity()))
-                .and(withAddressContains(criteria.getAddress()));
+                withCountry(country))
+                .and(withCity(city));
     }
 
     private static Predicate withCountry(String country) {

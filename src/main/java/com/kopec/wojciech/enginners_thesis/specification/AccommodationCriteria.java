@@ -18,5 +18,6 @@ public class AccommodationCriteria {
     private Integer minPricePerNight;
     private Integer maxPricePerNight;
     private List<String> amenities;
-    private LocalizationDto localization;
+    private String country;
+    private String city;
 }

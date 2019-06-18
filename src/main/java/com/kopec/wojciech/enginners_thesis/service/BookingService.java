@@ -3,11 +3,14 @@ package com.kopec.wojciech.enginners_thesis.service;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
+import com.kopec.wojciech.enginners_thesis.exception.GuestsCountBiggerThanAvailable;
 import com.kopec.wojciech.enginners_thesis.model.Booking;
 import com.kopec.wojciech.enginners_thesis.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -36,6 +39,9 @@ public class BookingService {
     }
 
     public BookingDto update(BookingDto bookingDto) {
+        int accommodationMaxGuests = bookingDto.getAccommodation().getMaxGuests();
+        if(bookingDto.getGuestsCount() > accommodationMaxGuests)
+            throw new GuestsCountBiggerThanAvailable("Number of guests cannot be accepted. Max guests for this apartment is " + accommodationMaxGuests);
         return mapSavedBooking(bookingDto);
     }
 
