@@ -1,7 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.specification;
 
-import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
-import com.kopec.wojciech.enginners_thesis.model.AccommodationType;
+import com.kopec.wojciech.enginners_thesis.model.Accommodation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AccommodationCriteria {
     private String name;
-    private List<AccommodationType> accommodationTypes;
+    private List<Accommodation.AccommodationType> accommodationTypes;
     private Integer requiredGuestCount;
     private Integer minPricePerNight;
     private Integer maxPricePerNight;

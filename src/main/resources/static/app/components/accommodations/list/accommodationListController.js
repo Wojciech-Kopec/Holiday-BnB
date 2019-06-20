@@ -1,11 +1,23 @@
 angular.module('app')
-    .controller('AccommodationListController', function ($rootScope, $window, $mdDialog, $scope, AccommodationService, $route) {
+    .controller('AccommodationListController', function ($rootScope, $location, $window, $mdDialog, $scope, AccommodationService, $route, $routeParams) {
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
         const vm = this;
+        AccommodationService.getAll().$promise
+            .then(data => {
+                vm.accommodations = data;
 
-        vm.accommodations = AccommodationService.getAll();
+                const userId = $routeParams.userId;
+                if (userId) {
+                    vm.accommodations = vm.accommodations.filter(accommodation => accommodation.user.id == userId);
+                }
+            })
+            .catch(err => {
+                console.log('Could not fetch Accommodations');
+                console.log(err);
+                $location.path('/error');
+            });
 
         vm.search = () => {
             let name, accommodationType, requiredGuestCount, minPricePerNight, maxPricePerNight, country, city;
@@ -59,7 +71,6 @@ angular.module('app')
         };
 
         vm.removeAccommodation = accommodation => {
-            // if (popupService.showPopup('Do you want to delete this entry?')) {
             AccommodationService.remove(accommodation)
                 .then(deleteCallback)
                 .catch(logErr);            // }

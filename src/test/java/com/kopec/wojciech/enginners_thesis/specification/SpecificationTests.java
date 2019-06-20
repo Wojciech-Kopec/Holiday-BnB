@@ -108,7 +108,7 @@ public class SpecificationTests {
 
         AccommodationCriteria criteria2 = AccommodationCriteria.builder()
                 .accommodationTypes(Lists.newArrayList(accommodationEntity.getAccommodationType(),
-                        AccommodationType.CABIN, AccommodationType.SUITE)
+                        Accommodation.AccommodationType.CABIN, Accommodation.AccommodationType.SUITE)
                 )
                 .build();
 

@@ -104,7 +104,7 @@
                                 <td>{{accommodation.createdDate}}</td>
                             </tr>
                             <tr>
-                                <td class="string" colspan="4"><b>Description: </b><br><br>{{accommodation.description}}
+                                <td class="line-breaks" colspan="4"><b>Description: </b><br><br>{{accommodation.description}}
                                 </td>
                                 <td>
                                     <table>
@@ -148,7 +148,7 @@
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-danger" title="Remove"
+                                    <button ng-if="accommodation.user.id == authUser.id" class="btn btn-danger" title="Remove"
                                             ng-click="ctrl.removePopup($event, accommodation)">
                                         <i class="fas fa-user-minus">&emsp;Remove</i>
                                     </button>

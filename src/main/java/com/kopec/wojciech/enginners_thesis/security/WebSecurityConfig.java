@@ -1,5 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.security;
 
+import com.kopec.wojciech.enginners_thesis.rest.UserRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -27,23 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests().antMatchers("/wallPage").hasAnyRole("ADMIN", "USER")
-//                .and()
-//                .authorizeRequests().antMatchers("/login", "/resource/**").permitAll()
-//                .and()
-//                .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").permitAll()
-//                .loginProcessingUrl("/doLogin")
-//                .successForwardUrl("/postLogin")
-//                .failureUrl("/loginFailed")
-//                .and()
-//                .logout().logoutUrl("/doLogout").logoutSuccessUrl("/logout").permitAll()
-//                .and()
-//                .csrf().disable();
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -51,8 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .authorizeRequests()
-                .antMatchers("/login","/user-edit").permitAll()
-                .antMatchers(HttpMethod.POST).authenticated().and()
+                .antMatchers(HttpMethod.POST, "/login", "/register", UserRestController.class.getAnnotation(RequestMapping.class).value()[0]).permitAll()
+                .antMatchers(HttpMethod.GET).permitAll()
+                .antMatchers(HttpMethod.POST).authenticated()
+                .antMatchers(HttpMethod.PUT).authenticated()
+                .antMatchers(HttpMethod.DELETE).authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -67,16 +55,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence charSequence) {
-                return charSequence.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence charSequence, String s) {
-                return charSequence.toString().equals(s);
-            }
-        };
+        return new BCryptPasswordEncoder();
     }
+
+////    Plain encode - for testing purposes
+//    @Bean
+//    public PasswordEncoder encoder() {
+//        return new PasswordEncoder() {
+//            @Override
+//            public String encode(CharSequence charSequence) {
+//                return charSequence.toString();
+//            }
+//
+//            @Override
+//            public boolean matches(CharSequence charSequence, String s) {
+//                return charSequence.toString().equals(s);
+//            }
+//        };
+//    }
 }

@@ -1,13 +1,21 @@
 angular.module('app')
-    .controller('UserEditController', function ($rootScope, $window, $routeParams, $location, $timeout, UserService, User) {
+    .controller('UserEditController', function ($rootScope, $window, $routeParams, $route, $location, $timeout, UserService, User, AuthenticationService) {
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
         const vm = this;
         const userId = $routeParams.userId;
+
         if (userId) {
-            vm.user = UserService.get(userId);
-            vm.editAllowed = $rootScope.authUser !== null && userId == $rootScope.authUser.id;
+            UserService.get(userId).$promise
+                .then((data) => {
+                    vm.user = data;
+                    vm.editAllowed = $rootScope.authUser !== null && userId == $rootScope.authUser.id;
+                })
+                .catch(() => {
+                    console.log('User resource NOT found, redirecting to /error');
+                    $location.path('/error')
+                })
         } else {
             vm.user = new User();
             vm.editAllowed = !$rootScope.authenticated;
@@ -18,38 +26,28 @@ angular.module('app')
                 .then(saveCallback)
                 .catch(errorCallback);
         };
+
         vm.updateUser = () => {
             UserService.update(vm.user)
                 .then(updateCallback)
                 .catch(errorCallback);
         };
 
-        vm.getUsersAccommodations = () => {
-            UserService.getAccommodations(vm.user)
-                .then(accommodationsFetchCallback)
-                .catch(errorCallback);
-        };
-
-        vm.getUsersBookings = () => {
-            UserService.getBookings(vm.user)
-                .then(bookingsFetchCallback)
-                .catch(errorCallback);
-        };
-
         const saveCallback = () => {
-            $location.path(`/users/${vm.user.id}`);
-            vm.msg = 'Save successful!'
+            vm.msg = 'Save successful!';
+            $location.path(`/login`);
         };
 
         const updateCallback = response => vm.msg = 'Update successful!';
 
-        const accommodationsFetchCallback = response => vm.msg = 'User\'s accommodations fetch successful!';
-
-        const bookingsFetchCallback = response => vm.msg = 'User\'s bookings fetch successful!';
-
         const errorCallback = err => {
-            console.log(err);
-            vm.msg = 'Error: ' + err;
+            console.log('Error: ', err);
+            if (err) {
+                vm.msg = 'Error: ' + err.data.message + "\n";
+                err.data.errors.forEach(error => vm.msg = vm.msg + error.field + " " + error.defaultMessage + "\n");
+            } else {
+                console.log('Error is undefined');
+                vm.msg = "Error message not available!";
+            }
         };
-
     });

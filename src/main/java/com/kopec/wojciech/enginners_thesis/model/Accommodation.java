@@ -1,8 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,14 +71,9 @@ public class Accommodation extends AbstractEntity {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-
-//    @OneToMany(mappedBy = "accommodation",
-//            fetch = FetchType.LAZY,
-//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH},
-//            orphanRemoval = true)
-//    @IndexColumn(name = "id", base = 1)
-//    @Singular
-//    private List<Booking> bookings;
+    public enum AccommodationType {
+        FLAT, HOUSE, CABIN, RESORT, SUITE, ROOM
+    }
 
     //Got to be implemented because of Hibernate PersistentBag lack of equals() implementation
     @Override

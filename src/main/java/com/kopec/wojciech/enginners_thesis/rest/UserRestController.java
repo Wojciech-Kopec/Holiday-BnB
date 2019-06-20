@@ -3,7 +3,6 @@ package com.kopec.wojciech.enginners_thesis.rest;
 import com.kopec.wojciech.enginners_thesis.dto.AccommodationDto;
 import com.kopec.wojciech.enginners_thesis.dto.BookingDto;
 import com.kopec.wojciech.enginners_thesis.dto.UserDto;
-import com.kopec.wojciech.enginners_thesis.model.Booking;
 import com.kopec.wojciech.enginners_thesis.service.AccommodationService;
 import com.kopec.wojciech.enginners_thesis.service.BookingService;
 import com.kopec.wojciech.enginners_thesis.service.UserService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;

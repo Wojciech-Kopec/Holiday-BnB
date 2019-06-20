@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.kopec.wojciech.enginners_thesis.model.Accommodation;
-import com.kopec.wojciech.enginners_thesis.model.AccommodationType;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -32,7 +30,7 @@ public class AccommodationDto {
     private String description;
 
     @NotNull
-    private AccommodationType accommodationType;
+    private Accommodation.AccommodationType accommodationType;
 
     @NotNull
     @Positive

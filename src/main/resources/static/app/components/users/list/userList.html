@@ -18,48 +18,56 @@
         <div class="col-12">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">First Name</th>
-                        <th scope="col">Last Name</th>
-                        <th scope="col">E-mail</th>
-                        <th scope="col">Phone no.</th>
-                        <th scope="col">Roles</th>
-                        <th scope="col" class="text-center">Action</th>
-                    </tr>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Phone no.</th>
+                    <th scope="col">Roles</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="user in ctrl.users">
-                        <th scope="row">{{user.id}}</th>
-                        <td>{{user.username}}</td>
-                        <td>{{user.firstName}}</td>
-                        <td>{{user.lastName}}</td>
-                        <td>{{user.email}}</td>
-                        <td>{{user.phoneNumber}}</td>
-                        <td>{{user.roles}}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-primary" title="Edit">
-                                <a ng-href="#!users/{{user.id}}" class="text-white">
-                                    <i class="fas fa-user-edit"></i>
-                                </a>
-                            </button>
-                            <button class="btn btn-sm btn-warning" title="Manage Accommodations">
-                                <a ng-href="#!user-accommodations/{{user.id}}" class="text-white">
-                                    <i class="fas fa-wrench"></i>
-                                </a>
-                            </button>
-                            <button class="btn btn-sm btn-warning" title="Manage Bookings">
-                                <a ng-href="#!user-bookings/{{user.id}}" class="text-white">
-                                    <i class="fas fa-wrench"></i>
-                                </a>
-                            </button>
-                            <button class="btn btn-sm btn-danger" title="Remove" ng-click="ctrl.removePopup($event, user)">
-
-                                <i class="fas fa-user-minus"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tr ng-repeat="user in ctrl.users">
+                    <th scope="row">{{user.id}}</th>
+                    <td>{{user.username}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phoneNumber}}</td>
+                    <td>{{user.roles}}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary" title="Edit">
+                            <a ng-href="#!users/{{user.id}}" class="text-white">
+                                <i class="fas fa-user-edit">
+                                    &emsp;Display
+                                </i>
+                            </a>
+                        </button>
+                        <button class="btn btn-sm btn-warning" title="Manage Accommodations">
+                            <a ng-href="#!users/{{user.id}}/accommodations" class="text-white">
+                                <i class="fas fa-wrench">
+                                    &emsp;Accommodations
+                                </i>
+                            </a>
+                        </button>
+                        <button class="btn btn-sm btn-warning" title="Manage Bookings">
+                            <a ng-href="#!users/{{user.id}}/bookings" class="text-white">
+                                <i class="fas fa-wrench">
+                                    &emsp;Bookings
+                                </i>
+                            </a>
+                        </button>
+                        <button ng-if="user.id == authUser.id" class="btn btn-sm btn-danger" title="Remove"
+                                ng-click="ctrl.removePopup($event, user)">
+                            <i class="fas fa-user-minus">
+                                &emsp;Remove
+                            </i>
+                        </button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

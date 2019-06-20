@@ -6,10 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -60,9 +57,12 @@ public class Booking extends AbstractEntity {
     private LocalDate finishDate;
 
     @Column(name = "final_price")
-    @Positive
     @NotNull
     private int finalPrice;
+
+    public enum BookingStatus {
+        VERIFIED, SUBMITTED, REJECTED
+    }
 
     @AssertTrue(message = "Finish date must be after start date")
     private boolean isFinishDateAfterStartDate() {

@@ -1,7 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Amenity;
-import com.kopec.wojciech.enginners_thesis.model.AmenityType;
 import lombok.Data;
 import lombok.ToString;
 import org.modelmapper.ModelMapper;
@@ -15,7 +14,7 @@ public class AmenityDto {
     private Integer id;
 
     @NotNull
-    private AmenityType type;
+    private Amenity.AmenityType type;
 
     @NotBlank
     private String description;

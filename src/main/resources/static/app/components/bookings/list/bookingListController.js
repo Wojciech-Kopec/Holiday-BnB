@@ -1,15 +1,25 @@
 angular.module('app')
-    .controller('BookingListController', function (BookingService, $route, $routeParams, $mdDialog) {
+    .controller('BookingListController', function (BookingService, $route, $routeParams, $mdDialog, $location) {
         const vm = this;
-        vm.bookings = BookingService.getAll();
 
-        const userId = $routeParams.userId;
-        const accommodationId = $routeParams.accommodationId;
-        if (userId) {
-            vm.bookings = vm.bookings.filter(booking => booking.user.id === userId);
-        } else if (accommodationId) {
-            vm.bookings = vm.bookings.filter(booking => booking.accommodation.id === accommodationId);
-        }
+        BookingService.getAll().$promise
+            .then(data => {
+                vm.bookings = data;
+
+                const userId = $routeParams.userId;
+                const accommodationId = $routeParams.accommodationId;
+
+                if (userId) {
+                    vm.bookings = vm.bookings.filter(booking => booking.user.id == userId);
+                } else if (accommodationId) {
+                    vm.bookings = vm.bookings.filter(booking => booking.accommodation.id == accommodationId);
+                }
+            })
+            .catch((err) => {
+                console.log('Could not fetch Bookings');
+                console.log(err);
+                $location.path('/error');
+            });
 
         const deleteCallback = () => {
             $route.reload();

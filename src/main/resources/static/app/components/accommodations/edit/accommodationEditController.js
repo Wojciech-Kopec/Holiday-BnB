@@ -3,35 +3,26 @@ angular.module('app')
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
-
         const vm = this;
         const accommodationId = $routeParams.accommodationId;
+
         if (accommodationId) {
-            let promise = AccommodationService.get(accommodationId);
-            console.log(promise);
-            promise.$promise.then((result) => vm.accommodation = result.value);
-            console.log(vm.accommodation);
-            if (vm.accommodation) {
-                vm.editAllowed = $rootScope.authUser !== null && vm.accommodation.user.id == $rootScope.authUser.id;
-            } else
-                $location.path('/error');
+            AccommodationService.get(accommodationId).$promise
+                .then((data) => {
+                    vm.accommodation = data;
+                    vm.editAllowed = $rootScope.authUser !== null && vm.accommodation.user.id == $rootScope.authUser.id;
+                })
+                .catch(() => {
+                    console.log('Accommodation resource NOT found, redirecting to /error');
+                    $location.path('/error')
+                });
+
         } else {
             vm.accommodation = new Accommodation();
             vm.accommodation.amenities = [];
             vm.accommodation.user = $rootScope.authUser;
             vm.editAllowed = $rootScope.authenticated;
         }
-
-        vm.iteration = [0, 1, 2, 3, 4];
-
-        const saveCallback = () => {
-            $location.path(`/accommodations/${vm.accommodation.id}`);
-        };
-        const updateCallback = response => vm.msg = 'SUCCESS!';
-
-        const errorCallback = err => {
-            vm.msg = `Saving error!\n ${err.data.message}`;
-        };
 
         vm.saveAccommodation = () => {
             let amenityArray = [];
@@ -49,10 +40,32 @@ angular.module('app')
                 .then(saveCallback)
                 .catch(errorCallback);
         };
+
         vm.updateAccommodation = () => {
             AccommodationService.update(vm.accommodation)
                 .then(updateCallback)
                 .catch(errorCallback);
         };
+
+        const saveCallback = () => {
+            $location.path(`/accommodations/${vm.accommodation.id}`);
+            vm.msg = 'SUCCESS - Entity created!';
+        };
+
+        const updateCallback = response => vm.msg = 'SUCCESS!';
+
+        const errorCallback = err => {
+            console.log('Error: ', err);
+            if(err) {
+                vm.msg = 'Error: ' + err.data.message + "\n";
+                err.data.errors.forEach(error => vm.msg = vm.msg + error.field + " " + error.defaultMessage + "\n");
+            } else {
+                console.log('Error is undefined');
+                vm.msg = "Error message not available!";
+            }
+            };
+
+        vm.iteration = [0, 1, 2, 3, 4];
+
 
     });

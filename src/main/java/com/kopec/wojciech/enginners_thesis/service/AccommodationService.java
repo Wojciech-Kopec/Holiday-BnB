@@ -60,7 +60,6 @@ public class AccommodationService {
                 .collect(Collectors.toList());
     }
 
-    //TODO to be used in Users REST API
     public List<AccommodationDto> findAllByUser(UserDto user) {
         return accommodationRepository.findAllByUserOrderByCreatedDateDesc(UserDto.toEntity(user))
                 .stream()

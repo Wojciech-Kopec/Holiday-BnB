@@ -6,6 +6,7 @@ import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.repository.AccommodationRepository;
 import com.kopec.wojciech.enginners_thesis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +18,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final AccommodationRepository accommodationRepository;
 
+    private PasswordEncoder encoder;
     @Autowired
     public UserService(UserRepository userRepository,
-                       AccommodationRepository accommodationRepository) {
+                       AccommodationRepository accommodationRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.accommodationRepository = accommodationRepository;
+        this.encoder = encoder;
     }
 
     public UserDto save(UserDto userDto) {
@@ -31,7 +34,7 @@ public class UserService {
         if (usernameExist(userDto.getUsername())) {
             throw new UserAlreadyExistException("There is an account with that username: " + userDto.getUsername());
         }
-
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
         return mapSavedUser(userDto);
     }
 
@@ -42,6 +45,11 @@ public class UserService {
     }
 
     public UserDto update(UserDto userDto) {
+        UserDto preUpdatedUser = this.findById(userDto.getId());
+        if(!preUpdatedUser.getPassword().equals(userDto.getPassword())) {
+            //password has been changed
+            userDto.setPassword(encoder.encode(userDto.getPassword()));
+        }
         return mapSavedUser(userDto);
     }
 
@@ -79,12 +87,4 @@ public class UserService {
     public UserDto findById(Integer id) {
         return UserDto.toDto(userRepository.findById(id).orElse(null));
     }
-
-//    public UserDto findByAccommodation(AccommodationDto accommodation) {
-//        return UserDto.toDto(userRepository.findByAccommodationsContains(AccommodationDto.toEntity(accommodation)));
-//    }
-//
-//    public UserDto findByBooking(BookingDto booking) {
-//        return UserDto.toDto(userRepository.findByBookingsContains(BookingDto.toEntity(booking)));
-//    }
 }

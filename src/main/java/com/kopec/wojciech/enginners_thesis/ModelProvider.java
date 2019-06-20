@@ -38,27 +38,27 @@ public class ModelProvider {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
-                .type(AmenityType.WIFI)
+                .type(Amenity.AmenityType.WIFI)
                 .description("Internet Connections all over the building")
                 .build();
 
         Amenity amenity2 = Amenity.builder()
-                .type(AmenityType.KITCHEN)
+                .type(Amenity.AmenityType.KITCHEN)
                 .description("Fully functional kitchen")
                 .build();
 
         Amenity amenity3 = Amenity.builder()
-                .type(AmenityType.BACKYARD)
+                .type(Amenity.AmenityType.BACKYARD)
                 .description("Spacious yard just behind the property")
                 .build();
 
         Amenity amenity4 = Amenity.builder()
-                .type(AmenityType.TV)
+                .type(Amenity.AmenityType.TV)
                 .description("50 inch TV set with cable in property")
                 .build();
 
         Amenity amenity5 = Amenity.builder()
-                .type(AmenityType.OTHER)
+                .type(Amenity.AmenityType.OTHER)
                 .description("Roof of property is fully accessible for guests")
                 .build();
 
@@ -94,7 +94,7 @@ public class ModelProvider {
                         "Parom bardzo się podoba ta lokalizacja – za pobyt dla 2 osób oceniają ją na 9,0\n" +
                         "\n" +
                         "Mówimy w Twoim języku!")
-                .accommodationType(AccommodationType.HOUSE)
+                .accommodationType(Accommodation.AccommodationType.HOUSE)
                 .maxGuests(5)
                 .pricePerNight(500)
                 .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2, amenity3, amenity4, amenity5)))
@@ -108,17 +108,17 @@ public class ModelProvider {
         Accommodation accommodation;
 
         Amenity amenity1 = Amenity.builder()
-                .type(AmenityType.BACKYARD)
+                .type(Amenity.AmenityType.BACKYARD)
                 .description("Spacious yard just behind the property")
                 .build();
 
         Amenity amenity2 = Amenity.builder()
-                .type(AmenityType.TV)
+                .type(Amenity.AmenityType.TV)
                 .description("50 inch TV set with cable in property")
                 .build();
 
         Amenity amenity3 = Amenity.builder()
-                .type(AmenityType.OTHER)
+                .type(Amenity.AmenityType.OTHER)
                 .description("Roof of property is fully accessible for guests")
                 .build();
 
@@ -132,7 +132,7 @@ public class ModelProvider {
                 .user(userOwner)
                 .name("D&C APARTHOTELS MARKET SQUARE")
                 .description("Test_Description2_ " + StringUtils.repeat("AAAAAAAAA ", 10))
-                .accommodationType(AccommodationType.FLAT)
+                .accommodationType(Accommodation.AccommodationType.FLAT)
                 .maxGuests(4)
                 .pricePerNight(350)
                 .amenities(new LinkedList<>(Arrays.asList(amenity1, amenity2, amenity3)))
@@ -147,7 +147,7 @@ public class ModelProvider {
                 .user(client)
                 .accommodation(accommodation)
                 .guestsCount(4)
-                .status(BookingStatus.VERIFIED)
+                .status(Booking.BookingStatus.VERIFIED)
                 .startDate(LocalDate.of(2022, 1, 1))
                 .finishDate(LocalDate.of(2022, 1, 15))
                 .build();
@@ -158,7 +158,7 @@ public class ModelProvider {
                 .user(client)
                 .accommodation(accommodation)
                 .guestsCount(3)
-                .status(BookingStatus.SUBMITTED)
+                .status(Booking.BookingStatus.SUBMITTED)
                 .startDate(LocalDate.of(2022, 2, 10))
                 .finishDate(LocalDate.of(2022, 3, 1))
                 .build();

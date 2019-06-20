@@ -1,18 +1,22 @@
 angular.module('app')
     .constant('LOGIN_ENDPOINT', '/login')
-    .service('AuthenticationService', function ($http, $window, $rootScope, $route, LOGIN_ENDPOINT) {
-        this.authenticate = function (credentials, successCallback) {
-            var authHeader = {Authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)};
+    .service('AuthenticationService', function ($http, $window, $rootScope, $route, $q, LOGIN_ENDPOINT) {
+        this.authenticate = function (username, password, successCallback) {
+            var deferred = $q.defer();
+            var authHeader = {Authorization: 'Basic ' + btoa(username + ':' + password)};
             var config = {headers: authHeader};
             $http
                 .post(LOGIN_ENDPOINT, {}, config)
                 .then(function success(value) {
-                    $http.defaults.headers.post.Authorization = authHeader.Authorization;
+                    $http.defaults.headers.common.Authorization = authHeader.Authorization;
                     successCallback();
+                    deferred.resolve();
                 }, function error(reason) {
-                    console.log('Login error');
+                    console.log('Authentication error');
                     console.log(reason);
+                    deferred.reject(reason);
                 });
+            return deferred.promise;
         };
         this.removeAuthentication = function () {
             delete $http.defaults.headers.post.Authorization;
@@ -37,7 +41,7 @@ angular.module('app')
         vm.users = UserService.getAll();
         vm.credentials = {};
 
-        function loginSuccess() {
+        function authSuccess() {
             $rootScope.authenticated = true;
             $window.sessionStorage.setItem('authenticated', JSON.stringify($rootScope.authenticated));
 
@@ -48,7 +52,8 @@ angular.module('app')
         }
 
         vm.login = function () {
-            AuthenticationService.authenticate(vm.credentials, loginSuccess);
+            AuthenticationService.authenticate(vm.credentials.username, vm.credentials.password, authSuccess)
+                .catch(() => vm.msg = "Login and/or password is incorrect. Try again");
         };
 
         vm.logout = function () {

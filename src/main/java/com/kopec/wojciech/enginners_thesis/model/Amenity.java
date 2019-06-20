@@ -1,12 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.model;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.ManyToAny;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.validation.annotation.Validated;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,11 +20,35 @@ public class Amenity extends AbstractEntity {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
-    private AmenityType type;
+    private Amenity.AmenityType type;
 
     @NotBlank
     private String description;
 
     @ManyToOne
     private Accommodation accommodationId;
+
+    public enum AmenityType {
+        WIFI("WI-FI"),
+        KITCHEN("Kitchen"),
+        TV("TV"),
+        POOL("Swimming Pool"),
+        BACKYARD("Backyard"),
+        SAUNA("Sauna"),
+        PARKING("Parking"),
+        TERRACE("Terrace"),
+        AC("Air-conditioning"),
+        OTHER("Other");
+
+
+        private String type;
+
+        AmenityType(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+    }
 }

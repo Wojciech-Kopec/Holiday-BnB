@@ -1,6 +1,5 @@
 package com.kopec.wojciech.enginners_thesis.specification;
 
-import com.kopec.wojciech.enginners_thesis.dto.LocalizationDto;
 import com.kopec.wojciech.enginners_thesis.model.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -33,17 +32,17 @@ public final class AccommodationSpecification {
         return name != null ? QAccommodation.accommodation.name.contains(name) : null;
     }
 
-    private static Predicate withAccommodationTypes(List<AccommodationType> types) {
+    private static Predicate withAccommodationTypes(List<Accommodation.AccommodationType> types) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (types != null && types.size() > 0) {
-            for (AccommodationType type : types) {
+            for (Accommodation.AccommodationType type : types) {
                 booleanBuilder.or(withAccommodationType(type));
             }
         }
         return booleanBuilder;
     }
 
-    private static Predicate withAccommodationType(AccommodationType type) {
+    private static Predicate withAccommodationType(Accommodation.AccommodationType type) {
         return type != null ? QAccommodation.accommodation.accommodationType.eq(type) : null;
     }
 
@@ -61,7 +60,7 @@ public final class AccommodationSpecification {
 
     private static Predicate withAmenity(String amenityType) {
         ListPath<Amenity, QAmenity> qAmenities = QAccommodation.accommodation.amenities;
-        return qAmenities.any().type.eq(AmenityType.valueOf(amenityType));
+        return qAmenities.any().type.eq(Amenity.AmenityType.valueOf(amenityType));
     }
 
     private static Predicate withAmenities(List<String> amenities) {

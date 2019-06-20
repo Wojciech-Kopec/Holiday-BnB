@@ -1,7 +1,6 @@
 package com.kopec.wojciech.enginners_thesis.dto;
 
 import com.kopec.wojciech.enginners_thesis.model.Booking;
-import com.kopec.wojciech.enginners_thesis.model.BookingStatus;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -26,7 +25,7 @@ public class BookingDto {
     @NotNull
     private int guestsCount;
 
-    private BookingStatus status;
+    private Booking.BookingStatus status;
     private LocalDateTime submissionDate;
 
     @Future
@@ -37,7 +36,6 @@ public class BookingDto {
     @NotNull
     private LocalDate finishDate;
 
-    @Positive
     @NotNull
     private int finalPrice;
 

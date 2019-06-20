@@ -3,9 +3,11 @@ package com.kopec.wojciech.enginners_thesis.integration;
 import com.google.common.collect.Lists;
 import com.kopec.wojciech.enginners_thesis.rest.*;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,6 +15,9 @@ import static org.hamcrest.Matchers.*;
 
 public class UserResourceIT extends AbstractRestIT {
     private static String baseEndpoint = UserRestController.class.getAnnotation(RequestMapping.class).value()[0];
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Test
     public void validRegistrationTest() throws Exception {
@@ -26,6 +31,7 @@ public class UserResourceIT extends AbstractRestIT {
         );
         Integer createdId = userRepository.findByUsername(primaryUserDto.getUsername()).getId();
         primaryUserDto.setId(createdId);
+        primaryUserDto.setPassword(encoder.encode(primaryUserDto.getPassword()));
 
         thenAssert(response,
                 HttpStatus.CREATED,

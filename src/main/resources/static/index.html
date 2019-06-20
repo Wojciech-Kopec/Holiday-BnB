@@ -18,7 +18,8 @@
     <script src="node_modules/angular-resource/angular-resource.js"></script>
 
     <!-- Angular Material style sheet -->
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
@@ -70,9 +71,11 @@
                     &emsp;&emsp;&emsp;</a>
             </li>
             <li ng-if="authenticated && authUser" class="nav-asset">
-                <a class="nav-link no-overflow" ng-href="#!/users/{{authUser.id}}">Logged as <b>{{authUser.username}}</b>&emsp;&emsp;</a>
+                <a class="nav-link no-overflow" ng-href="#!/users/{{authUser.id}}">Logged as
+                    <b>{{authUser.username}}</b>&emsp;&emsp;</a>
             </li>
-            <li ng-if="authenticated && authUser" ng-controller="AuthenticationController as authCtrl" class="nav-asset">
+            <li ng-if="authenticated && authUser" ng-controller="AuthenticationController as authCtrl"
+                class="nav-asset">
                 <a class="nav-link" ng-click="authCtrl.logout()">Logout</a>
             </li>
             <li ng-if="!authenticated" class="nav-asset">

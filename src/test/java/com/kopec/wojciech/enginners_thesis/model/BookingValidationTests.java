@@ -12,7 +12,7 @@ public class BookingValidationTests extends AbstractValidationTest<Booking> {
     @Test
     public void shouldNotValidateNulls() {
         Booking booking= new Booking();
-        assertObjectsConstraintsViolationCount(booking, 7);
+        assertObjectsConstraintsViolationCount(booking, 6);
     }
 
     @Test
@@ -21,7 +21,7 @@ public class BookingValidationTests extends AbstractValidationTest<Booking> {
                 .guestsCount(0)
                 .build();
 
-        assertObjectsConstraintsViolationCount(booking1, 7);
+        assertObjectsConstraintsViolationCount(booking1, 6);
     }
 
     @Test

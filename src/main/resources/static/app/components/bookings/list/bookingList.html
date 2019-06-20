@@ -34,7 +34,7 @@
                                         <i class="fas fa-user-edit"></i>
                                     </a>
                                 </button>
-                                <button class="btn btn-sm btn-danger" title="Remove"
+                                <button ng-if="booking.user.id == authUser.id" class="btn btn-sm btn-danger" title="Remove"
                                         ng-click="ctrl.removePopup($event, booking)">
 
                                     <i class="fas fa-user-minus"></i>

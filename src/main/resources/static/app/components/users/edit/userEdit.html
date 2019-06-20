@@ -7,7 +7,7 @@
     </div>
     <div class="row" ng-if="ctrl.msg">
         <div class="mx-auto">
-            <p class="text-danger">{{ctrl.msg}}</p>
+            <p class="text-danger line-breaks">{{ctrl.msg}}</p>
         </div>
     </div>
     <div class="row">
@@ -52,12 +52,13 @@
                     Accommodation
                 </a>
                 <br><br>
-                <button ng-if="ctrl.user.id" class="btn btn-primary" type="submit" ng-click="ctrl.getUsersAccommodations()">
-                    Show {{ctrl.user.username}}'s Accommodations
+                <button ng-if="ctrl.user.id" class="btn btn-primary btn-warning">
+                    <a ng-href="#!users/{{ctrl.user.id}}/bookings" class="text-white">Show
+                        Bookings</a>
                 </button>
-                <br><br>
-                <button ng-if="ctrl.user.id" class="btn btn-primary" type="submit" ng-click="ctrl.getUsersBookings()">
-                    Show {{ctrl.user.username}}'s Bookings
+                <button ng-if="ctrl.user.id" class="btn btn-primary btn-warning">
+                    <a ng-href="#!users/{{ctrl.user.id}}/accommodations" class="text-white">Show
+                        Accommodations</a>
                 </button>
             </div>
         </form>

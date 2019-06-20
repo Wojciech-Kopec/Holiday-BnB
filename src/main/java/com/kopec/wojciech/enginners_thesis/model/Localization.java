@@ -26,11 +26,11 @@ public class Localization extends AbstractEntity {
     private Accommodation accommodation;
 
     @NotNull
-    @Size(min = 5, max = 30)
+    @Size(min = 3, max = 50)
     private String country;
 
     @NotNull
-    @Size(min = 5, max = 30)
+    @Size(min = 3, max = 50)
     private String city;
 
     private String address;

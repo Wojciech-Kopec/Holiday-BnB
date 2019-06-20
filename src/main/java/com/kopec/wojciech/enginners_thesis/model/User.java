@@ -3,14 +3,9 @@ package com.kopec.wojciech.enginners_thesis.model;
 
 import com.kopec.wojciech.enginners_thesis.validation.ExtendedEmailValidator;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -61,38 +56,5 @@ public class User extends AbstractEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
     @Singular
     private Set<Role> roles;
-
-//    @Fetch(value = FetchMode.SUBSELECT)
-//    @OneToMany(mappedBy = "user",
-//            fetch = FetchType.LAZY,
-//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH}, /*COULD NOT DELETE OBJECTS WITH THIS*/
-//            orphanRemoval = true)
-////    @OrderColumn(name = "booking_id")
-//    @IndexColumn(name = "id", base = 1)
-//    @Singular
-//    private List<Booking> bookings;
-//
-//    @Fetch(value = FetchMode.SUBSELECT)
-//    @OneToMany(mappedBy = "user",
-//            fetch = FetchType.LAZY,
-//            cascade = {CascadeType.REMOVE, CascadeType.REFRESH},
-//            orphanRemoval = true)
-////    @OrderColumn(name = "accommodation_id")
-//    @IndexColumn(name = "id", base = 1)
-//    @Singular
-//    private List<Accommodation> accommodations;
-
-
-    //    public void setAccommodations(List<Accommodation> accommodations) {
-//        this.accommodations.clear();
-//        if (accommodations != null) {
-//            this.accommodations.addAll(accommodations);
-//        }
-//    }
-//
-//    public void setBookings(List<Booking> bookings) {
-//        this.bookings.clear();
-//        this.bookings.addAll(bookings);
-//    }
 
 }
