@@ -87,4 +87,5 @@ public class UserService {
     public UserDto findById(Integer id) {
         return UserDto.toDto(userRepository.findById(id).orElse(null));
     }
+    
 }
