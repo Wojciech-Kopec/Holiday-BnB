@@ -1,6 +1,7 @@
 package com.kopec.wojciech.enginners_thesis.integration;
 
 import com.google.common.collect.Lists;
+import com.kopec.wojciech.enginners_thesis.model.User;
 import com.kopec.wojciech.enginners_thesis.rest.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,11 @@ public class UserResourceIT extends AbstractRestIT {
                 baseEndpoint,
                 primaryUserDto
         );
-        Integer createdId = userRepository.findByUsername(primaryUserDto.getUsername()).getId();
-        primaryUserDto.setId(createdId);
-        primaryUserDto.setPassword(encoder.encode(primaryUserDto.getPassword()));
+        User userFromDB = userRepository.findByUsername(primaryUserDto.getUsername());
+
+        Integer createdId = userFromDB.getId();
+        primaryUserDto.setId(createdId); //ID is not knows at persist
+        primaryUserDto.setPassword(userFromDB.getPassword()); //Password is encoded on persist
 
         thenAssert(response,
                 HttpStatus.CREATED,
