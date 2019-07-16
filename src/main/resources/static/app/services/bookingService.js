@@ -1,5 +1,5 @@
 angular.module('app')
-    .constant('BOOKING_ENDPOINT', '/api/bookings/:id')
+    .constant('BOOKING_ENDPOINT', API_ROOT + '/api/bookings/:id')
     .factory('Booking', function($resource, BOOKING_ENDPOINT) {
         return $resource(BOOKING_ENDPOINT, { id: '@_id' }, {
             update: {

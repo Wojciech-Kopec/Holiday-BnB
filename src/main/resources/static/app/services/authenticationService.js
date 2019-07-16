@@ -1,5 +1,5 @@
 angular.module('app')
-    .constant('LOGIN_ENDPOINT', '/login')
+    .constant('LOGIN_ENDPOINT', API_ROOT + '/login')
     .service('AuthenticationService', function ($http, $window, $rootScope, $route, $q, LOGIN_ENDPOINT) {
         this.authenticate = function (username, password, successCallback) {
             var deferred = $q.defer();
