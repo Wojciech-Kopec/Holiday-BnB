@@ -21,8 +21,8 @@ public class UserValidationTests extends AbstractValidationTest<User> {
     public void shouldNotValidateSizesNotInRange() {
         User user1 = User.builder()
                 .username(stringWithSize(4))
-                .firstName(stringWithSize(4))
-                .lastName(stringWithSize(4))
+                .firstName(stringWithSize(2))
+                .lastName(stringWithSize(2))
                 .phoneNumber(stringWithSize(6))
                 .password(stringWithSize(4))
                 .email("valid@email.com")

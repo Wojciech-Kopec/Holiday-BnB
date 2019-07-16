@@ -17,8 +17,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AccommodationRepository accommodationRepository;
-
     private PasswordEncoder encoder;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        AccommodationRepository accommodationRepository, PasswordEncoder encoder) {
