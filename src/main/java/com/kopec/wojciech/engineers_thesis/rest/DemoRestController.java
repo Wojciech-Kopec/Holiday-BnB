@@ -28,7 +28,6 @@ public class DemoRestController {
 
     private final EntityGenerator entityGenerator = EntityGenerator.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(DemoRestController.class);
-    private static String result;
 
     @Autowired
     public DemoRestController(UserService userService, AccommodationService accommodationService, BookingService
@@ -40,14 +39,10 @@ public class DemoRestController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> get() {
-        if (result == null) {
-            result = persistEntities();
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(persistEntitiesForDemoMode(), HttpStatus.OK);
     }
 
-
-    private String persistEntities() {
+    private String persistEntitiesForDemoMode() {
         int beforeUsersCount = userService.findAll().size();
         int beforeAccommodationsCount = accommodationService.findAll(null).size();
         int beforeBookingsCount = bookingService.findAll().size();
