@@ -1,9 +1,11 @@
 package com.kopec.wojciech.enginners_thesis.rest;
 
 import com.google.common.base.Strings;
-import com.kopec.wojciech.enginners_thesis.EnginnersThesisApplication;
+import com.kopec.wojciech.enginners_thesis.EngineersThesisApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +24,28 @@ import java.util.jar.Manifest;
 @RestController
 @RequestMapping("/about")
 public class AppInfoRestController {
+
+    @Autowired
+    private BuildProperties buildProperties;
+
     private static final Logger logger = LoggerFactory.getLogger(AppInfoRestController.class);
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> get() {
-        Manifest appManifest = getAppManifest();
-        String manifest;
-        if (appManifest != null)
-            manifest = parseManifest(appManifest);
-        else
-            manifest = "Manifest not found!";
+//        Manifest appManifest = getAppManifest();
+//        String manifest;
+//        if (appManifest != null)
+//            manifest = parseManifest(appManifest);
+//        else
+//            manifest = "Manifest not found!";
+
+        String manifest = "";
+        manifest += "\n" + buildProperties.getArtifact();
+        manifest += "\n" + buildProperties.getGroup();
+        manifest += "\n" + buildProperties.getName();
+        manifest += "\n" + buildProperties.getTime();
+        manifest += "\n" + buildProperties.getVersion();
+        manifest += "\n" + buildProperties.get("build.time");
 
         return new ResponseEntity<>(manifest, HttpStatus.OK);
     }
@@ -48,7 +62,7 @@ public class AppInfoRestController {
         Manifest manifest = null;
 
         try {
-            Enumeration<URL> resources = EnginnersThesisApplication.class.getClassLoader()
+            Enumeration<URL> resources = EngineersThesisApplication.class.getClassLoader()
                     .getResources("META-INF/MANIFEST.MF");
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
