@@ -1,5 +1,5 @@
 angular.module('app')
-    .constant('USER_ENDPOINT', API_ROOT + '/api/users/:id')
+    .constant('USER_ENDPOINT', 'api/users/:id')
     .factory('User', function ($resource, USER_ENDPOINT) {
         return $resource(USER_ENDPOINT, {id: '@_id'}, {
             update: {
