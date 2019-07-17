@@ -77,7 +77,7 @@ angular.module('app')
         };
 
         vm.removePopup = (event, accommodation) => {
-            var confirm = $mdDialog.confirm()
+            let confirm = $mdDialog.confirm()
                 .title('Would you like to remove this entry?')
                 .targetEvent(event)
                 .ok('Remove')

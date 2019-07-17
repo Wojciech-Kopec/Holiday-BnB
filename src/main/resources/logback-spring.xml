@@ -45,8 +45,8 @@
     <logger name="org.hibernate.SQL" level="debug"/>
 
     <!--TODO remove? -->
-    <!-- LOG "com.kopec.wojciech.enginners_thesis*" at TRACE level -->
-    <logger name="com.kopec.wojciech.enginners_thesis" level="trace" additivity="false">
+    <!-- LOG "com.kopec.wojciech.engineers_thesis*" at TRACE level -->
+    <logger name="com.kopec.wojciech.engineers_thesis" level="trace" additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </logger>

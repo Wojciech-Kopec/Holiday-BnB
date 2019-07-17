@@ -1,5 +1,5 @@
 angular.module('app')
-    .controller('UserEditController', function ($rootScope, $window, $routeParams, $route, $location, $timeout, UserService, User, AuthenticationService) {
+    .controller('UserEditController', function ($rootScope, $window, $routeParams, $route, $location, $timeout, UserService, User) {
         $rootScope.authUser = JSON.parse($window.sessionStorage.getItem('authUser'));
         $rootScope.authenticated = JSON.parse($window.sessionStorage.getItem('authenticated'));
 
