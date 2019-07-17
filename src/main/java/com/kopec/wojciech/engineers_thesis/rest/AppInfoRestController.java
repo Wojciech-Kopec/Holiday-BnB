@@ -37,7 +37,7 @@ public class AppInfoRestController {
     }
 
     private String parseDateTime(String dateTime) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, dtf);
         localDateTime = localDateTime.plusHours(2); //Timezone issue
         dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
